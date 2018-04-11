@@ -1,1 +1,0 @@
-# konradedgar.github.io
