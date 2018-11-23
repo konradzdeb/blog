@@ -205,11 +205,13 @@ button,
             transform: rotate(-45deg);
     bottom: 0; }
   .nav-btn.is-on + .nav-list {
-    opacity: 1; }
+      opacity: 1;
+      background-color: white;
+  }
 
 .nav-list {
   list-style: none;
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   margin-top: 1rem;
   padding: 0;
   opacity: 0;
