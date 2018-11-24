@@ -6,37 +6,29 @@
     <description>Recent content in Posts on Random R stuff</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-GB</language>
-    <lastBuildDate>Fri, 23 Nov 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 24 Nov 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>a</title>
-      <link>/2018/11/23/a/</link>
-      <pubDate>Fri, 23 Nov 2018 00:00:00 +0000</pubDate>
+      <title>Interactivly Loading Shiny Modules</title>
+      <link>/2018/11/24/interactive-module/</link>
+      <pubDate>Sat, 24 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018/11/23/a/</guid>
-      <description></description>
+      <guid>/2018/11/24/interactive-module/</guid>
+      <description>Shiny</description>
     </item>
     
     <item>
-      <title>c</title>
-      <link>/2018/11/23/c/</link>
-      <pubDate>Fri, 23 Nov 2018 00:00:00 +0000</pubDate>
+      <title>ASCII charts in R</title>
+      <link>/2015/06/05/ascii-charts-in-r/</link>
+      <pubDate>Fri, 05 Jun 2015 00:00:00 +0000</pubDate>
       
-      <guid>/2018/11/23/c/</guid>
-      <description>Content
-a = 1 FALSE TRUE function(x) { x ^ 2 }  </description>
-    </item>
-    
-    <item>
-      <title>test post</title>
-      <link>/2018/11/22/test-post/</link>
-      <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/2018/11/22/test-post/</guid>
-      <description>sample test post sample test postsample test postsample test postsample test postsample test postsample test postsample test postsample test postsample test postsample test postsample test postsample test postsample test postsample test postsample test postsample test postsample test postsample test postsample test post</description>
+      <guid>/2015/06/05/ascii-charts-in-r/</guid>
+      <description>In Stata it is possible to use function plot in order to get a simple scatter plot in Stata console. As of Stata eight, plot is no longer supported but remains a useful tool for quickly exploring relationships between variables. Using plot on the auto data provides the following results:
+Stata textual plot
+ Now the question is: can we achieve the same level of convenience in R? Of course.</description>
     </item>
     
   </channel>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html>
 
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title> Posts &middot; Random R stuff </title>
+<title> ASCII charts in R &middot; Random R stuff </title>
 
 
 <link rel="stylesheet" href="/css/slim.css">
@@ -15,7 +15,7 @@
 <link rel="shortcut icon" href="/favicon.ico">
 
 
-<link href="/post/index.xml" rel="alternate" type="application/rss+xml" title="Random R stuff" />
+<link href="" rel="alternate" type="application/rss+xml" title="Random R stuff" />
 
 </head>
 
@@ -43,58 +43,32 @@
 
     <div class="content">
       <div class="posts">
-         
-        <div class="post">
-          <h2 class="post-title"><a href="/2018/11/24/interactive-module/">Interactivly Loading Shiny Modules</a></h2>
-          <span class="post-date">Nov 24, 2018</span>
-		  
-			<span class="post-tags">
-		  	
-			          #<a href="/tags/shiny">Shiny</a>&nbsp;
-		  	
-			          #<a href="/tags/r">R</a>&nbsp;
-		  	
-		    </span>
-		  
-		  
-		  	<div class="summary">
-				Shiny
-				<a class="read-more" href="/2018/11/24/interactive-module/">&hellip;</a>
-			</div>
-		  
-        </div>
-        
         <div class="post">
           <h2 class="post-title"><a href="/2015/06/05/ascii-charts-in-r/">ASCII charts in R</a></h2>
-          <span class="post-date">Jun 5, 2015</span>
-		  
-			<span class="post-tags">
-		  	
-			          #<a href="/tags/r">R</a>&nbsp;
-		  	
-			          #<a href="/tags/ascii">ASCII</a>&nbsp;
-		  	
-			          #<a href="/tags/stata">Stata</a>&nbsp;
-		  	
-			          #<a href="/tags/graphics">graphics</a>&nbsp;
-		  	
-		    </span>
-		  
-		  
-		  	<div class="summary">
-				In Stata it is possible to use function plot in order to get a simple scatter plot in Stata console. As of Stata eight, plot is no longer supported but remains a useful tool for quickly exploring relationships between variables. Using plot on the auto data provides the following results:
-Stata textual plot
- Now the question is: can we achieve the same level of convenience in R? Of course.
-				<a class="read-more" href="/2015/06/05/ascii-charts-in-r/">&hellip;</a>
-			</div>
-		  
-        </div>
-        
-      </div>
-      <div class="pagination">
-   
+          <span class="post-date">Jun 5, 2015 </span>
+          <div class="post-content">
+            
+
+
+<p>In Stata it is possible to use function plot in order to get a simple scatter plot in Stata console. As of Stata eight, plot is no longer supported but remains a useful tool for quickly exploring relationships between variables. Using plot on the auto data provides the following results:</p>
+<div class="figure">
+<img src="stata_text_plot.png" alt="Stata textual plot" />
+<p class="caption">Stata textual plot</p>
 </div>
+<p>Now the question is: can we achieve the same level of convenience in R? Of course. The txtplot package authored by Bjoern Bornkamp provides similar functionality. Executing the code below will generate nice text plot straight in the R console:</p>
+<div class="figure">
+<img src="r_txtplot_chart.png" alt="R txtplot chart" />
+<p class="caption">R txtplot chart</p>
+</div>
+
+          </div>
+        </div>
+        <div class="pagination">
+          <a class="btn previous " href="/2018/11/24/interactive-module/"> Prev</a>  
+        </div>
+      </div>
     </div>
+    
     <div class="footer">
   
   <p>Powered by <a href="https://gohugo.io">Hugo</a>. This theme—Slim—is open sourced on <a href="https://github.com/zhe/hugo-theme-slim">Github</a>.</p>
@@ -103,8 +77,11 @@ Stata textual plot
 
   </div>
   <script src="/js/slim.js"></script>
+  <script src="/js/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
   
-
 </body>
 
 </html>

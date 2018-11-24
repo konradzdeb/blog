@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bi on Random R stuff</title>
+    <link>/categories/bi/</link>
+    <description>Recent content in Bi on Random R stuff</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-GB</language>
+    <lastBuildDate>Sat, 24 Nov 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/bi/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Interactivly Loading Shiny Modules</title>
+      <link>/2018/11/24/interactive-module/</link>
+      <pubDate>Sat, 24 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/11/24/interactive-module/</guid>
+      <description>Shiny</description>
+    </item>
+    
+  </channel>
+</rss>
