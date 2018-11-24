@@ -6,35 +6,35 @@
     <description>Recent content in Categories on Random R stuff</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-GB</language>
-    <lastBuildDate>Fri, 23 Nov 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 05 Jun 2015 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Cat_a</title>
-      <link>/categories/cat_a/</link>
-      <pubDate>Fri, 23 Nov 2018 00:00:00 +0000</pubDate>
+      <title>Archive</title>
+      <link>/categories/archive/</link>
+      <pubDate>Fri, 05 Jun 2015 00:00:00 +0000</pubDate>
       
-      <guid>/categories/cat_a/</guid>
+      <guid>/categories/archive/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Cat_b</title>
-      <link>/categories/cat_b/</link>
-      <pubDate>Fri, 23 Nov 2018 00:00:00 +0000</pubDate>
+      <title>Bi</title>
+      <link>/categories/bi/</link>
+      <pubDate>Sat, 24 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>/categories/cat_b/</guid>
+      <guid>/categories/bi/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>R</title>
-      <link>/categories/r/</link>
-      <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
+      <title>How To</title>
+      <link>/categories/how-to/</link>
+      <pubDate>Sat, 24 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>/categories/r/</guid>
+      <guid>/categories/how-to/</guid>
       <description></description>
     </item>
     

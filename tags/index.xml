@@ -6,35 +6,53 @@
     <description>Recent content in Tags on Random R stuff</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-GB</language>
-    <lastBuildDate>Thu, 22 Nov 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 05 Jun 2015 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Ascii</title>
+      <link>/tags/ascii/</link>
+      <pubDate>Fri, 05 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ascii/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Graphics</title>
+      <link>/tags/graphics/</link>
+      <pubDate>Fri, 05 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/graphics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>R</title>
       <link>/tags/r/</link>
-      <pubDate>Thu, 22 Nov 2018 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 24 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/r/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Tag_a</title>
-      <link>/tags/tag_a/</link>
-      <pubDate>Fri, 23 Nov 2018 00:00:00 +0000</pubDate>
+      <title>Shiny</title>
+      <link>/tags/shiny/</link>
+      <pubDate>Sat, 24 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>/tags/tag_a/</guid>
+      <guid>/tags/shiny/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Tag_b</title>
-      <link>/tags/tag_b/</link>
-      <pubDate>Fri, 23 Nov 2018 00:00:00 +0000</pubDate>
+      <title>Stata</title>
+      <link>/tags/stata/</link>
+      <pubDate>Fri, 05 Jun 2015 00:00:00 +0000</pubDate>
       
-      <guid>/tags/tag_b/</guid>
+      <guid>/tags/stata/</guid>
       <description></description>
     </item>
     
