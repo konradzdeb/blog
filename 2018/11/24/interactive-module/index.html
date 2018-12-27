@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/fontawesome.css" integrity="sha384-u5J7JghGz0qUrmEsWzBQkfvc8nK3fUT7DCaQzNQ+q4oEXhGSx+P2OqjWsfIRB8QT" crossorigin="anonymous">
 <div class="header">
   <h1 class="site-title"><a href="/">Random R stuff</a></h1>
-  <p class="site-tagline">Fun with R and other languages</p>
+  <p class="site-tagline">R, data science, other languages and, at times remotely, related content</p>
   <div class="nav">
     <a class="nav-btn" href="#">
       <span class="ci ci-burger"></span>
@@ -47,7 +47,39 @@
           <h2 class="post-title"><a href="/2018/11/24/interactive-module/">Interactivly Loading Shiny Modules</a></h2>
           <span class="post-date">Nov 24, 2018 </span>
           <div class="post-content">
-            <p>Shiny</p>
+            
+
+
+<p>Shiny is a widely popular web application framework for a R. In simple tearms it enables any R programmer to develop and deploy web application. This application could be simple - an interactive document consiting of a few charts and tables or a c complex “behemoth” with multiple functionalities enabling end-users to run models, query external data, generate exportable reports and sophisticated visuals.</p>
+<p>In business, it is frequently efficient to capitalise on existing solution and develop / upgrade existing products. In a business intelligence web application context this may mean adding modules and functionalities to an existing application so a wider audiance can be served and more user needs can be met.</p>
+<p>This has certain advanatges, mostly:</p>
+<ul>
+<li>Deployment cycle is faster, we are working on an existing product and adding new functionalities</li>
+<li>We are leveraging existing dissemination mechanism, authentication, server, data connections. Where possible we can use tested and working solutions. This is conducive to stability.</li>
+<li>Testing will be easier as we have an established user group that is familiar with the product</li>
+</ul>
+<div id="challenges" class="section level1">
+<h1>Challenges</h1>
+<p>Challenges are more interesting, as this is what I’m going to discuss. The challenges can be groupped in two main themes:</p>
+<ul>
+<li>Development</li>
+<li>User exeperience</li>
+</ul>
+<div id="development" class="section level2">
+<h2>Development</h2>
+<p>Let’s address development challenges first. Traditionally Shiny application would consist of <code>server.R</code> and <code>ui.R</code>. Each file containing function definitions for server and user interface. Recently both of those are saved as in one file as in examples provided with Shiny package. To see available examples run:</p>
+<pre class="r"><code>list.files(
+    path = system.file(&quot;examples&quot;, package = &quot;shiny&quot;),
+    pattern = glob2rx(&quot;*.R&quot;),
+    recursive = TRUE,
+    full.names = TRUE
+)</code></pre>
+<p>Now this won’t fly. Best case scenario we will end-up with <a href="https://craftofcoding.wordpress.com/2013/10/07/what-is-spaghetti-code/">sphagetti code</a> mostly likely we will end up with nothhing. This said, ther may be one benefit…</p>
+<blockquote class="twitter-tweet"><p lang="und" dir="ltr"><a href="https://twitter.com/hashtag/programming?src=hash&amp;ref_src=twsrc%5Etfw">#programming</a> <a href="https://twitter.com/hashtag/programmersJokes?src=hash&amp;ref_src=twsrc%5Etfw">#programmersJokes</a> <a href="https://twitter.com/hashtag/coding?src=hash&amp;ref_src=twsrc%5Etfw">#coding</a> <a href="https://twitter.com/hashtag/ProgrammingHumor?src=hash&amp;ref_src=twsrc%5Etfw">#ProgrammingHumor</a> <a href="https://twitter.com/hashtag/jokes?src=hash&amp;ref_src=twsrc%5Etfw">#jokes</a> <a href="https://twitter.com/hashtag/humor?src=hash&amp;ref_src=twsrc%5Etfw">#humor</a> <a href="https://twitter.com/hashtag/coders?src=hash&amp;ref_src=twsrc%5Etfw">#coders</a> <a href="https://twitter.com/hashtag/Programmers?src=hash&amp;ref_src=twsrc%5Etfw">#Programmers</a> <a href="https://twitter.com/hashtag/Github?src=hash&amp;ref_src=twsrc%5Etfw">#Github</a> <a href="https://twitter.com/hashtag/Microsoft?src=hash&amp;ref_src=twsrc%5Etfw">#Microsoft</a> <a href="https://t.co/MEOui1BTCT">pic.twitter.com/MEOui1BTCT</a></p>&mdash; Programmers Memes (@ProgrammersMeme) <a href="https://twitter.com/ProgrammersMeme/status/1004392656414367744?ref_src=twsrc%5Etfw">June 6, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+</div>
+</div>
 
           </div>
         </div>
