@@ -17,8 +17,8 @@
       <pubDate>Sat, 24 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>/2018/11/24/interactive-module/</guid>
-      <description>Shiny is a widely popular web application framework for a R. In simple tearms it enables any R programmer to develop and deploy web application. This application could be simple - an interactive document consiting of a few charts and tables or a c complex “behemoth” with multiple functionalities enabling end-users to run models, query external data, generate exportable reports and sophisticated visuals.
-In business, it is frequently efficient to capitalise on existing solution and develop / upgrade existing products.</description>
+      <description>TL;DR If you want to see the implemented solution, please refer to: GitHub repo.
+ Context Shiny is a widely popular web application framework for a R. In simple tearms it enables any R programmer to develop and deploy web application. This application could be simple - an interactive document consiting of a few charts and tables or a c complex “behemoth” with multiple functionalities enabling end-users to run models, query external data, generate exportable reports and sophisticated visuals.</description>
     </item>
     
     <item>
