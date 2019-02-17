@@ -14,22 +14,18 @@ post = "/:year/:month/:day/:slug/"
 [params]
     author = "Konrad Zdeb"
     description = "Personal blog on R, business intelligence, data science and statistics"
+    Subtitle = "Fun with R and other languages"
     twitter = "konradzdeb"
+
     # Provide summary
     enableSummary = true
+
     # Show twitter
     enableTwitterCard = true
 
-    # options for highlight.js (version, additional languages, and theme)
-    # highlightjsVersion = "9.12.0"
-    # highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
-    # highlightjsLang = ["r", "yaml"]
-    # highlightjsTheme = "Tomorrow"
+    # show latest posts in single page
+	showLatestPosts = false
 
-    MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs"
-    MathJaxVersion = "2.7.5"
-
-    Subtitle = "Fun with R and other languages"
     # Show nice icons
     iconFont = "font-awesome"
 
