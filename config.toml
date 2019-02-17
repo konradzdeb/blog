@@ -30,6 +30,8 @@ post = "/:year/:month/:day/:slug/"
     MathJaxVersion = "2.7.5"
 
     Subtitle = "Fun with R and other languages"
+    # Show nice icons
+    iconFont = "font-awesome"
 
 # Add additional social link entries underneath
 [social]
