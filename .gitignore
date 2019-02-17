@@ -1,2 +1,6 @@
 # Ignore public folder
 public
+# Ignore RStudio producton files
+sessionInfoLog
+.Rhistory
+.Rproj.user/
