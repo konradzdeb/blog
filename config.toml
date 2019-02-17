@@ -24,10 +24,13 @@ post = "/:year/:month/:day/:slug/"
     enableTwitterCard = true
 
     # show latest posts in single page
-	showLatestPosts = false
+	showLatestPosts = true
 
     # Show nice icons
     iconFont = "font-awesome"
+
+    enableRSS = true
+	enableToc = true
 
 # Add additional social link entries underneath
 [social]
