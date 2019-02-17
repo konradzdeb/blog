@@ -4,12 +4,21 @@ title = "Random R stuff"
 theme = "hugo-theme-cactus-plus"
 googleAnalytics = "UA-129716792-1"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+# Asper the config (does not have Asian language)
+hasCJKLanguage = false
+
 
 [permalinks]
 post = "/:year/:month/:day/:slug/"
 
 [params]
+    author = "Konrad Zdeb"
     description = "Personal blog on R, business intelligence, data science and statistics"
+    twitter = "konradzdeb"
+    # Provide summary
+    enableSummary = true
+    # Show twitter
+    enableTwitterCard = true
 
     # options for highlight.js (version, additional languages, and theme)
     highlightjsVersion = "9.12.0"
@@ -21,12 +30,6 @@ post = "/:year/:month/:day/:slug/"
     MathJaxVersion = "2.7.5"
 
     Subtitle = "Fun with R and other languages"
-    GithubID = "konradedgar"
-    TwitterID = "konradzdeb"
-    LinkedInID = "konradz"
-    StacksOverflowID = "1655567"
-    AnalyticsID = "UA-129716792-1"
-    Summary = true  # takes true or false
     Content = false  # takes true or false
     # if both are set to true, summary is shown.
     # FooterMsg = "Copyright Me 2016. Powered by Hugo."
