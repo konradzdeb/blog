@@ -21,18 +21,15 @@ post = "/:year/:month/:day/:slug/"
     enableTwitterCard = true
 
     # options for highlight.js (version, additional languages, and theme)
-    highlightjsVersion = "9.12.0"
-    highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
-    highlightjsLang = ["r", "yaml"]
-    highlightjsTheme = "Tomorrow"
+    # highlightjsVersion = "9.12.0"
+    # highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
+    # highlightjsLang = ["r", "yaml"]
+    # highlightjsTheme = "Tomorrow"
 
     MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs"
     MathJaxVersion = "2.7.5"
 
     Subtitle = "Fun with R and other languages"
-    Content = false  # takes true or false
-    # if both are set to true, summary is shown.
-    # FooterMsg = "Copyright Me 2016. Powered by Hugo."
 
 # Add additional social link entries underneath
 [social]
