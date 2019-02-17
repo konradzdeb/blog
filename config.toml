@@ -23,14 +23,14 @@ hasCJKLanguage = false
 	showLatestPosts = true
 
     # Show nice icons
-    iconFont = "font-awesome"
+    iconFont = "mono-social"
 
     enableRSS = true
 	enableToc = true
 
 # Add additional social link entries underneath
 [social]
-	twitter = "https://www.twitter.com/konradzdeb"
-	github = "https://www.github.com/konradedgar"
-	linkedin = "https://uk.linkedin.com/in/konradz"
-	stack-overflow = "https://stackoverflow.com/users/1655567/konrad"
+	circletwitterbird = "https://www.twitter.com/konradzdeb"
+	circlegithubalt = "https://www.github.com/konradedgar"
+	circlelinkedin = "https://uk.linkedin.com/in/konradz"
+	circlestackoverflow = "https://stackoverflow.com/users/1655567/konrad"
