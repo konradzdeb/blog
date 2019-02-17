@@ -7,10 +7,6 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 # Asper the config (does not have Asian language)
 hasCJKLanguage = false
 
-
-[permalinks]
-post = "/:year/:month/:day/:slug/"
-
 [params]
     author = "Konrad Zdeb"
     description = "Personal blog on R, business intelligence, data science and statistics"
