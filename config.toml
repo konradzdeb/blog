@@ -33,3 +33,9 @@ post = "/:year/:month/:day/:slug/"
     Content = false  # takes true or false
     # if both are set to true, summary is shown.
     # FooterMsg = "Copyright Me 2016. Powered by Hugo."
+
+# Add additional social link entries underneath
+[social]
+	twitter-square = "https://www.twitter.com/konradzdeb"
+	github-square = "https://www.github.com/konradedgar"
+	linkedin-square = "https://uk.linkedin.com/in/konradz"
