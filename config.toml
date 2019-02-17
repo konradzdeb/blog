@@ -35,7 +35,7 @@ post = "/:year/:month/:day/:slug/"
 
 # Add additional social link entries underneath
 [social]
-	twitter-square = "https://www.twitter.com/konradzdeb"
-	github-square = "https://www.github.com/konradedgar"
-	linkedin-square = "https://uk.linkedin.com/in/konradz"
+	twitter = "https://www.twitter.com/konradzdeb"
+	github = "https://www.github.com/konradedgar"
+	linkedin = "https://uk.linkedin.com/in/konradz"
 	stack-overflow = "https://stackoverflow.com/users/1655567/konrad"
