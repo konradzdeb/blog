@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/brands.css" integrity="sha384-QT2Z8ljl3UupqMtQNmPyhSPO/d5qbrzWmFxJqmY7tqoTuT2YrQLEqzvVOP2cT5XW" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/fontawesome.css" integrity="sha384-u5J7JghGz0qUrmEsWzBQkfvc8nK3fUT7DCaQzNQ+q4oEXhGSx+P2OqjWsfIRB8QT" crossorigin="anonymous">
+<div class="header">
+  <h1 class="site-title"><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a></h1>
+  <p class="site-tagline">{{ .Site.Params.Subtitle }}</p>
+  <div class="nav">
+    <a class="nav-btn" href="#">
+      <span class="ci ci-burger"></span>
+    </a>
+    <ul class="nav-list">
+      {{ range .Site.Menus.main }}
+      <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+      {{end}}
+	  <li class="spacer">&ac;</li>
+	  {{ with .Site.Params.GithubID }}
+      <li><a href="https://github.com/{{.}}"><i class="fab fa-github"></i></a></li>{{ end }} {{ with .Site.Params.TwitterID }}
+      <li><a href="https://twitter.com/{{.}}"><i class="fab fa-twitter"></i></a></li>{{ end }} {{ with .Site.Params.LinkedInID }}
+      <li><a href="http://linkedin.com/in/{{.}}"><i class="fab fa-linkedin-in"></i></a></li>{{ end }} {{ with .Site.Params.StacksOverflowID }} <li><a href="https://stackoverflow.com/users/{{.}}"><i class="fab fa-stack-overflow"></i></a></li> {{ end }}
+    </ul>
+  </div>
+</div>
