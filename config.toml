@@ -10,8 +10,12 @@ hasCJKLanguage = false
 [params]
     author = "Konrad Zdeb"
     description = "Personal blog on R, business intelligence, data science and statistics"
-    Subtitle = "Fun with R and other languages"
     twitter = "konradzdeb"
+
+    enableRSS = true
+	enableToc = true
+
+	enableDisqus = false
 
     # Provide summary
     enableSummary = true
@@ -25,8 +29,6 @@ hasCJKLanguage = false
     # Show nice icons
     iconFont = "mono-social"
 
-    enableRSS = true
-	enableToc = true
 
 # Add additional social link entries underneath
 [social]
