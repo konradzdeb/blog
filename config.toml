@@ -13,9 +13,10 @@ hasCJKLanguage = false
     twitter = "konradzdeb"
 
     enableRSS = true
-	enableToc = true
+    enableToc = true
 
-	enableDisqus = false
+    enableDisqus = false
+    enableGoogleAnalytics = true
 
     # Provide summary
     enableSummary = true
@@ -24,7 +25,7 @@ hasCJKLanguage = false
     enableTwitterCard = true
 
     # show latest posts in single page
-	showLatestPosts = true
+    showLatestPosts = true
 
     # Show nice icons
     iconFont = "mono-social"
