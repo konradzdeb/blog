@@ -2,8 +2,12 @@
 title: Interactivly Loading Shiny Modules
 date: '2018-11-24'
 slug: interactive-module
-categories: ['how-to', 'BI']
-tags: ['R', 'Shiny']
+categories: 
+    - how-to
+    - BI
+tags: 
+    - R
+    - Shiny
 ---
 
 # TL;DR
