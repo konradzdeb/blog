@@ -394,17 +394,10 @@ $(document).ready(function () {
 </div>
 <div id="hdp" class="section level3">
 <h3>HDP</h3>
-<p>The Horton Sandbox Deployment script has 228 lines. A substantial part of it is concerned with commentary. Before running the script it is prudenr to look at the content.</p>
-<pre><code>#!/usr/bin/env bash
-
-registry=&quot;hortonworks&quot;
-flavor=$(cat sandbox-flavor)
-if [ &quot;$flavor&quot; == &quot;hdf&quot; ]; then
- hdfEnabled=true
- hdpEnabled=false
-elif [ &quot;$flavor&quot; == &quot;hdp&quot; ]; then
- hdfEnabled=false
- hdpEnabled=true</code></pre>
+<!-- The Horton Sandbox Deployment script has 228 lines. A substantial part of it is concerned with commentary. Before running the script it is prudenr to look at the content. -->
+<!-- ```{r hds_scrip, engine='sh', echo=FALSE, eval=TRUE, comment=''} -->
+<!-- sed -n 1,10p ~/Documents/Developer/HortnoWorksSanbox/assets/generate-proxy-deploy-script.sh -->
+<!-- ``` -->
 </div>
 </div>
 </div>
