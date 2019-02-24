@@ -21,8 +21,9 @@ The post covers installation of Hortonworks Sandbox Deployment (HDP) on Mac usin
 
 Before installing docker let's check for the existing installation.
 
-```{r docker_check, engine='sh', echo=TRUE}
+```{r docker_check, echo=TRUE, eval=FALSE}
 which -a docker
+# /usr/local/bin/docker
 ```
 
 Assuming that the line above did not produce results we can install docker with use of homebrew. To install homebrew:
@@ -39,7 +40,7 @@ brew install docker
 
 ### HDP
 
-The HDP can be installed with provides scrip. 
+The HDP can be installed with provides scrip.
 
 
 
