@@ -39,11 +39,7 @@ brew install docker
 
 ### HDP
 
-<!-- The Horton Sandbox Deployment script has `r length( readLines('~/Documents/Developer/HortnoWorksSanbox/assets/generate-proxy-deploy-script.sh'))` lines. A substantial part of it is concerned with commentary. Before running the script it is prudenr to look at the content. -->
-
-<!-- ```{r hds_scrip, engine='sh', echo=FALSE, eval=TRUE, comment=''} -->
-<!-- sed -n 1,10p ~/Documents/Developer/HortnoWorksSanbox/assets/generate-proxy-deploy-script.sh -->
-<!-- ``` -->
+The HDP can be installed with provides scrip. 
 
 
 
