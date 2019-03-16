@@ -1,6 +1,6 @@
 ---
-title: Installing Hortonworks Sanbox Deployment (HDP) on Docker Mac
-author: Konrad
+title: 'Installing Hortonworks Sanbox Deployment (HDP) on Docker Mac'
+author: 'Konrad'
 date: '2019-02-23'
 slug: installing-hortonworks-sanbox-deployment-hdp-on-docker-mac
 categories:
@@ -40,7 +40,7 @@ brew install docker
 
 ### HDP
 
-The HDP can be installed with provides scrip.
+The HDP can be installed with the provided scrip. The script can be download from 
 
 
 
