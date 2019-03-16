@@ -1,4 +1,4 @@
-baseurl = "https://konradzdeb.netlify.com/"
+baseurl = "/"
 languageCode = "en-GB"
 title = "Random R stuff"
 theme = "hugo-theme-cactus-plus"
@@ -31,7 +31,7 @@ hasCJKLanguage = false
     iconFont = "mono-social"
 
     # Navigation links
-    archive = "post/"
+    archive = ""
 
 
 # Add additional social link entries underneath
