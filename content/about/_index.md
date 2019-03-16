@@ -1,7 +1,7 @@
 ---
-date = '2019-03-16'
-title = "About"
-hidden = false
+title: 'About'
+author: 'Konrad'
+date: '2019-03-16'
 ---
 
 TBC
