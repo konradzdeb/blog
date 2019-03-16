@@ -3,8 +3,7 @@ title: Managing rows in the ggplot legend
 author: Konrad
 date: '2015-03-28'
 slug: managing-rows-in-the-ggplot-legend
-categories:
-  - how-to
+categories: how-to
 tags:
   - R
   - ggplot
