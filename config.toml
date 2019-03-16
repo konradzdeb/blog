@@ -30,6 +30,9 @@ hasCJKLanguage = false
     # Show nice icons
     iconFont = "mono-social"
 
+    # Navigation links
+    archive = "post/"
+
 
 # Add additional social link entries underneath
 [social]
