@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "http://konradzdeb.netlify.com/"
 languageCode = "en-GB"
 title = "Random R stuff"
 theme = "hugo-theme-cactus-plus"
