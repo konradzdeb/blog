@@ -1,6 +1,6 @@
 baseurl = "/"
 languageCode = "en-GB"
-title = "Random R stuff"
+title = "Konrad Zdeb's Personal Blog"
 theme = "hugo-theme-cactus-plus"
 googleAnalytics = "UA-129716792-1"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
