@@ -37,6 +37,6 @@ hasCJKLanguage = false
 # Add additional social link entries underneath
 [social]
 	circletwitterbird = "https://www.twitter.com/konradzdeb"
-	circlegithubalt = "https://www.github.com/konradedgar"
+	circlegithubalt = "https://www.github.com/konradzdeb"
 	circlelinkedin = "https://uk.linkedin.com/in/konradz"
 	circlestackoverflow = "https://stackoverflow.com/users/1655567/konrad"
