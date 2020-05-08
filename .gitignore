@@ -1,5 +1,7 @@
-# Ignore public folder
-public
+# Ignore local website service
+rmarkdown-libs/
+*.html
+public/
 # Ignore RStudio producton files
 sessionInfoLog
 .Rhistory
