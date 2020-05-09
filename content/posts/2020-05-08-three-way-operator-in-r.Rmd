@@ -1,6 +1,6 @@
 ---
 title: Three-Way Operator in R
-author: Konrad Zdeb
+author: Konrad
 date: '2020-05-08'
 slug: three-way-operator-in-r
 categories:
