@@ -31,7 +31,7 @@ hasCJKLanguage = false
     iconFont = "mono-social"
 
     # Navigation links
-    archive = ""
+    archive = "/post/"
 
 
 # Add additional social link entries underneath
