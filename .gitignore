@@ -6,3 +6,5 @@ sessionInfoLog
 .Rhistory
 .Rproj.user/
 .Rproj.user
+# macOS files
+.DS_Store
