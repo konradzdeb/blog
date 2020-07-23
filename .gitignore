@@ -1,8 +1,12 @@
 # Ignore local website service
 rmarkdown-libs/
 public/
+
 # Ignore RStudio producton files
 sessionInfoLog
 .Rhistory
 .Rproj.user/
 .Rproj.user
+
+# Ignore macOS files
+.DS_Store
