@@ -1,0 +1,29 @@
+---
+title: Poor Man's Robust Shiny App Deployment
+author: Konrad Zdeb
+date: '2020-07-23'
+slug: poor-man-s-robust-shiny-app-deployment
+categories:
+  - how-to
+tags:
+  - R
+  - Shiny
+---
+
+# Not so uncommon problem...
+
+[RStudio Connect](https://rstudio.com/products/connect/) and more modest [Shiny Proxy](https://www.shinyproxy.io) come to mind as most obvious solutions for putting Shiny applications in production. Those are perfect solutions for deploying application that are going to be consumed on a regular basis by larger audiences. Managing dependencies and user access are common tasks we would expect for a publishing platform to address. Frequently, deployment of Shiny application is directed at smaller audiences and less frequent usage. Commonly,in business a modelling solution can be packaged in Shiny application facilitating periodical re-run of models with different parameters and updated data sets. Such solutions can be conveniently utilised to facilitated development of monthly or quarterly reports. If the app is used once per month/quarter by a narrow user group the need to deploy it on the server is not well articulated. In that particular case we are mostly interested in ensuring that we can:
+
+- Protect dependencies of our Shiny application
+- Ensure that the relevant documentation is easily accessible
+- Embed testing mechanism so we can be confident that we can safely re-run our model on a new data or with changed parameters
+
+It is worth remaking that likely we can live without some of the things that proper deployment solutions offer. If the app is being utilised on an infrequent basis, very likely, we can accommodate a little bit of occasional effort in putting the application for production. In majority of cases, additional 5 - 15 minutes of work will seldom cause a significant impediment in case of a analytical product that is used on monthly or quarterly basis. Within a small user group it is also likely that we don't have a strong need to manage complex user access and permissions. In effect, we are mostly interested in packaging our modelling and reporting solution for future, infrequent, usage.
+
+# What R community has to offer
+
+If we remove the *Shiny application* words from the opening paragraph, majority of criteria and our *key deliverables* correspond to what we would usually expect to find in an R package. R packages have a robust way of storing documentation, facilitate comprehensive unit testing and dependency management. On the basic level the dependency management is well addressed by the `DESCRIPTION` file that constitutes an integral part of each R package.
+
+> The job of the DESCRIPTION file is to store important metadata about your package. When you first start writing packages, you’ll mostly use these metadata to record what packages are needed to run your package. However, as time goes by and you start sharing your package with others, the metadata file becomes increasingly important because it specifies who can use it (the license) and whom to contact (you!) if there are any problems.
+
+`r tufte::quote_footer('--- Hadley Wickham')`
