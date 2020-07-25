@@ -27,3 +27,9 @@ If we remove the *Shiny application* words from the opening paragraph, majority 
 > The job of the DESCRIPTION file is to store important metadata about your package. When you first start writing packages, you’ll mostly use these metadata to record what packages are needed to run your package. However, as time goes by and you start sharing your package with others, the metadata file becomes increasingly important because it specifies who can use it (the license) and whom to contact (you!) if there are any problems.
 
 `r tufte::quote_footer('--- Hadley Wickham')`
+
+R ecosystem offers more sophisticated alternatives to managing dependencies that may be more suitable for corporate environment^[Useful list is mentioned in [this discusion](https://stackoverflow.com/q/43018752/1655567) at Stack Overflow.] As we are looking at a solution that would be usable from a perspective of an advanced analyst it is safe to make an assumption that wise use of `DESCRIPTION` file will suffice. Same goes for testing and documentation development/storage. R package architecture facilitates storing and sharing of documentations. Whereas tools, like [`roxygen2`](https://roxygen2.r-lib.org) facilitate seamless documentation development. R community offers a number of approaches to unit testing with  [`testthat`](https://testthat.r-lib.org) package being one of the most popular ones. 
+
+## What about Shiny?
+
+The tools briefly describe above will be familiar to anyone who had some exposure to developing R packages. The key question, which still remains unanswered, pertains to any potential way we could leverage this architecture in order to facilitate deployment and sharing of an R package. 
