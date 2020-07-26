@@ -7,6 +7,7 @@ sessionInfoLog
 .Rhistory
 .Rproj.user/
 .Rproj.user
+.RData
 
 # Ignore macOS files
 .DS_Store
