@@ -32,4 +32,10 @@ R ecosystem offers more sophisticated alternatives to managing dependencies that
 
 ## What about Shiny?
 
-The tools briefly describe above will be familiar to anyone who had some exposure to developing R packages. The key question, which still remains unanswered, pertains to any potential way we could leverage this architecture in order to facilitate deployment and sharing of an R package. 
+The tools briefly describe above will be familiar to anyone who had some exposure to developing R packages. The key question, which still remains unanswered, pertains to any potential way we could leverage this architecture in order to facilitate deployment and sharing of an R package. Fortunately, R community offers an excellent solution facilitating distribution of Shiny applications using R package architecture. Developed by [ThinkR](https://thinkr.fr/) R package [`golem`](https://github.com/ThinkR-open/golem) facilitates development of R packages that focus on embedding Shiny applications.
+
+# Underbelly... 
+
+Authors of [`golem`](https://github.com/ThinkR-open/golem)  did an excellent job in creating robust in package documentation and providing vignettes on development, deployment and configuration as well as a comprehensive book^[Fay, C, Rochette, S, Guyader, V, Girard C 2020, *Engineering Production-Grade Shiny Apps* [https://engineering-shiny.org/](https://engineering-shiny.org/index.html)]. In order to understand how [`golem`](https://github.com/ThinkR-open/golem) works it's necessary to recognise that Shiny Application is in effect a collection of ordinary R functions, some of which will be concerned with translating R code into user interface. An excellent outline of the Shiny Application structure is presented in [*Mastering Shiny*](https://mastering-shiny.org) book by Hadley Wickham.
+
+
