@@ -389,6 +389,27 @@ summary {
 <footer>
 — Hadley Wickham
 </footer>
+<p>R ecosystem offers more sophisticated alternatives to managing dependencies that may be more suitable for corporate environment<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> As we are looking at a solution that would be usable from a perspective of an advanced analyst it is safe to make an assumption that wise use of <code>DESCRIPTION</code> file will suffice. Same goes for testing and documentation development/storage. R package architecture facilitates storing and sharing of documentations. Whereas tools, like <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> facilitate seamless documentation development. R community offers a number of approaches to unit testing with <a href="https://testthat.r-lib.org"><code>testthat</code></a> package being one of the most popular ones.</p>
+<div id="what-about-shiny" class="section level2">
+<h2>What about Shiny?</h2>
+<p>The tools briefly describe above will be familiar to anyone who had some exposure to developing R packages. The key question, which still remains unanswered, pertains to any potential way we could leverage this architecture in order to facilitate deployment and sharing of an R package. Fortunately, R community offers an excellent solution facilitating distribution of Shiny applications using R package architecture. Developed by <a href="https://thinkr.fr/">ThinkR</a> R package <a href="https://github.com/ThinkR-open/golem"><code>golem</code></a> facilitates development of R packages that focus on embedding Shiny applications.</p>
+</div>
+</div>
+<div id="underbelly" class="section level1">
+<h1>Underbelly…</h1>
+<p>Authors of <a href="https://github.com/ThinkR-open/golem"><code>golem</code></a> did an excellent job in creating robust in package documentation and providing vignettes on development, deployment and configuration as well as a comprehensive book<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. In order to understand how <a href="https://github.com/ThinkR-open/golem"><code>golem</code></a> works it’s necessary to recognise that Shiny Application is in effect a collection of ordinary R functions, some of which will be concerned with translating R code into user interface. An excellent outline of the Shiny Application structure is provided in <a href="https://mastering-shiny.org"><em>Mastering Shiny</em></a> book by Hadley Wickham.</p>
+<div id="development-strategy" class="section level2">
+<h2>Development strategy</h2>
+<p>The article makes an assumption that our Shiny Application is to serve as a wrapper for an existing modelling or analytical solution. In that case we would consider that we are working with a set of scripts akin to Drake pipeline<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> In practice, this would imply that we have a set of functions that we are ready to package into a production ready solution.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Useful list is mentioned in <a href="https://stackoverflow.com/q/43018752/1655567">this discusion</a> at Stack Overflow.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Fay, C, Rochette, S, Guyader, V, Girard C 2020, <em>Engineering Production-Grade Shiny Apps</em> <a href="https://engineering-shiny.org/index.html">https://engineering-shiny.org/</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>Drake is a R packge facilitating development of reproducible research projects, more information can be found on the official <a href="https://github.com/ropensci/drake">GitHub page</a>.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 
 
