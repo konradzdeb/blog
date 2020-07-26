@@ -1,7 +1,7 @@
 ---
-title: Poor Man's Robust Shiny App Deployment
-author: Konrad Zdeb
-date: '2020-07-23'
+title: "Poor Man's Robust Shiny App Deployment"
+author: "Konrad"
+date: "2020-07-23"
 slug: poor-man-s-robust-shiny-app-deployment
 categories:
   - how-to
