@@ -28,7 +28,7 @@ hasCJKLanguage = false
     showLatestPosts = true
 
     # Show nice icons
-    iconFont = "mono-social"
+    iconFont = "font-awesome"
 
     # Navigation links
     archive = ""
@@ -36,7 +36,8 @@ hasCJKLanguage = false
 
 # Add additional social link entries underneath
 [social]
-	circletwitterbird = "https://www.twitter.com/konradzdeb"
-	circlegithubalt = "https://www.github.com/konradzdeb"
-	circlelinkedin = "https://uk.linkedin.com/in/konradzdeb"
-	circlestackoverflow = "https://stackoverflow.com/users/1655567/konrad"
+	twitter = "https://www.twitter.com/konradzdeb"
+	github = "https://www.github.com/konradzdeb"
+	linkedin-in = "https://uk.linkedin.com/in/konradzdeb"
+	stack-overflow = "https://stackoverflow.com/users/1655567/konrad"
+	keybase = "https://keybase.io/konradedgar"
