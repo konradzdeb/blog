@@ -12,8 +12,14 @@ tags:
 ---
 
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="/rmarkdown-libs/pymjs/pym.v1.js"></script>
-<script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
+<script src="/rmarkdown-libs/d3/d3.min.js"></script>
+<script src="/rmarkdown-libs/dagre/dagre-d3.min.js"></script>
+<link href="/rmarkdown-libs/mermaid/dist/mermaid.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/mermaid/dist/mermaid.slim.min.js"></script>
+<link href="/rmarkdown-libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/chromatography/chromatography.js"></script>
+<script src="/rmarkdown-libs/DiagrammeR-binding/DiagrammeR.js"></script>
+<script src="/rmarkdown-libs/pymjs/pym.v1.min.js"></script>
 
 
 <div id="not-so-uncommon-problem" class="section level1">
@@ -47,8 +53,11 @@ tags:
 <div id="development-strategy" class="section level2">
 <h2>Development strategy</h2>
 <p>The article makes an assumption that our Shiny Application is to serve as a wrapper for an existing modelling or analytical solution. In that case we would consider that we are working with a set of scripts akin to Drake pipeline<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> In practice, this would imply that we have a set of functions that we are ready to package into a production ready solution. Usually we would have a set of functions that we may use to query corporate databases via <a href="https://github.com/r-dbi/DBI"><code>DBI</code></a> or similar solution, some pre-processing and modelling work and artefact generating functions, such as wrapper for <a href="https://ggplot2.tidyverse.org"><code>ggplot2</code></a> graphics and tables. Our final product usually would be in a form of a report and/or presentation. In practice, our quarterly report updating cycle likely will look to the one illustrated below.</p>
-<div id="htmlwidget-1" style="width:100%;height:480px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/posts/2020-07-23-poor-man-s-robust-shiny-app-deployment_files/figure-html//widgets/widget_report_update_flow.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="DiagrammeR html-widget"></div>
+<script>HTMLWidgets.pymChild = new pym.Child();HTMLWidgets.addPostRenderHandler(function(){
+                                setTimeout(function(){HTMLWidgets.pymChild.sendHeight();},100);
+                            });</script>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"\ngraph LR;\nA(Request for new Report Materialises) --> B[Updated Data is Sourced]\nB --> C[Modelling Solutions Re-Run]\nD[Request for New Scenarios Parameters] --> C\nA --> D\nE[Re-Running Past Scenarios on New Data] --> C\nC --> F[Visualisation, Preliminary Analysis]\nF --> A\nF --> G[Report Production]\nstyle A fill:#E5E25F\nstyle D fill:#E5E25F\nstyle E fill:#E5E25F\n"},"evals":[],"jsHooks":[]}</script>
 <p>In practical terms, yellow boxes usually imply communication with consumers of the report and seeking clarification on usefulness of the provided analysis. It may be that availability of new data induced us to ask questions that weren’t previously observable. For sake of efficiency, we would strive to automate of the remaining processes as much as possible. If we were sufficiently foreseeing we have embedded most of our modelling and reporting work in manageable functions. Embedding Shiny application on that layer gives us another possibility of further automating the process of report delivery and re-running analysis.</p>
 </div>
 </div>
