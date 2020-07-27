@@ -57,7 +57,7 @@ F --> G[Report Production]
 style A fill:#E5E25F
 style D fill:#E5E25F
 style E fill:#E5E25F
-", height = 400, width = 1000)
+")
 ```
 
 In practical terms, yellow boxes usually imply communication with consumers of the report and seeking clarification on usefulness of the provided analysis. It may be that availability of new data induced us to ask questions that weren't previously observable. For sake of efficiency, we would strive to automate of the remaining processes as much as possible. If we were sufficiently foreseeing we have embedded most of our modelling and reporting work in manageable functions. Embedding Shiny application on that layer gives us another possibility of further automating the process of report delivery and re-running analysis. 
