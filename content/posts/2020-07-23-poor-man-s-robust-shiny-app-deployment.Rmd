@@ -12,7 +12,7 @@ tags:
 
 # Not so uncommon problem...
 
-[RStudio Connect](https://rstudio.com/products/connect/) and more modest [Shiny Proxy](https://www.shinyproxy.io) come to mind as most obvious solutions for putting Shiny applications in production. Those are perfect solutions for deploying application that are going to be consumed on a regular basis by larger audiences. Managing dependencies and user access are common tasks we would expect for a publishing platform to address. Frequently, deployment of Shiny application is directed at smaller audiences and less frequent usage. Commonly,in business a modelling solution can be packaged in Shiny application facilitating periodical re-run of models with different parameters and updated data sets. Such solutions can be conveniently utilised to facilitated development of monthly or quarterly reports. If the app is used once per month/quarter by a narrow user group the need to deploy it on the server is not well articulated. In that particular case we are mostly interested in ensuring that we can:
+[RStudio Connect](https://rstudio.com/products/connect/) and more modest [Shiny Proxy](https://www.shinyproxy.io) come to mind as most obvious solutions for deploying Shiny applications in production. Application servers are ideal for deploying applications that are to be consumed on a regular basis by larger audiences. In addition to serving the application, managing dependencies and user access or logging user activity are common tasks we would expect for a publishing platform to address. Frequently, however, deployment of Shiny application is directed at smaller audiences and less frequent usage. In such a situation, are availability, accessibility and user access management requirements will be often more modest. Commonly,in business a modelling solution can be packaged in Shiny application facilitating periodical re-run of models with different parameters and updated data sets. Such solutions can be conveniently utilised to facilitated development of monthly or quarterly reports. If the app is used once per month/quarter by a narrow user group the need to deploy it on the server is not well articulated. In that particular case we are mostly interested in ensuring that we can:
 
 - Protect dependencies of our Shiny application
 - Ensure that the relevant documentation is easily accessible
@@ -42,6 +42,8 @@ Authors of [`golem`](https://github.com/ThinkR-open/golem)  did an excellent job
 
 The article makes an assumption that our Shiny Application is to serve as a wrapper for an existing modelling or analytical solution. In that case we would consider that we are working with a set of scripts akin to Drake pipeline^[Drake is a R package facilitating development of reproducible research projects, more information can be found on the official [GitHub page](https://github.com/ropensci/drake).] In practice, this would imply that we have a set of functions that we are ready to package into a production ready solution. Usually we would have a set of functions that we may use to query corporate databases via [`DBI`](https://github.com/r-dbi/DBI) or similar solution, some pre-processing and modelling work and artefact generating functions, such as wrapper for [`ggplot2`](https://ggplot2.tidyverse.org) graphics and tables. Our final product usually would be in a form of a report and/or presentation. In practice, our quarterly report updating cycle likely will look to the one illustrated below.
 
-```{r }
+```{r report_update_flow}
 
 ```
+
+
