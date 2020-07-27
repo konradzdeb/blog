@@ -44,7 +44,7 @@ Authors of [`golem`](https://github.com/ThinkR-open/golem)  did an excellent job
 The article makes an assumption that our Shiny Application is to serve as a wrapper for an existing modelling or analytical solution. In that case we would consider that we are working with a set of scripts akin to Drake pipeline^[Drake is a R package facilitating development of reproducible research projects, more information can be found on the official [GitHub page](https://github.com/ropensci/drake).] In practice, this would imply that we have a set of functions that we are ready to package into a production ready solution. Usually we would have a set of functions that we may use to query corporate databases via [`DBI`](https://github.com/r-dbi/DBI) or similar solution, some pre-processing and modelling work and artefact generating functions, such as wrapper for [`ggplot2`](https://ggplot2.tidyverse.org) graphics and tables. Our final product usually would be in a form of a report and/or presentation. In practice, our quarterly report updating cycle likely will look to the one illustrated below.
 
 ```{r report_update_flow, echo=FALSE}
-widgetframe::frameableWidget(DiagrammeR::mermaid("
+widgetframe::frameWidget(DiagrammeR::mermaid("
 graph LR;
 A(Request for new Report Materialises) --> B[Updated Data is Sourced]
 B --> C[Modelling Solutions Re-Run]
