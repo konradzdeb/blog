@@ -45,8 +45,8 @@ tags:
 <h2>Development strategy</h2>
 <p>The article makes an assumption that our Shiny Application is to serve as a wrapper for an existing modelling or analytical solution. In that case we would consider that we are working with a set of scripts akin to Drake pipeline<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> In practice, this would imply that we have a set of functions that we are ready to package into a production ready solution. Usually we would have a set of functions that we may use to query corporate databases via <a href="https://github.com/r-dbi/DBI"><code>DBI</code></a> or similar solution, some pre-processing and modelling work and artefact generating functions, such as wrapper for <a href="https://ggplot2.tidyverse.org"><code>ggplot2</code></a> graphics and tables. Our final product usually would be in a form of a report and/or presentation. In practice, our quarterly report updating cycle likely will look to the one illustrated below.</p>
 <div class="figure">
-<img src="/post/2020-07-23-poor-man-s-robust-shiny-app-deployment_files/bi_analytical_flow.png" alt="" />
-<p class="caption">Analytical BI/Modelling flow</p>
+<img src="/post/2020-07-23-poor-man-s-robust-shiny-app-deployment_files/bi_analytical_flow.png" width="400" height="200" alt="" />
+<p class="caption">Analytical BI/Modelling Flow</p>
 </div>
 <p>In practical terms, yellow boxes usually imply communication with consumers of the report and seeking clarification on usefulness of the provided analysis. It may be that availability of new data induced us to ask questions that weren’t previously observable. For sake of efficiency, we would strive to automate of the remaining processes as much as possible. If we were sufficiently foreseeing we have embedded most of our modelling and reporting work in manageable functions. Embedding Shiny application on that layer gives us another possibility of further automating the process of report delivery and re-running analysis.</p>
 </div>
