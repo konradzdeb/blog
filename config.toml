@@ -31,7 +31,7 @@ hasCJKLanguage = false
     iconFont = "font-awesome"
 
     # Navigation links
-    archive = "sitemap.xml"
+    archive = "post"
 
 
 # Add additional social link entries underneath
