@@ -31,7 +31,7 @@ hasCJKLanguage = false
     iconFont = "font-awesome"
 
     # Navigation links
-    archive = ""
+    archive = "/"
 
 
 # Add additional social link entries underneath
