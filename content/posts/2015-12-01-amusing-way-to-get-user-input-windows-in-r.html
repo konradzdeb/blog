@@ -1,0 +1,36 @@
+---
+title: Amusing way to get user input windows in R
+author: Konrad
+date: '2015-12-01'
+slug: amusing-way-to-get-user-input-windows-in-r
+categories:
+  - how-to
+tags:
+  - R
+  - GUI
+---
+
+
+
+<p>In an unlikely scenario that beautiful <a href="http://shiny.rstudio.com/" target="_blank" rel="noopener">Shiny </a>apps do not meet your analytical requirements and developing a full-blown user interface. in <a href="http://www.ggobi.org/rgtk2/">RGtk2</a> may seem to be a little too much, there is a third, often overlooked solution, - package <a href="https://cran.r-project.org/web/packages/svDialogs/index.html">svDialogs</a> by Philippe Grosjean. The package in a convenient way enables user to create various interface gadgets. For example the code:</p>
+<pre class="r"><code>require(svDialogs)
+
+# Let&#39;s keep some data in one place
+user_figure &lt;- svDialogs::dlg_input()</code></pre>
+<p>would result in the following window being presented to the user:</p>
+<div class="figure">
+<img src="/post/2015-12-01-amusing-way-to-get-user-input-windows-in-r_files/untitled.png" alt="" />
+<p class="caption">Sample user input</p>
+</div>
+<p>In this case the code will return the following object:</p>
+<pre class="r"><code>str(user_figure)
+# Classes &#39;nativeGUI&#39;, &#39;textCLI&#39;, &#39;gui&#39;, &#39;environment&#39; &lt;environment: 0x11872b648&gt; 
+user_figure
+# The default SciViews GUI (.GUI)
+# using widgets from: nativeGUI, textCLI
+# * Last call: dlg_input(gui = .GUI)
+# * Last widgets used: nativeGUI
+# * Last status: ok
+# * Last result:
+# [1] &quot;100&quot;</code></pre>
+<p><em>The post was inspired by <a href="http://stackoverflow.com/a/33934374/1655567" target="_blank" rel="noopener">an amusing discussion</a> on SO.</em></p>
