@@ -32,6 +32,8 @@ hasCJKLanguage = false
 
     # Navigation links
     archive = ""
+    tags = ""
+    about = ""
 
 
 # Add additional social link entries underneath
