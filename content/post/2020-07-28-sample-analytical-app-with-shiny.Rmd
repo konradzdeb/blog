@@ -1,0 +1,16 @@
+---
+title: Sample Analytical App with Shiny
+author: Konrad Zdeb
+date: '2020-07-28'
+slug: sample-analytical-app-with-shiny
+categories:
+  - dev
+  - how-to
+tags:
+  - R
+  - Shiny
+  - package
+---
+
+# Introduction
+
