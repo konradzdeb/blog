@@ -1,0 +1,52 @@
+---
+title: Sample Analytical App with Shiny
+author: Konrad Zdeb
+date: '2020-07-28'
+slug: sample-analytical-app-with-shiny
+categories:
+  - dev
+  - how-to
+tags:
+  - R
+  - Shiny
+  - package
+  - production
+---
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This article draws on the past post concerned with utilisation of <a href="https://github.com/ThinkR-open/golem"><code>golem</code></a> for robust deployment of analytical and reporting solutions. For this article, we will assume that we are working with defined working requirements that utilise some of the Labour Market Statistics disseminated through the <a href="https://www.nomisweb.co.uk"><em>nomis</em></a> portal.</p>
+<div id="change-plan" class="section level2">
+<h2>Change Plan</h2>
+<p><strong>What we have</strong></p>
+<ul>
+<li>Reporting requirements</li>
+<li>Past scripts we used to create reports with accompanying instructions</li>
+</ul>
+<p><strong>What we want</strong></p>
+<ul>
+<li><p><em>Stronger business continuity</em> - we want to be able to give some access to this project and don’t be concerned with missing files, outdated unavailable documentation and questions on how to produce updated reports. We want self-encompassing entity that takes of care of its technical requirements and user-interaction<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p></li>
+<li><p><em>Better reproducibility</em> - Easier way to re-run reports on custom parameters</p></li>
+<li><p><em>Improved efficiency</em> - We want to have a possibility of quickly creaing updated and re-running past reports using the app.</p></li>
+<li><p><em>Better development:</em></p>
+<ul>
+<li>We want to ensure that any change requests to our reporting/analytical stack won’t break crucial functionalities.</li>
+<li>We want to modularise development so new corporate branding or visualisation requirements can be applied with no (or minimal) ingeration in analytical function</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="development" class="section level1">
+<h1>Development</h1>
+<div id="i.-assumptions" class="section level2">
+<h2>I. Assumptions</h2>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Good parallel can be drawn between this approach and manuals available with life-saving equipment. Equipment delivers technical capacity and manual ensures operational capacity. In case of an inexperienced user one is not useful without the other. We want to ensure that user with minimum required capacity can use the tools correctly.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
