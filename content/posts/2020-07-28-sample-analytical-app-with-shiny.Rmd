@@ -30,16 +30,17 @@ This article draws on the past post concerned with utilisation of [`golem`](http
  
  - *Better reproducibility* - Easier way to re-run reports on custom parameters
  
- - *Improved efficiency* - We want to have a possibility of quickly creaing updated and re-running past reports using the app.
+ - *Improved efficiency* - We want to have a possibility of quickly creating updated and re-running past reports using the app.
  
  - *Better development:*
    - We want to ensure that any change requests to our reporting/analytical stack won't break crucial functionalities.
-   - We want to modularise development so new corporate branding or visualisation requirements can be applied with no (or minimal) ingeration in analytical function
+   - We want to modularise development so new corporate branding or visualisation requirements can be applied with no (or minimal) integration in analytical function
    
 # Development
 
-## I. Assumptions
+## I. Framework
 
+Future robust development owes a lot to solid foundations. For the ease of :wq
 
 
 
