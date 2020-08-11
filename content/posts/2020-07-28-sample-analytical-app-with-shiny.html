@@ -40,9 +40,40 @@ tags:
 </div>
 <div id="development" class="section level1">
 <h1>Development</h1>
-<div id="i.-framework" class="section level2">
-<h2>I. Framework</h2>
-<p>Future robust development owes a lot to solid foundations. For the ease of :wq</p>
+<div id="framework" class="section level2">
+<h2>Framework</h2>
+<div id="package" class="section level3">
+<h3>Package</h3>
+<p>Future robust development owes a lot to solid foundations. As the aim is to capitalise on the robust R packge architecture, we will look to leverage available supporting packages. As a first step, we will construct a new Shiny/R package infrastructure using <code>golem</code>.</p>
+<pre class="r"><code>golem::create_golem(path = &quot;nomisReports&quot;)</code></pre>
+<p>Running package with default options gave us the following folder structure:</p>
+<pre><code>.
+├── DESCRIPTION
+├── NAMESPACE
+├── R
+│   ├── app_config.R
+│   ├── app_server.R
+│   ├── app_ui.R
+│   └── run_app.R
+├── dev
+│   ├── 01_start.R
+│   ├── 02_dev.R
+│   ├── 03_deploy.R
+│   └── run_dev.R
+├── inst
+│   ├── app
+│   │   └── www
+│   │       └── favicon.ico
+│   └── golem-config.yml
+├── man
+│   └── run_app.Rd
+└── nomisReports.Rproj</code></pre>
+<p>The structure corresponds to what we would expect to find in a traditional package development. Thee are number of files specific to golem, which are explained later.</p>
+</div>
+<div id="testing" class="section level3">
+<h3>Testing</h3>
+<p>Integrating unit testing is crucial for subsequent swift development.</p>
+</div>
 </div>
 </div>
 <div class="footnotes">

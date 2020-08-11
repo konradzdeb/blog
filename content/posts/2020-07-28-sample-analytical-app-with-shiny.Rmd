@@ -38,9 +38,25 @@ This article draws on the past post concerned with utilisation of [`golem`](http
    
 # Development
 
-## I. Framework
+## Framework
 
-Future robust development owes a lot to solid foundations. For the ease of :wq
+### Package
 
+Future robust development owes a lot to solid foundations. As the aim is to capitalise on the robust R packge architecture, we will look to leverage available supporting packages. As a first step, we will construct a new Shiny/R package infrastructure using `golem`.
 
+```{r new_package_structure, echo=TRUE, eval=FALSE}
+golem::create_golem(path = "nomisReports")
+```
 
+Running package with default options gave us the following folder structure:
+
+```{r folder_structure, eval=TRUE, echo=FALSE, comment=""}
+setwd("~/Dev/RProjects/nomisReports/")
+fs::dir_tree()
+```
+
+The structure corresponds to what we would expect to find in a traditional package development. Thee are number of files specific to golem, which are explained later.
+
+### Testing
+
+Integrating unit testing is crucial for subsequent swift development. 
