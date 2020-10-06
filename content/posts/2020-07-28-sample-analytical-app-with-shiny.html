@@ -38,13 +38,11 @@ tags:
 </ul>
 </div>
 </div>
-<div id="development" class="section level1">
-<h1>Development</h1>
-<div id="framework" class="section level2">
-<h2>Framework</h2>
-<div id="package" class="section level3">
-<h3>Package</h3>
-<p>Future robust development owes a lot to solid foundations. As the aim is to capitalise on the robust R packge architecture, we will look to leverage available supporting packages. As a first step, we will construct a new Shiny/R package infrastructure using <code>golem</code>.</p>
+<div id="framework" class="section level1">
+<h1>Framework</h1>
+<div id="package" class="section level2">
+<h2>Package</h2>
+<p>Future robust development owes a lot to solid foundations. As the aim is to capitalise on the robust R package architecture, we will look to leverage available supporting packages. As a first step, we will construct a new Shiny/R package infrastructure using <code>golem</code>.</p>
 <pre class="r"><code>golem::create_golem(path = &quot;nomisReports&quot;)</code></pre>
 <p>Running package with default options gave us the following folder structure:</p>
 <pre><code>.
@@ -67,13 +65,13 @@ tags:
 │   └── golem-config.yml
 ├── man
 │   └── run_app.Rd
-└── nomisReports.Rproj</code></pre>
+├── nomisReports.Rproj
+└── sessionInfoLog</code></pre>
 <p>The structure corresponds to what we would expect to find in a traditional package development. Thee are number of files specific to golem, which are explained later.</p>
 </div>
-<div id="testing" class="section level3">
-<h3>Testing</h3>
-<p>Integrating unit testing is crucial for subsequent swift development.</p>
-</div>
+<div id="using-usethis" class="section level2">
+<h2>Using <code>usethis</code></h2>
+<p>Pacakge structure is a scaffolding that can be used to develop package functionalities and integrate remaining, subsequent articles focus on leveraging robust and tested methods for assembling our package development scaffolding, such as <a href="https://usethis.r-lib.org"><code>usethis</code></a> package that offers a variety of commands facilitating adding package elements.</p>
 </div>
 </div>
 <div class="footnotes">

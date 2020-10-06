@@ -36,13 +36,11 @@ This article draws on the past post concerned with utilisation of [`golem`](http
    - We want to ensure that any change requests to our reporting/analytical stack won't break crucial functionalities.
    - We want to modularise development so new corporate branding or visualisation requirements can be applied with no (or minimal) integration in analytical function
    
-# Development
+# Framework
 
-## Framework
+## Package
 
-### Package
-
-Future robust development owes a lot to solid foundations. As the aim is to capitalise on the robust R packge architecture, we will look to leverage available supporting packages. As a first step, we will construct a new Shiny/R package infrastructure using `golem`.
+Future robust development owes a lot to solid foundations. As the aim is to capitalise on the robust R package architecture, we will look to leverage available supporting packages. As a first step, we will construct a new Shiny/R package infrastructure using `golem`.
 
 ```{r new_package_structure, echo=TRUE, eval=FALSE}
 golem::create_golem(path = "nomisReports")
@@ -57,6 +55,6 @@ fs::dir_tree()
 
 The structure corresponds to what we would expect to find in a traditional package development. Thee are number of files specific to golem, which are explained later.
 
-### Testing
+## Using `usethis`
 
-Integrating unit testing is crucial for subsequent swift development. 
+Pacakge structure is a scaffolding that can be used to develop package functionalities and integrate remaining, subsequent articles focus on leveraging robust and tested methods for assembling our package development scaffolding, such as [`usethis`](https://usethis.r-lib.org) package that offers a variety of commands facilitating adding package elements.
