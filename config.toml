@@ -3,7 +3,7 @@ languageCode = "en-GB"
 title = "Konrad Zdeb's Personal Blog"
 theme = "hugo-theme-cactus-plus"
 googleAnalytics = "UA-129716792-1"
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\\.md$"]
 # Asper the config (does not have Asian language)
 hasCJKLanguage = false
 
