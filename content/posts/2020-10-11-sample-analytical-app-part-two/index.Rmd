@@ -1,0 +1,23 @@
+---
+title: Poor Man's Robust Shiny App Deployment (Part Two)
+author: Konrad Zdeb
+date: '2020-10-11'
+slug: sample-analytical-app-part-two
+categories:
+  - BI
+  - how-to
+tags:
+  - Shiny
+  - production
+  - R
+---
+
+# Background
+
+In the [previous article](/posts/sample-analytical-app-with-shiny/), I've covered creating basic foundations for development of a rudimentary Shiny application that can be used to create a Business Intelligence solution facilitating robust and effortless generation of a complex report. The solution addresses frequent need to update internal analytical outputs on fairly infrequent basis that is consumed by a limited audience. Contrary to solutions that are consumed by larger audiences on a monthly basis the solution that is only required to be refreshes monthly or quarterly seldom merits a development of fully-blow web application with dedicated backend architecture.
+
+On the other hand, any business that values its time and resource will be keen to address those requirements in a robust and reproducible manner, minimising potential risk associated with poor or lost documentation, outdated and malfunctioning dependencies and associated knowledge transfer challenges. The R package architecture lends itself very well to minimising those risks. Previously described way to integrate unit testing as well as established and mature standards for embedding documentation and managing dependencies on other package are conductive to increasing project robustness and portability.
+
+# Example (contd.)
+
+The previous article introduced key basic elements in package development, such as incorporation of the `usethis` package to incorporate package elements in a robust and consistent manner. This articles continuous further from that development and looks into incorporating findings in an application that can be used to conveniently refresh analytical and reporting outputs based on the external data source.
