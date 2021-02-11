@@ -1,0 +1,8 @@
+theme: "hugo-PaperMod"
+baseURL: http://example.org/
+languageCode: en-gb
+title: YARN (Yet Another R Novella)
+params:
+    # defaultTheme: light
+    # defaultTheme: dark
+    defaultTheme: auto # to switch between dark or light according to browser theme
