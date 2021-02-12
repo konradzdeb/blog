@@ -6,3 +6,10 @@ params:
     # defaultTheme: light
     # defaultTheme: dark
     defaultTheme: auto # to switch between dark or light according to browser theme
+    ShowReadingTime: true
+    homeInfoParams:
+        Title: Hi there wave
+        Content: Can be Info, links, about...
+    socialIcons:
+        - name: github
+          url: "https://github.com/konradzdeb"
