@@ -1,4 +1,4 @@
-theme: "hugo-PaperMod"
+theme: hugo-PaperMod
 baseURL: http://example.org/
 languageCode: en-gb
 title: YARN (Yet Another R Novella)
@@ -8,8 +8,10 @@ params:
     defaultTheme: auto # to switch between dark or light according to browser theme
     ShowReadingTime: true
     homeInfoParams:
-        Title: Hi there wave
-        Content: Can be Info, links, about...
+        Title:  R in business
+        Content: Yet another blog on using R with focus on R in business.
     socialIcons:
         - name: github
           url: "https://github.com/konradzdeb"
+        - name: linkedin
+          url: "https://www.linkedin.com/in/konradzdeb/"
