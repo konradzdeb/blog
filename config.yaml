@@ -1,17 +1,26 @@
 theme: hugo-PaperMod
-baseURL: http://example.org/
+baseURL: https://konradzdeb.netlify.com/
 languageCode: en-gb
 title: YARN (Yet Another R Novella)
+menu:
+    main:
+        - identifier: categories
+          name: categories
+          url: /categories/
+          weight: 10
+        - identifier: tags
+          name: tags
+          url: /tags/
+          weight: 20
 params:
     # defaultTheme: light
     # defaultTheme: dark
     defaultTheme: auto # to switch between dark or light according to browser theme
     ShowReadingTime: true
+    ShowShareButtons: true  
     homeInfoParams:
         Title:  R in business
         Content: Yet another blog on using R with focus on R in business.
     socialIcons:
-        - name: github
-          url: "https://github.com/konradzdeb"
-        - name: linkedin
-          url: "https://www.linkedin.com/in/konradzdeb/"
+        - name: "LinkedIn"
+          url: "https://www.linkedin.com/in/konradzdeb"
