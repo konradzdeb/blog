@@ -12,6 +12,7 @@ menu:
           name: tags
           url: /tags/
           weight: 20
+
 params:
     # defaultTheme: light
     # defaultTheme: dark
@@ -24,3 +25,8 @@ params:
     socialIcons:
         - name: "LinkedIn"
           url: "https://www.linkedin.com/in/konradzdeb"
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
