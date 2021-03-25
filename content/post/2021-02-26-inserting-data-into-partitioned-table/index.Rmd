@@ -60,6 +60,18 @@ CREATE TABLE blog.sample_partitioned_table (
 The code snippet above achieves the following:
  
 - Table `sample_partitioned_table` is created within newly created database `blog`.
-- Three value columns are defined of `FLOAT`, `DOUBLE` and `CHAR(1)` types. Hive offers fairly rich set of data types and it's worth to study [the official documentation](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Types) in order to ensure that selection of types is optimal considering the data we want to feed into the table. 
+- Three value columns are defined of `FLOAT`, `DOUBLE` and `CHAR(1)` types. Hive offers fairly rich set of data types and it's worth to study [the official documentation](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Types) in order to ensure that selection of types is optimal considering the data we want to feed into the table. If we don't have this clarity the wise solution may be to use more common types likes `INT`.
+- The `blog.sample_partitioned_table` is stored as a text file with lines separated by tabs and rows separated with end line.
+- The table defines theree columns used to partition the data, `tinyint` type is suitable to hold values from -127 to 127 so it can be used to store day and month values, `smallint` type holds values from -32,768 to 32,768 so it's suitable for storing annual data.
+
+For more substantial tables with frequent usage further consideration should be given to the [Hive file formats](https://cwiki.apache.org/confluence/display/Hive/FileFormats) as well as wider storage strategy aspects. 
+
+## Inserting data from R
+
+Inserting data using packages like [`glue`](https://glue.tidyverse.org/) in R is trivial, and enables us to deliver highly readable code that will be easy to maintain.
+
+### Sample data
+
+In an actual production setting, we would expect that our run will generate a data consistent with the table structure that should be saved as one of partitions. A common scenario could reflect summary events data generated for specific day, in business that structure would be frequently used to develop views on periodical business activity. For the purpose of example, I'm generating some sample data in R.
 
 # References
