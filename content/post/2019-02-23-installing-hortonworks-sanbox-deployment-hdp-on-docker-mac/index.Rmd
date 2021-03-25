@@ -31,7 +31,7 @@ Assuming that the line above did not produce results we can install docker with 
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-we can the progress with installing docker
+We can the progress with installing docker
 
 ```{r docker_install, eval=FALSE, echo=TRUE}
 brew install docker

@@ -1,0 +1,74 @@
+---
+title: Inserting Data into Partitioned Table
+author: Konrad Zdeb
+date: '2021-02-26'
+slug: []
+categories:
+  - how-to
+  - example
+tags:
+  - R
+  - Spark
+references:
+- id: costa2019
+  title: Evaluating partitioning and bucketing strategies for Hive‐based Big Data Warehousing systems
+  author:
+  - family: Costa
+    given: Eduarda
+  - family: Costa
+    given: Carlos
+  - family: Santos
+    given: Maribel Yasmina
+  container-title: Journal of Big Data
+  volume: 6
+  URL: 'https://doi.org/10.1186/s40537-019-0196-1'
+  DOI: 10.1186/s40537-019-0196-1
+  issue: 34
+  publisher: Nature Publishing Group
+  page: 1-38
+  type: article-journal
+  issued:
+    year: 2019
+    month: 4
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<div id="rationale" class="section level1">
+<h1>Rationale</h1>
+<p>Maintaining partitioned Hive tables is a frequent practice in a business. Properly structured tables are conducive to achieving robust performance through speeding up query execution <span class="citation">(see <a href="#ref-costa2019" role="doc-biblioref">Costa, Costa, and Santos 2019</a>)</span>. Frequent use cases pertain to creating tables with hierarchical partition structure. In context of a data that is refreshed daily, the frequently utilised partition structure reflects years, months and dates.</p>
+<div id="creating-partitioned-table" class="section level2">
+<h2>Creating partitioned table</h2>
+<p>In HiveQL we would create the table with the following structure using the syntax below. In order to keep the development tidy, I’m creating a separate database on Hive which I will use for the purpose of creating tables for this article.</p>
+<pre class="sql"><code>-- Initially test database is created to keep the development tidy
+CREATE DATABASE blog COMMENT &#39;Blog article samples, can be deleted.&#39;;
+-- Example table is created
+CREATE TABLE blog.sample_partitioned_table (
+        value_column_a FLOAT    COMMENT &#39;Column will hold 4-byte number&#39;, 
+        value_column_b DOUBLE   COMMENT &#39;8-byte double precision&#39;, 
+        value_column_c CHAR(1)  COMMENT &#39;Fixed length varchar&#39;) 
+    COMMENT &#39;Sample partitioned table stored as text file&#39; 
+    PARTITIONED BY (
+        part_year SMALLINT  COMMENT &#39;Data load year, partition&#39;, 
+        part_month TINYINT  COMMENT &#39;Data load month, partition&#39;,
+        part_day TINYINT    COMMENT &#39;Data load day, partition&#39;)
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY &#39;\t&#39;
+    LINES TERMINATED BY &#39;\n&#39;
+    STORED AS TEXTFILE;</code></pre>
+<p>The code snippet above achieves the following:</p>
+<ul>
+<li>Table <code>sample_partitioned_table</code> is created within newly created database <code>blog</code>.</li>
+<li>Three value columns are defined of <code>FLOAT</code>, <code>DOUBLE</code> and <code>CHAR(1)</code> types. Hive offers fairly rich set of data types and it’s worth to study <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Types">the official documentation</a> in order to ensure that selection of types is optimal considering the data we want to feed into the table.</li>
+</ul>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-costa2019" class="csl-entry">
+Costa, Eduarda, Carlos Costa, and Maribel Yasmina Santos. 2019. <span>“Evaluating Partitioning and Bucketing Strategies for Hive‐based Big Data Warehousing Systems.”</span> <em>Journal of Big Data</em> 6 (34): 1–38. <a href="https://doi.org/10.1186/s40537-019-0196-1">https://doi.org/10.1186/s40537-019-0196-1</a>.
+</div>
+</div>
+</div>
