@@ -60,8 +60,46 @@ CREATE TABLE blog.sample_partitioned_table (
 <p>The code snippet above achieves the following:</p>
 <ul>
 <li>Table <code>sample_partitioned_table</code> is created within newly created database <code>blog</code>.</li>
-<li>Three value columns are defined of <code>FLOAT</code>, <code>DOUBLE</code> and <code>CHAR(1)</code> types. Hive offers fairly rich set of data types and it’s worth to study <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Types">the official documentation</a> in order to ensure that selection of types is optimal considering the data we want to feed into the table.</li>
+<li>Three value columns are defined of <code>FLOAT</code>, <code>DOUBLE</code> and <code>CHAR(1)</code> types. Hive offers fairly rich set of data types and it’s worth to study <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Types">the official documentation</a> in order to ensure that selection of types is optimal considering the data we want to feed into the table. If we don’t have this clarity the wise solution may be to use more common types likes <code>INT</code>.</li>
+<li>The <code>blog.sample_partitioned_table</code> is stored as a text file with lines separated by tabs and rows separated with end line.</li>
+<li>The table defines theree columns used to partition the data, <code>tinyint</code> type is suitable to hold values from -127 to 127 so it can be used to store day and month values, <code>smallint</code> type holds values from -32,768 to 32,768 so it’s suitable for storing annual data.</li>
 </ul>
+<p>For more substantial tables with frequent usage further consideration should be given to the <a href="https://cwiki.apache.org/confluence/display/Hive/FileFormats">Hive file formats</a> as well as wider storage strategy aspects.</p>
+</div>
+<div id="inserting-data-from-r" class="section level2">
+<h2>Inserting data from R</h2>
+<p>Inserting data using packages like <a href="https://glue.tidyverse.org/"><code>glue</code></a> in R is trivial, and enables us to deliver highly readable code that will be easy to maintain.</p>
+<div id="sample-data" class="section level3">
+<h3>Sample data</h3>
+<p>In an actual production setting, we would expect that our run will generate a data consistent with the table structure that should be saved as one of partitions. A common scenario could reflect summary events data generated for specific day, in business that structure would be frequently used to develop views on periodical business activity. For the purpose of example, I’m generating some sample data in R.</p>
+<pre class="r"><code>suppressPackageStartupMessages(library(tidyverse))
+# Generating two months of data
+dates &lt;- seq.Date(
+    from = as.Date(&quot;01-01-2010&quot;, format = &quot;%d-%m-%Y&quot;),
+    to = as.Date(&quot;28-02-2010&quot;, format = &quot;%d-%m-%Y&quot;),
+    by = &quot;day&quot;
+)
+# Each data will contain two rows of values corresponding to the column types
+# that were previously defined in Hive
+lst_sample_data &lt;- map(.x = dates, ~ tibble(val_a = runif(2),
+                                            val_b = runif(2),
+                                            val_c = sample(letters, 2)))</code></pre>
+<p>The created data looks as follows:</p>
+<pre class="r"><code>str(lst_sample_data[1:5], max.level = 1)</code></pre>
+<pre><code>## List of 5
+##  $ : tibble [2 × 3] (S3: tbl_df/tbl/data.frame)
+##  $ : tibble [2 × 3] (S3: tbl_df/tbl/data.frame)
+##  $ : tibble [2 × 3] (S3: tbl_df/tbl/data.frame)
+##  $ : tibble [2 × 3] (S3: tbl_df/tbl/data.frame)
+##  $ : tibble [2 × 3] (S3: tbl_df/tbl/data.frame)</code></pre>
+<p>with each table consisting of two values we want to insert and corresponding partition columns.</p>
+<pre class="r"><code>lst_sample_data[[1]]</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   val_a val_b val_c
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
+## 1 0.983 0.586 t    
+## 2 0.517 0.393 d</code></pre>
+</div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">

@@ -74,4 +74,35 @@ Inserting data using packages like [`glue`](https://glue.tidyverse.org/) in R is
 
 In an actual production setting, we would expect that our run will generate a data consistent with the table structure that should be saved as one of partitions. A common scenario could reflect summary events data generated for specific day, in business that structure would be frequently used to develop views on periodical business activity. For the purpose of example, I'm generating some sample data in R.
 
+```{r sample_data}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lubridate))
+# Generating two months of data
+dates <- seq.Date(
+    from = as.Date("01-01-2010", format = "%d-%m-%Y"),
+    to = as.Date("28-02-2010", format = "%d-%m-%Y"),
+    by = "day"
+)
+# Each data will contain two rows of values corresponding to the column types
+# that were previously defined in Hive
+lst_sample_data <- map(.x = dates, ~ tibble(val_a = runif(2),
+                                            val_b = runif(2),
+                                            val_c = sample(letters, 2),
+                                            update_year = year(.x),
+                                            update_month = month(.x),
+                                            update_day = day(.x)))
+```
+
+The created data looks as follows:
+```{r list_preview}
+str(lst_sample_data[1:5], max.level = 1)
+```
+
+with each table consisting of two values we want to insert and corresponding partition columns.
+
+```{r single_table_preview}
+lst_sample_data[[1]]
+```
+
+
 # References
