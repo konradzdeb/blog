@@ -1,0 +1,162 @@
+---
+title: Inserting Data into Partitioned Table
+author: Konrad Zdeb
+date: '2021-02-26'
+slug: []
+categories:
+  - how-to
+  - example
+tags:
+  - R
+  - Spark
+references:
+- id: costa2019
+  title: Evaluating partitioning and bucketing strategies for Hive‐based Big Data Warehousing systems
+  author:
+  - family: Costa
+    given: Eduarda
+  - family: Costa
+    given: Carlos
+  - family: Santos
+    given: Maribel Yasmina
+  container-title: Journal of Big Data
+  volume: 6
+  URL: 'https://doi.org/10.1186/s40537-019-0196-1'
+  DOI: 10.1186/s40537-019-0196-1
+  issue: 34
+  publisher: Nature Publishing Group
+  page: 1-38
+  type: article-journal
+  issued:
+    year: 2019
+    month: 4
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<div id="rationale" class="section level1">
+<h1>Rationale</h1>
+<p>Maintaining partitioned Hive tables is a frequent practice in a business. Properly structured tables are conducive to achieving robust performance through speeding up query execution <span class="citation">(see <a href="#ref-costa2019" role="doc-biblioref">Costa, Costa, and Santos 2019</a>)</span>. Frequent use cases pertain to creating tables with hierarchical partition structure. In context of a data that is refreshed daily, the frequently utilised partition structure reflects years, months and dates.</p>
+<div id="creating-partitioned-table" class="section level2">
+<h2>Creating partitioned table</h2>
+<p>In HiveQL we would create the table with the following structure using the syntax below. In order to keep the development tidy, I’m creating a separate database on Hive which I will use for the purpose of creating tables for this article.</p>
+<pre class="sql"><code>-- Initially test database is created to keep the development tidy
+CREATE DATABASE blog COMMENT &#39;Blog article samples, can be deleted.&#39;;
+-- Example table is created
+CREATE TABLE blog.sample_partitioned_table (
+        value_column_a FLOAT    COMMENT &#39;Column will hold 4-byte number&#39;, 
+        value_column_b DOUBLE   COMMENT &#39;8-byte double precision&#39;, 
+        value_column_c CHAR(1)  COMMENT &#39;Fixed length varchar&#39;) 
+    COMMENT &#39;Sample partitioned table stored as text file&#39; 
+    PARTITIONED BY (
+        part_year SMALLINT  COMMENT &#39;Data load year, partition&#39;, 
+        part_month TINYINT  COMMENT &#39;Data load month, partition&#39;,
+        part_day TINYINT    COMMENT &#39;Data load day, partition&#39;)
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY &#39;\t&#39;
+    LINES TERMINATED BY &#39;\n&#39;
+    STORED AS TEXTFILE;</code></pre>
+<p>The code snippet above achieves the following:</p>
+<ul>
+<li>Table <code>sample_partitioned_table</code> is created within newly created database <code>blog</code>.</li>
+<li>Three value columns are defined of <code>FLOAT</code>, <code>DOUBLE</code> and <code>CHAR(1)</code> types. Hive offers fairly rich set of data types and it’s worth to study <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Types">the official documentation</a> in order to ensure that selection of types is optimal considering the data we want to feed into the table. If we don’t have this clarity the wise solution may be to use more common types likes <code>INT</code>.</li>
+<li>The <code>blog.sample_partitioned_table</code> is stored as a text file with lines separated by tabs and rows separated with end line.</li>
+<li>The table defines theree columns used to partition the data, <code>tinyint</code> type is suitable to hold values from -127 to 127 so it can be used to store day and month values, <code>smallint</code> type holds values from -32,768 to 32,768 so it’s suitable for storing annual data.</li>
+</ul>
+<p>For more substantial tables with frequent usage further consideration should be given to the <a href="https://cwiki.apache.org/confluence/display/Hive/FileFormats">Hive file formats</a> as well as wider storage strategy aspects.</p>
+</div>
+<div id="inserting-data-from-r" class="section level2">
+<h2>Inserting data from R</h2>
+<p>Inserting data using packages like <a href="https://glue.tidyverse.org/"><code>glue</code></a> in R is trivial, and enables us to deliver highly readable code that will be easy to maintain.</p>
+<div id="sample-data" class="section level3">
+<h3>Sample data</h3>
+<p>In an actual production setting, we would expect that our run will generate a data consistent with the table structure that should be saved as one of partitions. A common scenario could reflect summary events data generated for specific day, in business that structure would be frequently used to develop views on periodical business activity. For the purpose of example, I’m generating some sample data in R.</p>
+<pre class="r"><code>suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lubridate))
+# Generating two months of data
+dates &lt;- seq.Date(
+    from = as.Date(&quot;01-01-2010&quot;, format = &quot;%d-%m-%Y&quot;),
+    to = as.Date(&quot;28-02-2010&quot;, format = &quot;%d-%m-%Y&quot;),
+    by = &quot;day&quot;
+)
+# Each data will contain two rows of values corresponding to the column types
+# that were previously defined in Hive
+sample_data &lt;- map_dfr(.x = dates, ~ tibble(val_a = runif(2),
+                                            val_b = runif(2),
+                                            val_c = sample(letters, 2),
+                                            update_year = year(.x),
+                                            update_month = month(.x),
+                                            update_day = day(.x)))</code></pre>
+<p>The created data looks as follows:</p>
+<pre class="r"><code>head(sample_data)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   val_a  val_b val_c update_year update_month update_day
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
+## 1 0.337 0.671  g            2010            1          1
+## 2 0.234 0.864  m            2010            1          1
+## 3 0.456 0.975  j            2010            1          2
+## 4 0.489 0.0317 m            2010            1          2
+## 5 0.530 0.896  u            2010            1          3
+## 6 0.535 0.149  n            2010            1          3</code></pre>
+<p>Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the <a href="https://spark.rstudio.com"><code>sparklyr</code></a> psvksge I’m creating a local connection.</p>
+<pre class="r"><code>suppressPackageStartupMessages(library(sparklyr))
+sc &lt;- spark_connect(master = &quot;local&quot;)</code></pre>
+<p>For the purpose of the article I’ve also executed the provided-above HiveQL via Spark to ensure accessibility to data structures that would be structurally equivalent, ensuring smooth execution of the example code. Naturally, in a production setting, we would seldom look to create new Hive schema from an R script layer. Similarly, core tables storing results would be usually established outside regular production processes.</p>
+<pre class="r"><code>res_DBI_data &lt;- DBI::dbSendQuery(sc, &quot;CREATE DATABASE blog COMMENT &#39;Blog article samples,                                           can be deleted.&#39;&quot;)
+res_DBI_tble &lt;- DBI::dbSendQuery(sc, &quot;CREATE TABLE blog.sample_partitioned_table (
+        value_column_a FLOAT    COMMENT &#39;Column will hold 4-byte number&#39;, 
+        value_column_b DOUBLE   COMMENT &#39;8-byte double precision&#39;, 
+        value_column_c CHAR(1)  COMMENT &#39;Fixed length varchar&#39;) 
+    COMMENT &#39;Sample partitioned table stored as text file&#39; 
+    PARTITIONED BY (
+        part_year SMALLINT  COMMENT &#39;Data load year, partition&#39;, 
+        part_month TINYINT  COMMENT &#39;Data load month, partition&#39;,
+        part_day TINYINT    COMMENT &#39;Data load day, partition&#39;)
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY &#39;\t&#39;
+    LINES TERMINATED BY &#39;\n&#39;
+    STORED AS TEXTFILE&quot;)</code></pre>
+</div>
+<div id="insert-mechanism" class="section level3">
+<h3>Insert mechanism</h3>
+<p>Where the DBI package comes extremely handy is in inserting data into partitions. In context of our sample data we will want to populate every single partition with the respective modelling results. Courtesy of <code>map_dfc</code> function the “results” are available in one table but the proposed method can be easily modified and applied across other object structures, like lists.</p>
+<p>As a first step we will be looking to copy the existing sample data into Spark.</p>
+<pre class="r"><code>tbl_sprk &lt;- copy_to(sc, sample_data, &quot;spark_sample_data&quot;)</code></pre>
+<p>In Spark our RDD is visible as <code>spark_sample_data</code> we will be looking to use that table in order to insert our partition elements into permanent storage.</p>
+<pre class="r"><code>suppressPackageStartupMessages(library(DBI))
+suppressPackageStartupMessages(library(glue))
+res_pmap &lt;- pmap(
+    .l = select(sample_data, update_year, update_month, update_day),
+    .f = ~ DBI::dbSendQuery(sc, glue(&quot;INSERT INTO TABLE blog.sample_partitioned_table
+                                     PARTITION (part_year={..1},
+                                                part_month={..2},
+                                                part_day={..3})
+                                     SELECT val_a, val_b, val_c FROM spark_sample_data
+                                     WHERE update_year={..1} AND
+                                        update_month={..2} AND
+                                        update_day={..3}
+                                     &quot;)))</code></pre>
+<p>Let’s unpack the code below. Our key goals are:
+* Our aim is to populate <em>partitions</em> in our permanent Hive table <code>blog.sample_partitioned_table</code>, hence the statement <code>INSERT INTO TABLE blog.sample_partitioned_table</code>
+* We are working with some modelling/analytical data that currently sits in our Spark session as <code>spark_sample_data</code> and we want for the relevant results in the data to land in the prescribed partitions on Spark</p>
+<p>What happens in the process is as follows:
+1. We are generating a list of vectors with partitions identifiers to iterate over. As I’ve created this sample data in the current session in memory I can just refer to those items using <code>select</code> I would do that in the following manner <code>select(sample_data, update_year, update_month, update_day)</code>
+2. I’m interested in iterating over each column simultaneously and <code>pmap</code> function is excellent for that. Using <code>~</code> notation offered in <code>pmap</code> I will be looking to refer to first object as <code>..1</code> to the second as <code>..2</code> and so on.
+3. Glue package is used to insert strings with partitions identifier into the respective partition names.
+4. SELECT runs on <em>spark RDD</em> and also uses partition identifiers to get only subset of the data we are interested in and insert that subset into the desired partition.</p>
+</div>
+<div id="preview" class="section level3">
+<h3>Preview</h3>
+<p>Following the operation above we can</p>
+</div>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-costa2019" class="csl-entry">
+Costa, Eduarda, Carlos Costa, and Maribel Yasmina Santos. 2019. <span>“Evaluating Partitioning and Bucketing Strategies for Hive‐based Big Data Warehousing Systems.”</span> <em>Journal of Big Data</em> 6 (34): 1–38. <a href="https://doi.org/10.1186/s40537-019-0196-1">https://doi.org/10.1186/s40537-019-0196-1</a>.
+</div>
+</div>
+</div>
