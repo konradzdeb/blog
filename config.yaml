@@ -1,4 +1,4 @@
-theme: hugo-PaperMod
+theme: "hugo-PaperMod"
 baseURL: https://konradzdeb.netlify.com/
 languageCode: en-gb
 title: R in Business
