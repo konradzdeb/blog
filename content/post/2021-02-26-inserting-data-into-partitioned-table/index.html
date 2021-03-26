@@ -91,18 +91,22 @@ sample_data &lt;- map_dfr(.x = dates, ~ tibble(val_a = runif(2),
 <p>The created data looks as follows:</p>
 <pre class="r"><code>head(sample_data)</code></pre>
 <pre><code>## # A tibble: 6 x 6
-##   val_a  val_b val_c update_year update_month update_day
-##   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
-## 1 0.337 0.671  g            2010            1          1
-## 2 0.234 0.864  m            2010            1          1
-## 3 0.456 0.975  j            2010            1          2
-## 4 0.489 0.0317 m            2010            1          2
-## 5 0.530 0.896  u            2010            1          3
-## 6 0.535 0.149  n            2010            1          3</code></pre>
+##     val_a  val_b val_c update_year update_month update_day
+##     &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
+## 1 0.307   0.694  r            2010            1          1
+## 2 0.535   0.599  s            2010            1          1
+## 3 0.662   0.952  z            2010            1          2
+## 4 0.949   0.534  p            2010            1          2
+## 5 0.00298 0.0167 b            2010            1          3
+## 6 0.575   0.535  d            2010            1          3</code></pre>
 <p>Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the <a href="https://spark.rstudio.com"><code>sparklyr</code></a> psvksge I’m creating a local connection.</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(sparklyr))
 sc &lt;- spark_connect(master = &quot;local&quot;)</code></pre>
 <p>For the purpose of the article I’ve also executed the provided-above HiveQL via Spark to ensure accessibility to data structures that would be structurally equivalent, ensuring smooth execution of the example code. Naturally, in a production setting, we would seldom look to create new Hive schema from an R script layer. Similarly, core tables storing results would be usually established outside regular production processes.</p>
+<pre><code>## &lt;DBISparkResult&gt;
+##   SQL  DROP TABLE IF EXISTS blog.sample_partitioned_table
+##   ROWS Fetched: 0 [complete]
+##        Changed: 0</code></pre>
 <pre class="r"><code>res_DBI_data &lt;- DBI::dbSendQuery(sc, &quot;CREATE DATABASE blog COMMENT &#39;Blog article samples,                                           can be deleted.&#39;&quot;)
 res_DBI_tble &lt;- DBI::dbSendQuery(sc, &quot;CREATE TABLE blog.sample_partitioned_table (
         value_column_a FLOAT    COMMENT &#39;Column will hold 4-byte number&#39;, 
@@ -120,8 +124,7 @@ res_DBI_tble &lt;- DBI::dbSendQuery(sc, &quot;CREATE TABLE blog.sample_partition
 </div>
 <div id="insert-mechanism" class="section level3">
 <h3>Insert mechanism</h3>
-<p>Where the DBI package comes extremely handy is in inserting data into partitions. In context of our sample data we will want to populate every single partition with the respective modelling results. Courtesy of <code>map_dfc</code> function the “results” are available in one table but the proposed method can be easily modified and applied across other object structures, like lists.</p>
-<p>As a first step we will be looking to copy the existing sample data into Spark.</p>
+<p>Where the DBI package comes extremely handy is in inserting data into partitions. In context of our sample data we will want to populate every single partition with the respective modelling results. Courtesy of <code>map_dfc</code> function the “results” are available in one table but the proposed method can be easily modified and applied across other object structures, like lists. As a first step we will be looking to copy the existing sample data into Spark.</p>
 <pre class="r"><code>tbl_sprk &lt;- copy_to(sc, sample_data, &quot;spark_sample_data&quot;)</code></pre>
 <p>In Spark our RDD is visible as <code>spark_sample_data</code> we will be looking to use that table in order to insert our partition elements into permanent storage.</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(DBI))
@@ -132,11 +135,11 @@ res_pmap &lt;- pmap(
                                      PARTITION (part_year={..1},
                                                 part_month={..2},
                                                 part_day={..3})
-                                     SELECT val_a, val_b, val_c FROM spark_sample_data
-                                     WHERE update_year={..1} AND
+                                     SELECT val_a, val_b, val_c
+                        FROM spark_sample_data
+                                        WHERE update_year={..1} AND
                                         update_month={..2} AND
-                                        update_day={..3}
-                                     &quot;)))</code></pre>
+                                        update_day={..3}&quot;)))</code></pre>
 <p>Let’s unpack the code below. Our key goals are:
 * Our aim is to populate <em>partitions</em> in our permanent Hive table <code>blog.sample_partitioned_table</code>, hence the statement <code>INSERT INTO TABLE blog.sample_partitioned_table</code>
 * We are working with some modelling/analytical data that currently sits in our Spark session as <code>spark_sample_data</code> and we want for the relevant results in the data to land in the prescribed partitions on Spark</p>
@@ -144,13 +147,30 @@ res_pmap &lt;- pmap(
 1. We are generating a list of vectors with partitions identifiers to iterate over. As I’ve created this sample data in the current session in memory I can just refer to those items using <code>select</code> I would do that in the following manner <code>select(sample_data, update_year, update_month, update_day)</code>
 2. I’m interested in iterating over each column simultaneously and <code>pmap</code> function is excellent for that. Using <code>~</code> notation offered in <code>pmap</code> I will be looking to refer to first object as <code>..1</code> to the second as <code>..2</code> and so on.
 3. Glue package is used to insert strings with partitions identifier into the respective partition names.
-4. SELECT runs on <em>spark RDD</em> and also uses partition identifiers to get only subset of the data we are interested in and insert that subset into the desired partition.</p>
+4. <code>SELECT</code> runs on <em>spark RDD</em> and also uses partition identifiers to get only subset of the data we are interested in and insert that subset into the desired partition.</p>
 </div>
-<div id="preview" class="section level3">
-<h3>Preview</h3>
-<p>Following the operation above we can</p>
+<div id="results" class="section level3">
+<h3>Results</h3>
+<p>Following the operation above we can now explore the populated storage table. Sparklyr’s <a href="https://spark.rstudio.com/reference/"><code>sdf_num_partitions</code></a> can be used to get a number of existing partitions. Tibble’s <a href="https://tibble.tidyverse.org/reference/glimpse.html"><code>glimpse</code></a> can be used against the Spark data to get the preview of the created table.</p>
+<pre class="r"><code>tbl_perm &lt;- tbl(sc, &quot;blog.sample_partitioned_table&quot;)
+sdf_num_partitions(tbl_perm)</code></pre>
+<pre><code>## [1] 118</code></pre>
+<pre class="r"><code>glimpse(tbl_perm)</code></pre>
+<pre><code>## Rows: ??
+## Columns: 6
+## Database: spark_connection
+## $ value_column_a &lt;dbl&gt; 0.48326078, 0.46211860, 0.48326078, 0.46211860, 0.94889…
+## $ value_column_b &lt;dbl&gt; 0.52267477, 0.01484539, 0.52267477, 0.01484539, 0.68882…
+## $ value_column_c &lt;chr&gt; &quot;f&quot;, &quot;p&quot;, &quot;f&quot;, &quot;p&quot;, &quot;q&quot;, &quot;s&quot;, &quot;q&quot;, &quot;s&quot;, &quot;b&quot;, &quot;v&quot;, &quot;b&quot;, …
+## $ part_year      &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
+## $ part_month     &lt;int&gt; 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2…
+## $ part_day       &lt;int&gt; 7, 7, 7, 7, 20, 20, 20, 20, 29, 29, 29, 29, 18, 18, 18,…</code></pre>
 </div>
 </div>
+</div>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
+<p>Convenient and flexible functions facilitating string manipulations available in R make metaprogramming<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> in R easy. Generating and manipulating Hive statements as strings may not be the most efficient strategy in the light of the API’s offered via <code>sparklyr</code> or <code>dbplyr</code>. Neverthless is possible to spot instances where R code makes those coding challenges partiuclary easy to solution and also to maintain.</p>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
@@ -159,4 +179,10 @@ res_pmap &lt;- pmap(
 Costa, Eduarda, Carlos Costa, and Maribel Yasmina Santos. 2019. <span>“Evaluating Partitioning and Bucketing Strategies for Hive‐based Big Data Warehousing Systems.”</span> <em>Journal of Big Data</em> 6 (34): 1–38. <a href="https://doi.org/10.1186/s40537-019-0196-1">https://doi.org/10.1186/s40537-019-0196-1</a>.
 </div>
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Metaprogramming is a programming paradigm that treats other programming programs as data. In business, a BI setting metaprogramming is frequently used to generate efficiencies in routine data handling tasks, such as automating generation of SQL statements for importing data.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
