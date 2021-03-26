@@ -163,20 +163,20 @@ What happens in the process is as follows:
 1. We are generating a list of vectors with partitions identifiers to iterate over. As I've created this sample data in the current session in memory I can just refer to those items using `select` I would do that in the following manner `select(sample_data, update_year, update_month, update_day)`
 2. I'm interested in iterating over each column simultaneously and `pmap` function is excellent for that. Using `~` notation offered in `pmap` I will be looking to refer to first object as `..1` to the second as `..2` and so on.
 3. Glue package is used to insert strings with partitions identifier into the respective partition names.
-4. SELECT runs on *spark RDD* and also uses partition identifiers to get only subset of the data we are interested in and insert that subset into the desired partition.
+4. `SELECT` runs on *spark RDD* and also uses partition identifiers to get only subset of the data we are interested in and insert that subset into the desired partition.
 
-### Preview
+### Results
 
 Following the operation above we can now explore the populated storage table. Sparklyr's [`sdf_num_partitions`](https://spark.rstudio.com/reference/) can be used to get a number of existing partitions. Tibble's [`glimpse`](https://tibble.tidyverse.org/reference/glimpse.html) can be used against the Spark data to get the preview of the created table.
 
 ```{r preview_table}
-tbl_perm <- tbl(sc, "blog.sample_partitioned_data")
+tbl_perm <- tbl(sc, "blog.sample_partitioned_table")
 sdf_num_partitions(tbl_perm)
 glimpse(tbl_perm)
 ```
 
 # Summary
 
-Convenient and flexible functions facilitating string manipulations in R make metaprogramming^[Metaprogramming is a programming paradigm that treats other programming programs as data. In business, a BI setting metaprogramming is frequently used to generate efficiencies in routine data handling tasks, such as automating generation of SQL statements for importing data.] in R easy. 
+Convenient and flexible functions facilitating string manipulations available in R make metaprogramming^[Metaprogramming is a programming paradigm that treats other programming programs as data. In business, a BI setting metaprogramming is frequently used to generate efficiencies in routine data handling tasks, such as automating generation of SQL statements for importing data.] in R easy. Generating and manipulating Hive statements as strings may not be the most efficient strategy in the light of the API's offered via `sparklyr` or `dbplyr`. Neverthless is possible to spot instances where R code makes those coding challenges partiuclary easy to solution and also to maintain.
 
 # References
