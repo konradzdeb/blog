@@ -1,7 +1,7 @@
-theme: hugo-PaperMod
+theme: "hugo-PaperMod"
 baseURL: https://konradzdeb.netlify.com/
 languageCode: en-gb
-title: YARN (Yet Another R Novella)
+title: R in Business
 ignoreFiles: [
   "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\\.md$"
 ]
@@ -23,7 +23,7 @@ params:
     ShowReadingTime: true
     ShowShareButtons: true  
     homeInfoParams:
-        Title:  R in business
+        Title:  R in Business
         Content: Yet another blog on using R with focus on R in business.
     socialIcons:
         - name: "LinkedIn"
