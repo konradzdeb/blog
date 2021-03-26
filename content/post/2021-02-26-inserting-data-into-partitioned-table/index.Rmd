@@ -107,6 +107,11 @@ sc <- spark_connect(master = "local")
 ```
 For the purpose of the article I've also executed the provided-above HiveQL via Spark to ensure accessibility to data structures that would be structurally equivalent, ensuring smooth execution of the example code. Naturally, in a production setting, we would seldom look to create new Hive schema from an R script layer. Similarly, core tables storing results would be usually established outside regular production processes.
 
+```{r clean_table, echo=FALSE, eval=TRUE}
+# Clean table if exists to facilitate easier rendering of the blog post
+DBI::dbSendQuery(sc, "DROP TABLE IF EXISTS blog.sample_partitioned_table")
+```
+
 ```{r create_spark_data}
 res_DBI_data <- DBI::dbSendQuery(sc, "CREATE DATABASE blog COMMENT 'Blog article samples,                                           can be deleted.'")
 res_DBI_tble <- DBI::dbSendQuery(sc, "CREATE TABLE blog.sample_partitioned_table (
@@ -126,9 +131,7 @@ res_DBI_tble <- DBI::dbSendQuery(sc, "CREATE TABLE blog.sample_partitioned_table
 
 ### Insert mechanism
 
-Where the DBI package comes extremely handy is in inserting data into partitions. In context of our sample data we will want to populate every single partition with the respective modelling results. Courtesy of `map_dfc` function the "results" are available in one table but the proposed method can be easily modified and applied across other object structures, like lists. 
-
-As a first step we will be looking to copy the existing sample data into Spark.
+Where the DBI package comes extremely handy is in inserting data into partitions. In context of our sample data we will want to populate every single partition with the respective modelling results. Courtesy of `map_dfc` function the "results" are available in one table but the proposed method can be easily modified and applied across other object structures, like lists. As a first step we will be looking to copy the existing sample data into Spark.
 
 ```{r sample_to_spark}
 tbl_sprk <- copy_to(sc, sample_data, "spark_sample_data")
@@ -145,11 +148,11 @@ res_pmap <- pmap(
                                      PARTITION (part_year={..1},
                                                 part_month={..2},
                                                 part_day={..3})
-                                     SELECT val_a, val_b, val_c FROM spark_sample_data
-                                     WHERE update_year={..1} AND
+                                     SELECT val_a, val_b, val_c
+				     	FROM spark_sample_data
+                                     	WHERE update_year={..1} AND
                                         update_month={..2} AND
-                                        update_day={..3}
-                                     ")))
+                                        update_day={..3}")))
 ```
 
 Let's unpack the code below. Our key goals are:
@@ -164,6 +167,17 @@ What happens in the process is as follows:
 
 ### Preview
 
-Following the operation above we can 
+Following the operation above we can now explore the populated storage table. Sparklyr's [`sdf_num_partitions`](https://spark.rstudio.com/reference/) can be used to get a number of existing partitions. Tibble's [`glimpse`](https://tibble.tidyverse.org/reference/glimpse.html) can be used against the Spark data to get the preview of the created table.
+
+```{r preview_table}
+tbl_perm <- tbl(sc, "blog.sample_partitioned_data")
+sdf_num_partitions(tbl_perm)
+glimpse(tbl_perm)
+```
+
+# Summary
+
+Convenient and flexible functions facilitating string manipulations in R make metaprogramming^[Metaprogramming is a programming paradigm that treats other programming programs as data. In business, a BI setting metaprogramming is frequently used to generate efficiencies in routine data handling tasks, such as automating generation of SQL statements for importing data.] in R easy. 
+
 
 # References
