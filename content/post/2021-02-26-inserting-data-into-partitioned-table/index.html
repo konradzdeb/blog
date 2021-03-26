@@ -73,6 +73,7 @@ CREATE TABLE blog.sample_partitioned_table (
 <h3>Sample data</h3>
 <p>In an actual production setting, we would expect that our run will generate a data consistent with the table structure that should be saved as one of partitions. A common scenario could reflect summary events data generated for specific day, in business that structure would be frequently used to develop views on periodical business activity. For the purpose of example, I’m generating some sample data in R.</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lubridate))
 # Generating two months of data
 dates &lt;- seq.Date(
     from = as.Date(&quot;01-01-2010&quot;, format = &quot;%d-%m-%Y&quot;),
@@ -81,24 +82,73 @@ dates &lt;- seq.Date(
 )
 # Each data will contain two rows of values corresponding to the column types
 # that were previously defined in Hive
-lst_sample_data &lt;- map(.x = dates, ~ tibble(val_a = runif(2),
+sample_data &lt;- map_dfr(.x = dates, ~ tibble(val_a = runif(2),
                                             val_b = runif(2),
-                                            val_c = sample(letters, 2)))</code></pre>
+                                            val_c = sample(letters, 2),
+                                            update_year = year(.x),
+                                            update_month = month(.x),
+                                            update_day = day(.x)))</code></pre>
 <p>The created data looks as follows:</p>
-<pre class="r"><code>str(lst_sample_data[1:5], max.level = 1)</code></pre>
-<pre><code>## List of 5
-##  $ : tibble [2 × 3] (S3: tbl_df/tbl/data.frame)
-##  $ : tibble [2 × 3] (S3: tbl_df/tbl/data.frame)
-##  $ : tibble [2 × 3] (S3: tbl_df/tbl/data.frame)
-##  $ : tibble [2 × 3] (S3: tbl_df/tbl/data.frame)
-##  $ : tibble [2 × 3] (S3: tbl_df/tbl/data.frame)</code></pre>
-<p>with each table consisting of two values we want to insert and corresponding partition columns.</p>
-<pre class="r"><code>lst_sample_data[[1]]</code></pre>
-<pre><code>## # A tibble: 2 x 3
-##   val_a val_b val_c
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
-## 1 0.983 0.586 t    
-## 2 0.517 0.393 d</code></pre>
+<pre class="r"><code>head(sample_data)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   val_a  val_b val_c update_year update_month update_day
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
+## 1 0.337 0.671  g            2010            1          1
+## 2 0.234 0.864  m            2010            1          1
+## 3 0.456 0.975  j            2010            1          2
+## 4 0.489 0.0317 m            2010            1          2
+## 5 0.530 0.896  u            2010            1          3
+## 6 0.535 0.149  n            2010            1          3</code></pre>
+<p>Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the <a href="https://spark.rstudio.com"><code>sparklyr</code></a> psvksge I’m creating a local connection.</p>
+<pre class="r"><code>suppressPackageStartupMessages(library(sparklyr))
+sc &lt;- spark_connect(master = &quot;local&quot;)</code></pre>
+<p>For the purpose of the article I’ve also executed the provided-above HiveQL via Spark to ensure accessibility to data structures that would be structurally equivalent, ensuring smooth execution of the example code. Naturally, in a production setting, we would seldom look to create new Hive schema from an R script layer. Similarly, core tables storing results would be usually established outside regular production processes.</p>
+<pre class="r"><code>res_DBI_data &lt;- DBI::dbSendQuery(sc, &quot;CREATE DATABASE blog COMMENT &#39;Blog article samples,                                           can be deleted.&#39;&quot;)
+res_DBI_tble &lt;- DBI::dbSendQuery(sc, &quot;CREATE TABLE blog.sample_partitioned_table (
+        value_column_a FLOAT    COMMENT &#39;Column will hold 4-byte number&#39;, 
+        value_column_b DOUBLE   COMMENT &#39;8-byte double precision&#39;, 
+        value_column_c CHAR(1)  COMMENT &#39;Fixed length varchar&#39;) 
+    COMMENT &#39;Sample partitioned table stored as text file&#39; 
+    PARTITIONED BY (
+        part_year SMALLINT  COMMENT &#39;Data load year, partition&#39;, 
+        part_month TINYINT  COMMENT &#39;Data load month, partition&#39;,
+        part_day TINYINT    COMMENT &#39;Data load day, partition&#39;)
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY &#39;\t&#39;
+    LINES TERMINATED BY &#39;\n&#39;
+    STORED AS TEXTFILE&quot;)</code></pre>
+</div>
+<div id="insert-mechanism" class="section level3">
+<h3>Insert mechanism</h3>
+<p>Where the DBI package comes extremely handy is in inserting data into partitions. In context of our sample data we will want to populate every single partition with the respective modelling results. Courtesy of <code>map_dfc</code> function the “results” are available in one table but the proposed method can be easily modified and applied across other object structures, like lists.</p>
+<p>As a first step we will be looking to copy the existing sample data into Spark.</p>
+<pre class="r"><code>tbl_sprk &lt;- copy_to(sc, sample_data, &quot;spark_sample_data&quot;)</code></pre>
+<p>In Spark our RDD is visible as <code>spark_sample_data</code> we will be looking to use that table in order to insert our partition elements into permanent storage.</p>
+<pre class="r"><code>suppressPackageStartupMessages(library(DBI))
+suppressPackageStartupMessages(library(glue))
+res_pmap &lt;- pmap(
+    .l = select(sample_data, update_year, update_month, update_day),
+    .f = ~ DBI::dbSendQuery(sc, glue(&quot;INSERT INTO TABLE blog.sample_partitioned_table
+                                     PARTITION (part_year={..1},
+                                                part_month={..2},
+                                                part_day={..3})
+                                     SELECT val_a, val_b, val_c FROM spark_sample_data
+                                     WHERE update_year={..1} AND
+                                        update_month={..2} AND
+                                        update_day={..3}
+                                     &quot;)))</code></pre>
+<p>Let’s unpack the code below. Our key goals are:
+* Our aim is to populate <em>partitions</em> in our permanent Hive table <code>blog.sample_partitioned_table</code>, hence the statement <code>INSERT INTO TABLE blog.sample_partitioned_table</code>
+* We are working with some modelling/analytical data that currently sits in our Spark session as <code>spark_sample_data</code> and we want for the relevant results in the data to land in the prescribed partitions on Spark</p>
+<p>What happens in the process is as follows:
+1. We are generating a list of vectors with partitions identifiers to iterate over. As I’ve created this sample data in the current session in memory I can just refer to those items using <code>select</code> I would do that in the following manner <code>select(sample_data, update_year, update_month, update_day)</code>
+2. I’m interested in iterating over each column simultaneously and <code>pmap</code> function is excellent for that. Using <code>~</code> notation offered in <code>pmap</code> I will be looking to refer to first object as <code>..1</code> to the second as <code>..2</code> and so on.
+3. Glue package is used to insert strings with partitions identifier into the respective partition names.
+4. SELECT runs on <em>spark RDD</em> and also uses partition identifiers to get only subset of the data we are interested in and insert that subset into the desired partition.</p>
+</div>
+<div id="preview" class="section level3">
+<h3>Preview</h3>
+<p>Following the operation above we can</p>
 </div>
 </div>
 </div>
