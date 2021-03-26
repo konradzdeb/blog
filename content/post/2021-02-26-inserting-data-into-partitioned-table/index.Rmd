@@ -179,5 +179,4 @@ glimpse(tbl_perm)
 
 Convenient and flexible functions facilitating string manipulations in R make metaprogramming^[Metaprogramming is a programming paradigm that treats other programming programs as data. In business, a BI setting metaprogramming is frequently used to generate efficiencies in routine data handling tasks, such as automating generation of SQL statements for importing data.] in R easy. 
 
-
 # References
