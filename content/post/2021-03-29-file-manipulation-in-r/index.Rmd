@@ -1,0 +1,12 @@
+---
+title: Using R for File Manipulation
+author: Konrad Zdeb
+date: '2021-03-29'
+slug: file-manipulation-in-r
+categories:
+  - how-to
+tags:
+  - R-package
+  - R
+---
+
