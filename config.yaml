@@ -22,6 +22,7 @@ params:
     defaultTheme: auto # to switch between dark or light according to browser theme
     ShowReadingTime: true
     ShowShareButtons: true  
+    ShowPostNavLinks: true
     homeInfoParams:
         Title:  R in Business
         Content: Yet another blog on using R with focus on R in business.
