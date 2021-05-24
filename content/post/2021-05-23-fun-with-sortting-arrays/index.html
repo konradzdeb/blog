@@ -68,8 +68,27 @@ Perform the following steps:</p>
 <p>The line <code>array_sorted = sorted(arr)</code> makes the solution time out only once.</p>
 <p><strong>Passed tests: 13/14</strong></p>
 </div>
-<div id="assessment" class="section level2">
-<h2>Assessment</h2>
+<div id="third-attempt" class="section level2">
+<h2>Third attempt</h2>
+<p>Understandably, there is unnecessary computation taking place. The <code>for</code> loop will be restarted and always iterate over all elements until finding the element that does not match its correct place. This is computationally expensive. One approach would involve working with the loop to make the iteration less expensive. However, before attempting this I wanted to attempt another solution. For arrays that are simply sorted in reverse order arriving at incremental sorting can be achieved with a number of moves equal to half of the array lengths. In those cases, the computation and array swapping is unnecessary. This is implemented in the example below.</p>
+<pre class="python"><code>def minimumSwaps(arr):
+    # Check if dealing with simple reverse array, as sorting reverse array
+    # will be equivalent to half of length
+    if arr == sorted(arr, reverse=True):
+        return int(len(arr) / 2)
+    # Add zero to avoid the need of shifting the index so all the loops
+    # are working fine
+    arr.insert(0, 0)
+    num_sorts = 0
+    array_sorted = sorted(arr) # First optimisation
+    while arr != array_sorted:
+        for idx, val in enumerate(arr):
+            if idx != val:
+                arr[idx], arr[val] = arr[val], arr[idx]
+                num_sorts += 1
+                break
+    return num_sorts</code></pre>
+<p><strong>Passed tests: 14/14</strong></p>
 </div>
 </div>
 <div id="conclusions" class="section level1">
@@ -78,9 +97,10 @@ Perform the following steps:</p>
 <blockquote>
 <p>RAM is cheap, thinking is expensive</p>
 </blockquote>
-<p>There are some principles that this solution breaks.</p>
+<p>It’s always easy and tempting to start working through concrete example instead of approaching the problem algebraically.</p>
 <ul>
-<li><strong>First</strong> a good program computes what is has to and only that. The task is to return <em>the numbers of steps</em> not to <em>sort.</em> Sorting implies actual movement of elements in array and potentially will have a different (likely worse) memory footprint to a purely algebraic solution.</li>
-<li><strong>Second,</strong> a premature optimisation is frequent source of bugs.</li>
+<li><strong>First</strong> a good program computes what is has to and only that. The task is to return <em>the numbers of steps</em> not to <em>sort.</em> Sorting implies actual movement of elements in array and potentially will have a different (likely worse) memory footprint to a purely algebraic solution. The proposed solution does not adhere to this principle fully as purely algebraic solution is applied only for reverse arrays.</li>
+<li><strong>Second,</strong> a premature optimisation is frequent source of bugs; also, alogirthm is often the source of poor performance. In the proposed solution, there is a little focus on the actual performance, and optimisation is achieved mostly in the course of cheap / common sense steps, like storing sorted object or skipping computation for specific cases.</li>
 </ul>
+<p>Main learning points are that thinking how to achieve the outcome is frequently easier than building a detail mental image of the process that lends itself well to estimating the computational effort.</p>
 </div>
