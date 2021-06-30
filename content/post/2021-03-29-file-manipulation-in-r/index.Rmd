@@ -3,6 +3,7 @@ title: Using R for File Manipulation
 author: Konrad Zdeb
 date: '2021-03-29'
 slug: file-manipulation-in-r
+draft: true
 categories:
   - how-to
 tags:
@@ -25,11 +26,25 @@ references:
 
 # Challenge
 
-File manipulation is a frequent task unavoidable in every business. Traditionally, file manipulation challenges are considered within the ramifications of specific tools native to a given system. As such, the one may consider writing and scheduling shell script to undertake frequent file operations or using more specific purpose-built tools like [`logrotate`](https://linux.die.net/man/8/logrotate) in order to archive and clean logs or tools like [Kafka](https://kafka.apache.org/20/documentation.html) are used to build streaming-data pipelines. R is usually though of as a statistical programming or language or, more incorrectly, as an environment for a statistical analysis. Arguably, R is a mature progaming language. What constitues a *programming language* is a good question. Wikipedia offers somehow wide definition:
+File manipulation is a frequent task unavoidable in every business. Traditionally, file manipulation challenges are considered within the ramifications of specific tools native to a given system. As such, the one may consider writing and scheduling shell script to undertake frequent file operations or using more specific purpose-built tools like [`logrotate`](https://linux.die.net/man/8/logrotate) in order to archive and clean logs or tools like [Kafka](https://kafka.apache.org/20/documentation.html) are used to build streaming-data pipelines. R is usually though of as a statistical programming or language or, more incorrectly, as an environment for a statistical analysis. R is a mature programming language. What constitutes a *programming language* is a valid question. Wikipedia offers somehow wide definition:
 
 > A programming language is a formal language comprising a set of instructions that produce various kinds of output. Programming languages are used in computer programming to implement algorithms.
 
 [*Wikipedia*](https://en.wikipedia.org/wiki/Programming_language)
+
+# Pros and Cons of Using R as an ETL solution
+
+R wasn't designed to replace ETL^[Export Transform Load]
+
+## Pros
+
+* The article assumes that consideration on whether to utilise R within a team for pure ETL tasks is usually given in the context of R language being utilised to greater or lesser degree to facilitate data modelling, analytical or statistical work. In that context utilising R yields benefits mostly associated with ability to utilise the existing knowledge. Furthermore, as discussed later, R development team will be able to leverage the existing knowledge or expertise in accomplishing tasks that would traditionally 
+* R is an exceptionally flexible language and offered data structures lend themselves well for file manipulation
+* There is *some* chance for our production process to be able to rely on cross
+
+## Cons
+
+* Using R for file manipulation only defeats the purpose of the languages, in effect we will be pulling a number of dependecies to achive a number of tasks that usually can be successfully accomplished using tool found across majority of commonly available stacks, such as `find`, `sed` and so forth
 
 # References
 
