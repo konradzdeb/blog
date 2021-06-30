@@ -16,16 +16,16 @@ tags:
 <p>Recently, I cam across an interesting discussion on StackOverflow<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> pertaining to approach to fuzzy matching tables in R. Good answer contributed by one of the most resilient and excellent contributors to whom I owe a lot of thanks for help suggested relying on regular expression, combining this with basic sting removal and transformations like <code>toupper</code> to deterministically match the tables. The solution solved the problem and was accepted.</p>
 <div id="so-whats-wrong" class="section level1">
 <h1>So what’s wrong…</h1>
-<p>With this particular/problem pair, there is nothing wrong, on endless occasions I have seen people running <code>UPPER(REGEXP_REPLACE( my_value, '[[:space:]]', '' ))</code> only so later someone can realise, that actually now they need <code>REGEXP_REPLACE(COLUMN,'[^[:ascii:]],'')</code> only for people to come later with gems like that <code>SELECT REGEXP_REPLACE(COLUMN,'[^' || CHR(1) || '-' || CHR(127) || '],'')</code><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
-<p>The <em>real</em> problem is in how this challenge is being approached. People who endlessly twist the regex, so they arrive at something resembling the regex below, which was actually created to match email addresses<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>, aspire to match <em>deterministically.</em></p>
+<p>With this particular problem/solution pair, there is absolutely nothing wrong. On numerous occasions I have seen people running <code>UPPER(REGEXP_REPLACE( my_value, '[[:space:]]', '' ))</code> only so later someone can realise, that actually now they need <code>REGEXP_REPLACE(COLUMN,'[^[:ascii:]],'')</code> only for someone else to offer <code>SELECT REGEXP_REPLACE(COLUMN,'[^' || CHR(1) || '-' || CHR(127) || '],'')</code><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. Those are all good solutions that solve the particular challenge but they (very) seldom stand the test of time.</p>
+<p>The <em>real</em> problem is in not finding the most robust approach but deciding how the challenge is being approached from a priority perspective. Those of us who endlessly twist the regex so they arrive at something resembling the regex below, which was actually created to match email addresses<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>, aspire to match <em>deterministically</em> at any price and frequently are destined to fail, especially when working with data reflecting human-input.</p>
 <pre class="r"><code>^(?:(?!.*?[.]{2})[a-zA-Z0-9](?:[a-zA-Z0-9.+!%-]{1,64}|)|\&quot;[a-zA-Z0-9.+!% -]{1,64}\&quot;)@[a-zA-Z0-9][a-zA-Z0-9.-]+(.[a-z]{2,}|.[0-9]{1,})$</code></pre>
-<p>This is source of the problem, regex-based matching will always result a binary outcome, strings will match or not. By the very definition <strong>regex-based matching is not fuzzy matching.</strong></p>
-<div id="pardigm-shift-just-becasuse-people-dont-menion-this-often-enough" class="section level2">
-<h2>Pardigm shift … (just becasuse people don’t menion this often enough)</h2>
+<p>The nature of the regex matching is source of the problem. Regex-based matching will always result a binary outcome, strings will match or not. By the very definition <strong>regex-based matching is not fuzzy matching.</strong></p>
+<div id="pardigm-shift-just-becasuse-wee-dont-menion-this-phrase-often-enough" class="section level2">
+<h2>Pardigm shift … (just becasuse wee don’t menion this phrase often enough)</h2>
 <p>When you attempt to match things fuzzily you are signing up to a few assumptions:</p>
 <ol style="list-style-type: decimal">
 <li>Your matching reflects certain probabilistic assumptions or in other words, <em>your match is not expected to be 100% accurate.</em></li>
-<li>There is no “one right” method to do the matching, ways of calculating string distances may be less or more suitable for a given problem. Computationally expensive procedures may yield excellent result but prove impractical from the implementation perspective, and so fort</li>
+<li>There is no “one right” method to do the matching, ways of calculating string distances may be less or more suitable for a given problem. Computationally expensive procedures may yield excellent result but prove impractical from the implementation perspective, and so on</li>
 <li>Whereas for regex there is clear direction of improvement: it can be (almost) always tweaked more to account for one more ‘edge case’ the improvement direction</li>
 </ol>
 </div>
@@ -61,7 +61,7 @@ data_A |&gt;
 ## 3 &quot;&quot;              30 &lt;NA&gt;             
 ## 4 &quot;Mercedes&quot;      90 &lt;NA&gt;             
 ## 5 &quot;Mecedes&quot;       10 &lt;NA&gt;</code></pre>
-<p>We could solve that problem by running <code>trimws</code> or <code>str_trim</code> first, let’s do that. For better visibility the step is inserted as a separate call but we could easily wrap that call in existing transformation. The results are still unsatisfactory.</p>
+<p>We could solve that problem by running <code>trimws</code> or <code>str_trim</code> first, let’s do that. For better visibility the step is inserted as a separate call but we could easily wrap that call in the existing transformation. However, the results are still unsatisfactory.</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(&quot;tidyverse&quot;))
 data_A |&gt; 
     mutate(manufacturer = str_trim(manufacturer),
@@ -76,7 +76,7 @@ data_A |&gt;
 ## 3 Ford            30 &lt;NA&gt;             
 ## 4 Mercedes        90 &lt;NA&gt;             
 ## 5 Mecedes         10 &lt;NA&gt;</code></pre>
-<p>The next step could be solving upper case/ lower case challenge. The records start to match but the approach proves inefficient. If we want to match directly on a regex column we can use <code>regex_left_join</code> from the <code>fuzzyjoin</code> package. At this point things start to match but the overall conclusions are quite disappointing, we are facing either endlessly tweaking our string through regex or standalone transformation to arrive at a suitable match if we want to progress in that direction. We are also exposing ourselves to a risk that added row with misspelled name will break that logic. In an actual production environment there is a risk that substantial inflow of data will break our logic for a significant number of records.</p>
+<p>The potential next step could be addressing the upper case / lower case challenge. After doing this, the records start to match but the approach proves inefficient. We can tweak our matching further using regex. If we want to match directly on a regex column we can use <code>regex_left_join</code> from the <code>fuzzyjoin</code> package. At this point the tables start to match but the overall conclusions are quite disappointing, we are facing either endlessly tweaking our string through regex or standalone transformation to arrive at a suitable match if we want to progress in that direction. We are also exposing ourselves to a risk that added row with misspelled name will break that logic. In an actual production environment there is a risk that substantial inflow of data will break our logic for a significant number of records.</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(&quot;tidyverse&quot;))
 data_A |&gt; 
     mutate(manufacturer = str_trim(manufacturer),
@@ -93,12 +93,12 @@ data_A |&gt;
 ## 5 mecedes           10 &lt;NA&gt;           &lt;NA&gt;</code></pre>
 <div id="a-pragmatic-programmer-approach" class="section level2">
 <h2>A “pragmatic programmer” approach …</h2>
-<p>Let’s say revise our assumptions, after working with this trivial sample data we can conclude that:</p>
+<p>At this junction it’s beneficial revise our initial assumptions. After working with this trivial sample data we can conclude that:</p>
 <ul>
-<li><p>Those tables have no right to match in 100%, if we code for every single opportunity there is a strong chance that new data will through this approach by the window by introducing new spelling mistakes, spaces and so forth…</p></li>
+<li><p>Those tables have no right to match in 100%, if we code for every single opportunity there is a strong chance that new data will through this approach through the window by introducing new spelling mistakes, spaces and so forth…</p></li>
 <li><p>There is no consistency in mistakes, the data may contain superfluous spaces or odd capitalisation, we can’t form a assumption on what is the main problem to fix here.</p></li>
 </ul>
-<p>A solution to that challenge would be to approach the matching problem from a probabilistic perspective. A first option would be to generate a function assessing how dissimilar are our strings. Jaro-Winkler string distance is a metric continuously used in computer science and computational statistics assessing how distant are give strings. The comparator package offers a convenient implementation of that function.
+<p>A solution to this challenge would be to approach the matching problem from a probabilistic perspective. A first option would be to generate a function assessing how dissimilar are our strings. Jaro-Winkler string distance is a metric continuously used in computer science and computational statistics assessing how distant are give strings. The comparator package offers a convenient implementation of that function.
 For this example, I’m leaving the default option and forcing only ignoring strings.</p>
 <pre class="r"><code>library(&quot;comparator&quot;)
 jw &lt;- JaroWinkler(ignore_case = TRUE)
@@ -125,7 +125,6 @@ jw(&quot;Mercedes&quot;, &quot;mecedes&quot;)</code></pre>
 <div id="so-what" class="section level1">
 <h1>So what</h1>
 <p>First be honest with what do you need, can you live with a few mismatched records? If you are building data to predict trends reflecting substantial populations the likely answer is <em>yes,</em> if you are building data set to email personalised marketing communication to existing customers the likely answer is <em>no.</em></p>
-<p>The significant advantage of</p>
 </div>
 <div class="footnotes">
 <hr />
