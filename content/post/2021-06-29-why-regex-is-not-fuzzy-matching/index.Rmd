@@ -105,7 +105,7 @@ jw("Mercedes", "mecedes")
 The function returns distance between two strings and, expectedly, `jw` will return quite a high score for for common spelling mistakes. The score for dissimilar words will be much lower.
 
 ```{r jw_example_two}
-jw("Mercedes", "Ford Focus")
+jw("Mercedes", "opel corsa zxc")
 ```
 
 
@@ -113,10 +113,9 @@ We can attempt to implement the function in our matching further leverage the fu
 
 ```{r jw_match_fuzzy, echo=TRUE}
 fuzzyjoin::fuzzy_left_join(x = data_A, y = data_B, by = "manufacturer",
-                           match_fun = function(x, y) { jw(x, y) >= 0.55}
+                           match_fun = function(x, y) { jw(x, y) >= 0.65}
                            )
 ```
-
 Without any string transformations we are achieving *reasonable* match. The key word is here is *reasonable.* The proposed approach only makes sense if we agree that we are not looking for a perfect match but we are willing to accept reasonably good output.
 
 # So what
