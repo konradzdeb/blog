@@ -121,5 +121,3 @@ Without any string transformations we are achieving *reasonable* match. The key 
 # So what
 
 First be honest with what do you need, can you live with a few mismatched records? If you are building data to predict trends reflecting substantial populations the likely answer is *yes,* if you are building data set to email personalised marketing communication to existing customers the likely answer is *no.* 
-
-The significant advantage of 
