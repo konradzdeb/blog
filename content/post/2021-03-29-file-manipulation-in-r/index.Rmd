@@ -7,7 +7,6 @@ draft: true
 categories:
   - how-to
 tags:
-  - R-package
   - R
 references:
 - id: Christensson
