@@ -105,11 +105,11 @@ jw &lt;- JaroWinkler(ignore_case = TRUE)
 jw(&quot;Mercedes&quot;, &quot;mecedes&quot;)</code></pre>
 <pre><code>## [1] 0.9666667</code></pre>
 <p>The function returns distance between two strings and, expectedly, <code>jw</code> will return quite a high score for for common spelling mistakes. The score for dissimilar words will be much lower.</p>
-<pre class="r"><code>jw(&quot;Mercedes&quot;, &quot;Ford Focus&quot;)</code></pre>
-<pre><code>## [1] 0.55</code></pre>
+<pre class="r"><code>jw(&quot;Mercedes&quot;, &quot;opel corsa zxc&quot;)</code></pre>
+<pre><code>## [1] 0.5119048</code></pre>
 <p>We can attempt to implement the function in our matching further leverage the functions available in a <code>fuzzyjoin</code> package. The <code>fuzzy_left_join</code> requires for the matching function to require a boolean output so we can wrap actual results in an anonymous function<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
 <pre class="r"><code>fuzzyjoin::fuzzy_left_join(x = data_A, y = data_B, by = &quot;manufacturer&quot;,
-                           match_fun = function(x, y) { jw(x, y) &gt;= 0.55}
+                           match_fun = function(x, y) { jw(x, y) &gt;= 0.65}
                            )</code></pre>
 <pre><code>## # A tibble: 5 x 4
 ##   manufacturer.x           price manufacturer.y subjective_rating
