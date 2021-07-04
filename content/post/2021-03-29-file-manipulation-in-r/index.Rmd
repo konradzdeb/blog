@@ -89,7 +89,7 @@ knitr::kable(
 
 # Conclusion
 
-The R-based file manipulation process are only efficient, from a production perspective, when applied to processes containing a substantial analytical/statistical component. 
+The R-based file manipulation process are only efficient, from a production perspective, when applied to processes containing a substantial analytical/statistical component. R also lends itself exceptionally to handling processes with heterogeneous inputs and outputs. By leveraging R we can bring order to processes that, before, had to utilise multiple tools to access disparate databases and ingest binary outputs. If our production process utilise common publicly available data repository, there is a strong chance that R package ecosystem can provide a convenient wrapper that makes regular querying and refreshing a breeze. R-based ETL exercises may prove unnecessary onerous if our intention is to develop multi-thread, asynchronous solutions. If our sole purpose is to run multi-thread rsync, using R packages to arrive at comparable end-results would introduce a lot of unnecessary complexity. In effect, whether to use R as an ETL backend depends on the nature of the project. In majority of the cases, building ETL pipelines using R will make sense if our project *already* uses R to undertake some analytical/statistical effort or  there is a merit in brining R to do some statistical work. Likely, it is most efficient then to extend our R project by coding additional ETL using R than relaying on external tools to deliver data into R and outwith R.
 
 # References
 
