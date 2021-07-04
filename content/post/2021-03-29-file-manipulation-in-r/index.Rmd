@@ -3,7 +3,6 @@ title: Using R for File Manipulation
 author: Konrad Zdeb
 date: '2021-03-29'
 slug: file-manipulation-in-r
-draft: true
 categories:
   - how-to
 tags:
@@ -37,8 +36,8 @@ File manipulation is a frequent task unavoidable in almost every IT business pro
 
 ## Pros
 
-* R is an exceptionally flexible language and offered data structures lend themselves well for file manipulation
-* Ability for our production process to be migrated across the systems and configurations increases. Let's consider a simple example of generating temporary files. Utilising R base function `tempfile` or equivalent call from the `fs` package, `fs::file_temp()` allows for swift creation of temporary files. Achieving that on MS Windows using PowerShell could be done using specific cmdlet  called New-TemporaryFile `$tmp = New-TemporaryFile`. When working in command prompt we would leverage `%TEMP%` and `%RANDOM%` environment variables to come up with something like `set "uniqueFileName=%tmp%\bat~%RANDOM%.tmp"`, as discussed at lengths in [the related Stack Overflow answer](https://stackoverflow.com/a/32109191/1655567). The point is that exercises like that incur addittional maintaince cost. Whereas `tempfile` is straightfoward, well documented and understood by every R user, call:
+* Ability for our production process to be migrated across the systems and configurations increases. Let's consider a simple example of generating temporary files. Utilising R base function `tempfile` or equivalent call from the `fs` package, `fs::file_temp()` allows for swift creation of temporary files. Achieving that on MS Windows using PowerShell could be done using specific cmdlet  called *New-TemporaryFile:* `$tmp = New-TemporaryFile`. When working in command prompt we would leverage `%TEMP%` and `%RANDOM%` environment variables to come up with something like `set "uniqueFileName=%tmp%\bat~%RANDOM%.tmp"`, as discussed at lengths in [the related Stack Overflow answer](https://stackoverflow.com/a/32109191/1655567), which suggests this answer: 
+
 ```{coffee eval=FALSE, include=TRUE}
 @echo off
 setlocal EnableExtensions
@@ -48,13 +47,14 @@ rem get unique file name
 set "uniqueFileName=%tmp%\bat~%RANDOM%.tmp"
 if exist "%uniqueFileName%" goto :uniqLoop
 ```
-won't be obvious to maintainers not familiar with command prompt, even if the actual goal behind the two is identical from a production perspective (to provide process with a temporary path)
+
+The point is that exercises like that incur additional maintenance cost. Whereas `tempfile` is straightforward, well documented and understood by every R user; more importantly we achieve uniform cross-system implementation, which will make our project easier to maintain.
 
 * Thanks to the [Rocker Project](https://www.rocker-project.org) R plays exceptionally well with Docker which is conducive to reducing future maintainability costs and enhancing portability. Decent article covering technicalities of using Docker with R was provided by Colin Fay.^[Colin Fay; [*An Introduction to Docker for R Users*](https://colinfay.me/docker-r-reproducibility/).]
 
 * R has rich ecosystem offering API connectivity. Thanks to [*Plumber*](https://www.rplumber.io) R users can, with relatively little effort, generate own APIs. Packages like [*wbstats*](https://github.com/gshs-ornl/wbstats) and [*Eurostat*](https://github.com/rOpenGov/eurostat) provide convenient wrappers for sourcing data from publicly available repositories (article World Bank and Eurostat). Those can be immensely time server if we consider building processes that rely on background external demographic/macroeconomic data being incorporated in our processes on regular basis. The subject of R / API integration merits a separate article.
 
-* File format converstion. Through packages like [`haven`](https://haven.tidyverse.org/) R offers rich interface to access data in different formats (Stata, SPSS, etc.). When working with bloated legacy processes that may required handling input originating from heterogeneous sources (think SAS binary, in-house Oracle database and some periodical figures produced by World Bank) the R flexibility may prove actual life saver. Still we should be careful not to use R as an excuse not to refactor old processes. 
+* File format conversion. Through packages like [`haven`](https://haven.tidyverse.org/) R offers rich interface to access data in different formats (Stata, SPSS, etc..). When working with bloated legacy processes that may required handling input originating from heterogeneous sources (think SAS binary, in-house Oracle database and some periodical figures produced by World Bank) the R flexibility may prove actual life saver. Still we should be careful not to use R as an excuse not to refactor old processes. 
 
 ## Cons
 
@@ -62,14 +62,14 @@ won't be obvious to maintainers not familiar with command prompt, even if the ac
 
 * Achieving fine-grained control over common operations may be more difficult in R. Let's consider `rsync`. The Internet is full of examples how to achieve properly defined goals using `rsync`, it is also possible to find Python implementation of the algorithm^[An interesting implementation was offered by Tyler Cipriani in [his blog](https://tylercipriani.com/blog/2017/07/09/the-rsync-algorithm-in-python/).]. At the time of writing this article, the attempts to bring `rsync` functionality relied on command line tool.^[R package providing a convenient wrapper around `rsync` is available through the GitHub repo: [INWTlab/rsync](https://github.com/INWTlab/rsync).]
 
-* Multithreading, the thinking around multithreading and asynchronous computation in R oscilliates around finding more efficient ways to accomplish computational effort. Whereas packages like [r-lib/async](https://github.com/gaborcsardi/async) or [r-lib/processx](https://github.com/r-lib/processx) offer aproaches to run processes in the backrgound or perform asynchronous I/O operations; those solutions are applicable to more complex process. Achieveing parallel `rsync` execution can be easily achieved using `xargs`, as found on Stack Overflow^[The answer the question on *Speed up rsync with Simultaneous/Concurrent File Transfers?* available [here](https://stackoverflow.com/a/25532027/1655567).]:
+* Multi-threading, the thinking around multi-threading and asynchronous computation in R oscillates around finding more efficient ways to accomplish computational effort. Whereas packages like [r-lib/async](https://github.com/gaborcsardi/async) or [r-lib/processx](https://github.com/r-lib/processx) offer approaches to run processes in the background or perform asynchronous I/O operations; those solutions are applicable to more complex process. Achieving parallel `rsync` execution can be easily achieved using `xargs`, as found on Stack Overflow^[The answer the question on *Speed up rsync with Simultaneous/Concurrent File Transfers?* available [here](https://stackoverflow.com/a/25532027/1655567).]:
 ```{bash eval=FALSE, include=TRUE}
 ls /srv/mail | xargs -n1 -P4 -I% rsync -Pa % myserver.com:/srv/mail/
 ```
 
 ## Packages worth looking at
 
-When discussing efficiencies derivable from R in the context of file manipulation it's woth to mention a suitable packages as available 
+When discussing efficiencies derivable from R in the context of file manipulation it's worth to mention a suitable packages as available 
 
 ```{r pkgs_table, echo=FALSE}
 knitr::kable(
