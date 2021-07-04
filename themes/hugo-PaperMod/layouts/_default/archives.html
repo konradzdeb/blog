@@ -10,6 +10,11 @@
 </header>
 
 {{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
+
+{{- if .Site.Params.ShowAllPagesInArchive }}
+{{- $pages = site.RegularPages }}
+{{- end }}
+
 {{- range $pages.GroupByPublishDate "2006" }}
 {{- if ne .Key "0001" }}
 <div class="archive-year">
@@ -20,7 +25,7 @@
   <div class="archive-month">
     <h3 class="archive-month-header">{{- .Key }}<sup class="archive-count">&nbsp;&nbsp;{{ len .Pages }}</sup></h3>
     <div class="archive-posts">
-      {{- range .Pages  }}
+      {{- range .Pages }}
       {{- if eq .Kind "page" }}
       <div class="archive-entry">
         <h3 class="archive-entry-title">
@@ -40,4 +45,4 @@
 {{- end }}
 {{- end }}
 
-{{- end  }}{{/* end main */}}
+{{- end }}{{/* end main */}}

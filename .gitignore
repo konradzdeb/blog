@@ -9,3 +9,8 @@
 .DS_Store
 Thumbs.db
 sessionInfoLog
+
+# Ignore Spark session files
+derby.log
+logs/
+spark-warehouse/
