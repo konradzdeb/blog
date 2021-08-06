@@ -3,7 +3,6 @@ title: Installing Hortonworks Sanbox on Mac with Docker
 author: Konrad
 date: '2019-02-23'
 slug: installing-hortonworks-sanbox-deployment-hdp-on-docker-mac
-draft: true
 categories:
   - how-to
 tags:
@@ -23,18 +22,19 @@ tags:
 <div id="docker" class="section level3">
 <h3>Docker</h3>
 <p>Docker, which is now used by millions of developers, is and open platform for developing, shipping and running applications. More technically, Docker uses OS-level virtualisation to deliver software packages called containers. Before installing docker let’s check for the existing installation.</p>
-<pre class="r"><code>which -a docker
+<pre class="sh"><code>which -a docker
 # /usr/local/bin/docker
 docker -v
 # Docker version 20.10.2, build 2291f61</code></pre>
 <p>Assuming that the line above did not produce results we can install docker with use of Homebrew. To install Homebrew:</p>
-<pre class="r"><code>/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code></pre>
+<pre class="sh"><code>/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</code></pre>
 <p>We can the progress with installing docker. The command will install ‘cask’ version of the Docker. In Homebrew lingo, ‘casks’ are applications with Graphical User Interfaces. It is possible to install Docker without GUI by running <code>brew install docker</code>.</p>
-<pre class="r"><code>brew install --cask docker</code></pre>
+<pre class="sh"><code>brew install --cask docker</code></pre>
 </div>
 <div id="hdp" class="section level3">
 <h3>HDP</h3>
-<p>The HDP can be installed with the provided scrip. The script can be downloaded from</p>
+<p>The <a href="https://hub.docker.com/r/hortonworks/sandbox-hdp-standalone">hortonworks/sandbox-hdp-standalone</a> is available via Docker website and can be installed with the following command:</p>
+<pre class="sh"><code>docker pull hortonworks/sandbox-hdp-standalone</code></pre>
 </div>
 </div>
 </div>

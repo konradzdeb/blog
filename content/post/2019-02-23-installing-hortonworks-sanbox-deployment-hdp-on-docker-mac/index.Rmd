@@ -3,7 +3,6 @@ title: Installing Hortonworks Sanbox on Mac with Docker
 author: Konrad
 date: '2019-02-23'
 slug: installing-hortonworks-sanbox-deployment-hdp-on-docker-mac
-draft: true
 categories:
   - how-to
 tags:
@@ -23,7 +22,7 @@ Deploying system for distributed processing *within* a single computer may seem 
 
 Docker, which is now used by millions of developers, is and open platform for developing, shipping and running applications. More technically, Docker uses OS-level virtualisation to deliver software packages called containers. Before installing docker let's check for the existing installation.
 
-```{r docker_check, echo=TRUE, eval=FALSE}
+```{sh docker_check, echo=TRUE, eval=FALSE}
 which -a docker
 # /usr/local/bin/docker
 docker -v
@@ -32,17 +31,22 @@ docker -v
 
 Assuming that the line above did not produce results we can install docker with use of Homebrew. To install Homebrew:
 
-```{r brew_install, eval=FALSE, echo=TRUE}
+```{sh brew_install, eval=FALSE, echo=TRUE}
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
 We can the progress with installing docker. The command will install 'cask' version of the Docker. In Homebrew lingo, 'casks' are applications with Graphical User Interfaces. It is possible to install Docker without GUI by running `brew install docker`.
 
-```{r docker_install, eval=FALSE, echo=TRUE}
+```{sh docker_install, eval=FALSE, echo=TRUE}
 brew install --cask docker
 ```
 
 ### HDP
 
-The HDP can be installed with the provided scrip. The script can be downloaded from 
+The [hortonworks/sandbox-hdp-standalone](https://hub.docker.com/r/hortonworks/sandbox-hdp-standalone) is available via Docker website and can be installed with the following command:
+
+```{sh docker_image, eval=FALSE, echo=TRUE}
+docker pull hortonworks/sandbox-hdp-standalone
+```
+
 
