@@ -41,12 +41,41 @@ We can the progress with installing docker. The command will install 'cask' vers
 brew install --cask docker
 ```
 
-### HDP
+By choosing the `--cask` option we will choose instruct homebrew to install Docker with the additional application providing us with a convenient GUI for managing settings and images. With respect to the configuration, we have to increase the dedicated memory of the Docker images to at least 12GB. This can be quickly achieved by modification of the setting below.
 
-The [hortonworks/sandbox-hdp-standalone](https://hub.docker.com/r/hortonworks/sandbox-hdp-standalone) is available via Docker website and can be installed with the following command:
+*setting*
 
-```{sh docker_image, eval=FALSE, echo=TRUE}
-docker pull hortonworks/sandbox-hdp-standalone
+### Sanbox
+
+Cloudera maintains installation script, which presently the script can be download from [here](https://www.cloudera.com/downloads/hortonworks-sandbox/hdp.html?utm_source=mktg-tutorial). After downloading the sandbox can be installed using the following command:
+
+```{sh docker_install, eval=FALSE, echo=TRUE}
+sh --verbose ./docker-deploy-{Version}.sh
 ```
+
+Where `{Version}` stands for the version of the sandbox we are going to install. After the deployment script finishes successfully, we will be able to notice that the new docker images are now running. That can be checked by running `docker ps` command or by exploring the Docker GUI, as shown below.
+
+*Insert docker running*
+
+It's worth adding that the installed image is rather substantial, exceeding 27GB:
+
+```{sh docker_image_size, eval=FALSE, echo=TRUE}
+docker images | grep horton | awk '{ print $1, $7 }'
+# hortonworks/sandbox-hdp 27.5GB
+# hortonworks/sandbox-proxy 109MB
+```
+## Usage 
+
+### Start/Stop
+
+The sandbox can be controlled in a manner similar to other docker images
+
+```{sh start_stop, eval=FALSE, echo=TRUE}
+docker [start|stop] sandbox-hdp
+docker [start|stop] sandbox-proxy
+```
+
+### Accessing the sandbox
+
 
 
