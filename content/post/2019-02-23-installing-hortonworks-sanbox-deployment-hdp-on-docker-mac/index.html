@@ -41,7 +41,10 @@ docker -v
 <p>Cloudera maintains installation script, which presently the script can be download from <a href="https://www.cloudera.com/downloads/hortonworks-sandbox/hdp.html?utm_source=mktg-tutorial">here</a>. After downloading the sandbox can be installed using the following command:</p>
 <pre class="sh"><code>sh --verbose ./docker-deploy-{Version}.sh</code></pre>
 <p>Where <code>{Version}</code> stands for the version of the sandbox we are going to install. After the deployment script finishes successfully, we will be able to notice that the new docker images are now running. That can be checked by running <code>docker ps</code> command or by exploring the Docker GUI, as shown below.</p>
-<p><em>Insert docker running</em></p>
+<div class="figure">
+<img src="images/DockerRunning.png" style="width:80.0%;height:80.0%" alt="" />
+<p class="caption">Docker Running Desired Images</p>
+</div>
 <p>It’s worth adding that the installed image is rather substantial, exceeding 27GB:</p>
 <pre class="sh"><code>docker images | grep horton | awk &#39;{ print $1, $7 }&#39;
 # hortonworks/sandbox-hdp 27.5GB

@@ -55,7 +55,7 @@ sh --verbose ./docker-deploy-{Version}.sh
 
 Where `{Version}` stands for the version of the sandbox we are going to install. After the deployment script finishes successfully, we will be able to notice that the new docker images are now running. That can be checked by running `docker ps` command or by exploring the Docker GUI, as shown below.
 
-*Insert docker running*
+![Docker Running Desired Images](images/DockerRunning.png){width=80% height=80%}
 
 It's worth adding that the installed image is rather substantial, exceeding 27GB:
 
