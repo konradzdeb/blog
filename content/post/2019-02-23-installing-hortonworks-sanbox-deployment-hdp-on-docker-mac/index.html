@@ -31,17 +31,47 @@ docker -v
 <p>We can the progress with installing docker. The command will install ‘cask’ version of the Docker. In Homebrew lingo, ‘casks’ are applications with Graphical User Interfaces. It is possible to install Docker without GUI by running <code>brew install docker</code>.</p>
 <pre class="sh"><code>brew install --cask docker</code></pre>
 <p>By choosing the <code>--cask</code> option we will choose instruct homebrew to install Docker with the additional application providing us with a convenient GUI for managing settings and images. With respect to the configuration, we have to increase the dedicated memory of the Docker images to at least 12GB. This can be quickly achieved by modification of the setting below.</p>
-<p><em>setting</em></p>
+<div class="figure">
+<img src="images/DockerConfigMem.png" style="width:80.0%;height:80.0%" alt="" />
+<p class="caption">Docker Memory Configuration</p>
+</div>
 </div>
 <div id="sanbox" class="section level3">
 <h3>Sanbox</h3>
-<p>Cloudera maintains installation script that</p>
-<p>It’s worth adding that the installed image is rather substantial, exceeding 12GB:</p>
+<p>Cloudera maintains installation script, which presently the script can be download from <a href="https://www.cloudera.com/downloads/hortonworks-sandbox/hdp.html?utm_source=mktg-tutorial">here</a>. After downloading the sandbox can be installed using the following command:</p>
+<pre class="sh"><code>sh --verbose ./docker-deploy-{Version}.sh</code></pre>
+<p>Where <code>{Version}</code> stands for the version of the sandbox we are going to install. After the deployment script finishes successfully, we will be able to notice that the new docker images are now running. That can be checked by running <code>docker ps</code> command or by exploring the Docker GUI, as shown below.</p>
+<p><em>Insert docker running</em></p>
+<p>It’s worth adding that the installed image is rather substantial, exceeding 27GB:</p>
 <pre class="sh"><code>docker images | grep horton | awk &#39;{ print $1, $7 }&#39;
-# hortonworks/sandbox-hdp-standalone 12.4GB</code></pre>
+# hortonworks/sandbox-hdp 27.5GB
+# hortonworks/sandbox-proxy 109MB</code></pre>
+<div id="host-file" class="section level4">
+<h4>Host file</h4>
+<p>In order to access the Sandbox we have modify the host file<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> We can do this using the code below:</p>
+<pre class="sh"><code>echo &#39;127.0.0.1 sandbox-hdp.hortonworks.com sandbox-hdf.hortonworks.com&#39; | sudo tee -a /private/etc/hosts</code></pre>
+</div>
 </div>
 </div>
 <div id="usage" class="section level2">
 <h2>Usage</h2>
+<div id="startstop" class="section level3">
+<h3>Start/Stop</h3>
+<p>The sandbox can be controlled in a manner similar to other docker images</p>
+<pre class="sh"><code>docker [start|stop] sandbox-hdp
+docker [start|stop] sandbox-proxy</code></pre>
 </div>
+<div id="accessing-the-sandbox" class="section level3">
+<h3>Accessing the sandbox</h3>
+<p>Following the successful modification of the command above we can start interacting with the box. Opening a ssh connection to the snadbox can be achieved by executing</p>
+<pre class="sh"><code>ssh maria_dev@sandbox-hdp.hortonworks.com -p 2222</code></pre>
+<p>The list of pre-configured user accounts and passwords is provided by <a href="https://www.cloudera.com/tutorials/learning-the-ropes-of-the-hdp-sandbox.html">Cloudera</a>.</p>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://www.cloudera.com/tutorials/learning-the-ropes-of-the-hdp-sandbox.html">The article</a> explaining the process in detail is provided by Cloudera.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
