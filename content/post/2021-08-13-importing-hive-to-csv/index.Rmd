@@ -92,7 +92,7 @@ In  context of importing wide tables this will prove particulary painful. If we 
 
 # Generating code
 
-This is where R's flexibility and data structures come into play. We can use R to generate our HiveQL code and come up with a generic function that could be easily deployed against 
+This is where R's flexibility and data structures come into play. We can use R to generate our HiveQL code and come up with a generic function that could be easily deployed against data frames that we would like to make permanent in Hive. The most subsantial element in will be concerned with generating code.
 
 # Importing data
 
@@ -101,7 +101,4 @@ Before uploading the data we devise a table structure that will be used to hold 
 # Notes on Spark, etc.
 
 The article demonstrates using R to 
-
-
-
 
