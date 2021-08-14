@@ -81,7 +81,7 @@ test_data %&lt;&gt;% mutate(test_data,
  FIELDS TERMINATED BY &#39;,&#39;;</code></pre>
 <p>We would then point to the load statement, that would look more or less like that:</p>
 <pre class="sql"><code>LOAD DATA INPATH &#39;/user/hive/data/data.csv&#39; INTO TABLE blog.test_data;</code></pre>
-<p>The first observation that emerges is that generating all of the relevant code will be particulary onerous and verbose. In the following scenario we may be willing to:</p>
+<p>The first observation that emerges is that generating all of the relevant code will be particular onerous and verbose. In the following scenario we may be willing to:</p>
 <ul>
 <li>Comment on the columns we are souring reflecting original name, type and summarising any other transformations we have applied</li>
 <li>Table comments could reflect details on the source, such as the location of the file or any other characteristics that we can gather through <code>file.info</code>.</li>
@@ -90,11 +90,70 @@ test_data %&lt;&gt;% mutate(test_data,
 </div>
 <div id="generating-code" class="section level1">
 <h1>Generating code</h1>
-<p>This is where R’s flexibility and data structures come into play. We can use R to generate our HiveQL code and come up with a generic function that could be easily deployed against data frames that we would like to make permanent in Hive. The most subsantial element in will be concerned with generating code.</p>
+<p>This is where R’s flexibility and data structures come into play. We can use R to generate our HiveQL code and come up with a generic function that could be easily deployed against data frames that we would like to make permanent in Hive. The most subsantial element in will be concerned with generating code responsible for provisioning column names. We will also have to generate code that will create initial opening code and final elements pertaining to providing input on table characteristics.</p>
 </div>
 <div id="importing-data" class="section level1">
 <h1>Importing data</h1>
-<p>Before uploading the data we devise a table structure that will be used to hold it. Following the displayed variable types this can be done in the following manner.</p>
+<p>Before uploading the data we devise a table structure that will be used to hold it. Following the displayed variable types this can be done in the following manner. From a development perspective, breaking functions into managable smaller pieces will make it easier to develop.</p>
+<div id="generating-column-names" class="section level2">
+<h2>Generating column names</h2>
+<p>For this particular function we would like to obtain a string that would form the column part of the data generation query</p>
+<pre class="sql"><code>CREATE TABLE IF NOT EXISTS blog.test_data (
+ -- &lt;! Function output starts&gt;
+ id int,
+ dob date,
+ age int COMMENT &#39;This column was renamed or something else happened&#39;,
+ gender string
+ ...
+ -- &lt;! Function output ends&gt;
+ )
+ COMMENT &#39;Our sample data&#39;
+ PARTITIONED BY (txn_date STRING)
+ ROW FORMAT DELIMITED
+ FIELDS TERMINATED BY &#39;,&#39;;</code></pre>
+<p>This implies the following requirements:</p>
+<ul>
+<li>We want to come up with syntaticaly valid column names that can be used in HiveQL. As stated in the <a href="https://cwiki.apache.org/confluence/display/hive/languagemanual+ddl">official documentation</a>, the Hive is fairly pemissive in acceptable column names:</li>
+</ul>
+<blockquote>
+<p>In Hive 0.13 and later, column names can contain any Unicode character (see HIVE-6013), however, dot (.) and colon (:) yield errors on querying, so they are disallowed in Hive 1.2.0 (see HIVE-10120). Any column name that is specified within backticks (`) is treated literally. Within a backtick string, use double backticks (``) to represent a backtick character. Backtick quotation also enables the use of reserved keywords for table and column identifiers.</p>
+</blockquote>
+<p>We can assume a more rigours approach reflecting the prefence that, in all likelihood, majority of us would endorse:</p>
+<ul>
+<li>We don’t want for the columns to start with a number</li>
+<li>We want for the function to replace spaces with <code>_</code></li>
+<li>We would like to remove non-letter characters
+<ul>
+<li>On that for currency characters we would like for the function to repplace those with a three letter currency code</li>
+</ul></li>
+<li>With expection of the three letter currency code, the column name should be in lowercase. Hive is case-insesitive but pedentically, I would prefer for the column to be named <code>price_GBP</code> instead of <code>price_gbp</code>. As this is matter of preference we may make this operation optional</li>
+<li>We would like for the column to remove common three letter words; for instance <code>price_item</code> is sufficiently clear and we don’t need <code>price_for_an_item</code>. Pedentically, we may be even temepted to reverse common words so the order reads more natural, <code>item_price</code> reads better than <code>price_item</code> (although, there is no loss in meaning.)</li>
+</ul>
+<pre class="r"><code>#&#39; Clean Column Names
+#&#39;
+#&#39; Arbitrary set of rules transforming string so passed results are consistent
+#&#39;   with HiveQL rules on syntactically correct column names.
+#&#39;
+#&#39; @param x A character vector with column names to transform
+#&#39; @param lowercase_currency_names A logic, defaults to \code{FALSE}, whether to
+#&#39;   convert the currency names to lower-case.
+#&#39;
+#&#39; @return A character vector
+#&#39;
+#&#39; @export
+#&#39;
+#&#39; @examples
+#&#39; dirty_col_names &lt;- c(&quot;Date of Birth&quot;, &quot;12-important-column&quot;,
+#&#39;   &quot;14-crucial-column&quot;, &quot; user inputs&quot;, &quot;price in (£)&quot;)
+#&#39; clean_column_names(x = dirty_col_names)
+clean_column_names &lt;- function(x, lowercase_currency_names = FALSE) {
+
+}</code></pre>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>In the subsequent articles I will tackle remaining challnges such as automatically generating meanigful strings for the column comments and R to Hive type conversion. The function discussed above</p>
 </div>
 <div id="notes-on-spark-etc." class="section level1">
 <h1>Notes on Spark, etc.</h1>
