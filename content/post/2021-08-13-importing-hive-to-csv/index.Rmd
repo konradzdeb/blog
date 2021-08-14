@@ -80,8 +80,19 @@ CREATE TABLE IF NOT EXISTS blog.test_data (
 We would then point to the load statement, that would look more or less like that:
 
 ```{sql load_table, eval=FALSE, echo=TRUE}
-LOAD DATA INPATH '/user/hive/data/data.csv' INTO TABLE emp.employee;
+LOAD DATA INPATH '/user/hive/data/data.csv' INTO TABLE blog.test_data;
 ```
+
+The first observation that emerges is that generating all of the relevant code will be particulary onerous and verbose. In the following scenario we may be willing to:
+
+- Comment on the columns we are souring reflecting original name, type and summarising any other transformations we have applied
+- Table comments could reflect details on the source, such as the location of the file or any other characteristics that we can gather through `file.info`.
+
+In  context of importing wide tables this will prove particulary painful. If we are in position where we are at a risk of undertaking that type of exercise more frequently, reflecting on a process that would enable us to automate or part-automate the data load can prove beneficial. 
+
+# Generating code
+
+This is where R's flexibility and data structures come into play. We can use R to generate our HiveQL code and come up with a generic function that could be easily deployed against 
 
 # Importing data
 
@@ -89,7 +100,7 @@ Before uploading the data we devise a table structure that will be used to hold 
 
 # Notes on Spark, etc.
 
-The article demonstrates 
+The article demonstrates using R to 
 
 
 

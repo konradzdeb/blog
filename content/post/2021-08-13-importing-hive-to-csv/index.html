@@ -80,7 +80,17 @@ test_data %&lt;&gt;% mutate(test_data,
  ROW FORMAT DELIMITED
  FIELDS TERMINATED BY &#39;,&#39;;</code></pre>
 <p>We would then point to the load statement, that would look more or less like that:</p>
-<pre class="sql"><code>LOAD DATA INPATH &#39;/user/hive/data/data.csv&#39; INTO TABLE emp.employee;</code></pre>
+<pre class="sql"><code>LOAD DATA INPATH &#39;/user/hive/data/data.csv&#39; INTO TABLE blog.test_data;</code></pre>
+<p>The first observation that emerges is that generating all of the relevant code will be particulary onerous and verbose. In the following scenario we may be willing to:</p>
+<ul>
+<li>Comment on the columns we are souring reflecting original name, type and summarising any other transformations we have applied</li>
+<li>Table comments could reflect details on the source, such as the location of the file or any other characteristics that we can gather through <code>file.info</code>.</li>
+</ul>
+<p>In context of importing wide tables this will prove particulary painful. If we are in position where we are at a risk of undertaking that type of exercise more frequently, reflecting on a process that would enable us to automate or part-automate the data load can prove beneficial.</p>
+</div>
+<div id="generating-code" class="section level1">
+<h1>Generating code</h1>
+<p>This is where R’s flexibility and data structures come into play. We can use R to generate our HiveQL code and come up with a generic function that could be easily deployed against</p>
 </div>
 <div id="importing-data" class="section level1">
 <h1>Importing data</h1>
@@ -88,7 +98,7 @@ test_data %&lt;&gt;% mutate(test_data,
 </div>
 <div id="notes-on-spark-etc." class="section level1">
 <h1>Notes on Spark, etc.</h1>
-<p>The article demonstrates</p>
+<p>The article demonstrates using R to</p>
 </div>
 <div class="footnotes">
 <hr />
