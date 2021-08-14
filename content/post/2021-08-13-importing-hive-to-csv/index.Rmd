@@ -1,0 +1,96 @@
+---
+title: R-based metaprogramming strategies for handling Hive/CSV interaction (Part I, imports)
+author: Konrad Zdeb
+date: '2021-08-13'
+slug: importing-csv-to-hive
+categories:
+  - how-to
+tags:
+  - Hive
+  - bash
+  - R
+---
+
+# Background
+
+Handling Hive/CSV interacion is an unfortunate reality of many analytical and data environments. The question on exporting data from Hive to CSV and other formats is frequently raised on online forums. The article provides an opinionated overview of the existing methods and shortcomings. 
+
+## Trial Data
+
+Before progressing with the examples and outlining difficulties associated with the export I'm going to create some sample data. I'm using the [docker-hive](https://github.com/big-data-europe/docker-hive) Docker image provided by the Big Data Europe to run the example. The [`wakefield`](https://github.com/trinker/wakefield) package available for R provides access to a number of functions useful for synthetic data generation. In this example the goal is to generate a data set that will have columns of diverse types, such as freetext, dates, numbers of various formats, etc. The [`wakefield`](https://github.com/trinker/wakefield) packages comes with great examples and and using them is generally a good idea. I have increased the size of the data to hundred thousand rows so partitioning it will be more realistic
+
+```{r generate_synth_data, echo=TRUE, message=FALSE, warning=FALSE, cache=TRUE}
+library("wakefield")
+set.seed(123)
+test_data <- r_data_frame(n = 1e5,
+    id,
+    dob,
+    animal,
+    grade, grade,
+    death,
+    dummy,
+    grade_letter,
+    gender,
+    paragraph,
+    sentence
+)
+```
+
+I will add a few columns to create partitions so our trial data is more "realistic".
+
+```{r add_partitions, echo=TRUE, results='hide'}
+suppressPackageStartupMessages(library("tidyverse"))
+suppressPackageStartupMessages(library("magrittr")) # For %<>%
+test_data %<>% mutate(test_data, 
+                      part_year = lubridate::year(DOB),
+                      part_mnth = lubridate::month(DOB),
+                      part_day = lubridate::day(DOB)) %>%
+    mutate(across(starts_with("part"), as.integer))
+```
+
+
+The trial data looks good; we have generated a number of messy variables that will be "pleasure" to deal with during import/export operation.
+
+```{r preview_data, echo=FALSE}
+glimpse(test_data)
+```
+
+# Metaprogramming paradigm
+
+Metaprogramming paradigm assumes using computer code to generate more computer code. In effect metaprogramming gives other programs ability to treat code like data. As stated by Levy^[L. S. Levy, "A metaprogramming method and its economic justification," in IEEE Transactions on Software Engineering, vol. SE-12, no. 2, pp. 272-277, Feb. 1986, doi: [10.1109/TSE.1986.6312943](https://doi.org/10.1109/TSE.1986.6312943).]:
+
+> Metaprogramming, defined as creating application programs by writing programs that produce programs, is presented as the basis of a method for reducing software costs and improving software quality.
+
+The question is how this relates to our task of importing relatively messy "real-life" data into nice, partitioned Hive table that will be a pleasure to work with. Let's consider the simplest way to import the data. We would use `CREATE_TABLE`
+
+```{sql create_table, eval=FALSE, echo=TRUE}
+CREATE TABLE IF NOT EXISTS blog.test_data (
+ id int,
+ dob date,
+ age int COMMENT 'This column was renamed or something else happened',
+ gender string
+ ...
+ )
+ COMMENT 'Our sample data'
+ PARTITIONED BY (txn_date STRING)
+ ROW FORMAT DELIMITED
+ FIELDS TERMINATED BY ',';
+```
+
+We would then point to the load statement, that would look more or less like that:
+
+```{sql load_table, eval=FALSE, echo=TRUE}
+LOAD DATA INPATH '/user/hive/data/data.csv' INTO TABLE emp.employee;
+```
+
+# Importing data
+
+Before uploading the data we devise a table structure that will be used to hold it. Following the displayed variable types this can be done in the following manner.
+
+# Notes on Spark, etc.
+
+The article demonstrates 
+
+
+
+

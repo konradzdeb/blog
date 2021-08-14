@@ -1,0 +1,98 @@
+---
+title: R-based metaprogramming strategies for handling Hive/CSV interaction (Part I, imports)
+author: Konrad Zdeb
+date: '2021-08-13'
+slug: importing-csv-to-hive
+categories:
+  - how-to
+tags:
+  - Hive
+  - bash
+  - R
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<div id="background" class="section level1">
+<h1>Background</h1>
+<p>Handling Hive/CSV interacion is an unfortunate reality of many analytical and data environments. The question on exporting data from Hive to CSV and other formats is frequently raised on online forums. The article provides an opinionated overview of the existing methods and shortcomings.</p>
+<div id="trial-data" class="section level2">
+<h2>Trial Data</h2>
+<p>Before progressing with the examples and outlining difficulties associated with the export I’m going to create some sample data. I’m using the <a href="https://github.com/big-data-europe/docker-hive">docker-hive</a> Docker image provided by the Big Data Europe to run the example. The <a href="https://github.com/trinker/wakefield"><code>wakefield</code></a> package available for R provides access to a number of functions useful for synthetic data generation. In this example the goal is to generate a data set that will have columns of diverse types, such as freetext, dates, numbers of various formats, etc. The <a href="https://github.com/trinker/wakefield"><code>wakefield</code></a> packages comes with great examples and and using them is generally a good idea. I have increased the size of the data to hundred thousand rows so partitioning it will be more realistic</p>
+<pre class="r"><code>library(&quot;wakefield&quot;)
+set.seed(123)
+test_data &lt;- r_data_frame(n = 1e5,
+    id,
+    dob,
+    animal,
+    grade, grade,
+    death,
+    dummy,
+    grade_letter,
+    gender,
+    paragraph,
+    sentence
+)</code></pre>
+<p>I will add a few columns to create partitions so our trial data is more “realistic”.</p>
+<pre class="r"><code>suppressPackageStartupMessages(library(&quot;tidyverse&quot;))
+suppressPackageStartupMessages(library(&quot;magrittr&quot;)) # For %&lt;&gt;%
+test_data %&lt;&gt;% mutate(test_data, 
+                      part_year = lubridate::year(DOB),
+                      part_mnth = lubridate::month(DOB),
+                      part_day = lubridate::day(DOB)) %&gt;%
+    mutate(across(starts_with(&quot;part&quot;), as.integer))</code></pre>
+<p>The trial data looks good; we have generated a number of messy variables that will be “pleasure” to deal with during import/export operation.</p>
+<pre><code>## Rows: 100,000
+## Columns: 14
+## $ ID           &lt;chr&gt; &quot;00001&quot;, &quot;00002&quot;, &quot;00003&quot;, &quot;00004&quot;, &quot;00005&quot;, &quot;00006&quot;, &quot;00…
+## $ DOB          &lt;date&gt; 2007-10-06, 2007-11-23, 2007-02-12, 2008-01-25, 2007-02-…
+## $ Animal       &lt;fct&gt; Field Spaniel, Akita, Pool Frog, Akita, Akita, Newfoundla…
+## $ Grade_1      &lt;dbl&gt; 83.1, 87.4, 92.5, 93.7, 90.2, 86.4, 89.0, 86.1, 85.1, 84.…
+## $ Grade_2      &lt;dbl&gt; 88.9, 84.4, 93.0, 83.0, 87.2, 88.0, 86.1, 88.6, 93.3, 88.…
+## $ Death        &lt;lgl&gt; FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE,…
+## $ Dummy        &lt;dbl&gt; 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, …
+## $ Grade_Letter &lt;ord&gt; B, A+, A-, A, B, A-, B-, B+, B+, A-, A-, B, A, A-, B+, A-…
+## $ Gender       &lt;fct&gt; Female, Male, Male, Male, Female, Female, Female, Male, M…
+## $ Paragraph    &lt;chr&gt; &quot;Lorem ipsum dolor sit amet, vitae in sed eget, praesent …
+## $ Sentence     &lt;chr&gt; &quot;Look, I love to I love teachers, and I&#39;m happy to have s…
+## $ part_year    &lt;int&gt; 2007, 2007, 2007, 2008, 2007, 2006, 2007, 2007, 2007, 200…
+## $ part_mnth    &lt;int&gt; 10, 11, 2, 1, 2, 12, 6, 4, 4, 8, 8, 6, 4, 4, 7, 11, 7, 5,…
+## $ part_day     &lt;int&gt; 6, 23, 12, 25, 28, 13, 12, 3, 18, 31, 26, 12, 10, 11, 26,…</code></pre>
+</div>
+</div>
+<div id="metaprogramming-paradigm" class="section level1">
+<h1>Metaprogramming paradigm</h1>
+<p>Metaprogramming paradigm assumes using computer code to generate more computer code. In effect metaprogramming gives other programs ability to treat code like data. As stated by Levy<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>:</p>
+<blockquote>
+<p>Metaprogramming, defined as creating application programs by writing programs that produce programs, is presented as the basis of a method for reducing software costs and improving software quality.</p>
+</blockquote>
+<p>The question is how this relates to our task of importing relatively messy “real-life” data into nice, partitioned Hive table that will be a pleasure to work with. Let’s consider the simplest way to import the data. We would use <code>CREATE_TABLE</code></p>
+<pre class="sql"><code>CREATE TABLE IF NOT EXISTS blog.test_data (
+ id int,
+ dob date,
+ age int COMMENT &#39;This column was renamed or something else happened&#39;,
+ gender string
+ ...
+ )
+ COMMENT &#39;Our sample data&#39;
+ PARTITIONED BY (txn_date STRING)
+ ROW FORMAT DELIMITED
+ FIELDS TERMINATED BY &#39;,&#39;;</code></pre>
+<p>We would then point to the load statement, that would look more or less like that:</p>
+<pre class="sql"><code>LOAD DATA INPATH &#39;/user/hive/data/data.csv&#39; INTO TABLE emp.employee;</code></pre>
+</div>
+<div id="importing-data" class="section level1">
+<h1>Importing data</h1>
+<p>Before uploading the data we devise a table structure that will be used to hold it. Following the displayed variable types this can be done in the following manner.</p>
+</div>
+<div id="notes-on-spark-etc." class="section level1">
+<h1>Notes on Spark, etc.</h1>
+<p>The article demonstrates</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>L. S. Levy, “A metaprogramming method and its economic justification,” in IEEE Transactions on Software Engineering, vol. SE-12, no. 2, pp. 272-277, Feb. 1986, doi: <a href="https://doi.org/10.1109/TSE.1986.6312943">10.1109/TSE.1986.6312943</a>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
