@@ -3,6 +3,7 @@ title: R-based metaprogramming strategies for handling Hive/CSV interaction (Par
 author: Konrad Zdeb
 date: '2021-08-13'
 slug: importing-csv-to-hive
+draft: true
 categories:
   - how-to
 tags:
@@ -19,7 +20,7 @@ tags:
 <p>Handling Hive/CSV interacion is an unfortunate reality of many analytical and data environments. The question on exporting data from Hive to CSV and other formats is frequently raised on online forums. The article provides an opinionated overview of the existing methods and shortcomings.</p>
 <div id="trial-data" class="section level2">
 <h2>Trial Data</h2>
-<p>Before progressing with the examples and outlining difficulties associated with the export I’m going to create some sample data. I’m using the <a href="https://github.com/big-data-europe/docker-hive">docker-hive</a> Docker image provided by the Big Data Europe to run the example. The <a href="https://github.com/trinker/wakefield"><code>wakefield</code></a> package available for R provides access to a number of functions useful for synthetic data generation. In this example the goal is to generate a data set that will have columns of diverse types, such as freetext, dates, numbers of various formats, etc. The <a href="https://github.com/trinker/wakefield"><code>wakefield</code></a> packages comes with great examples and and using them is generally a good idea. I have increased the size of the data to hundred thousand rows so partitioning it will be more realistic</p>
+<p>Before progressing with the examples and outlining difficulties associated with the export I’m going to create some sample data. I’m using the <a href="https://github.com/big-data-europe/docker-hive">docker-hive</a> Docker image provided by the Big Data Europe to run the example. The <a href="https://github.com/trinker/wakefield"><code>wakefield</code></a> package available for R provides access to a number of functions useful for synthetic data generation. In this example the goal is to generate a data set that will have columns of diverse types, such as freetext, dates, numbers of various formats, etc.. The <a href="https://github.com/trinker/wakefield"><code>wakefield</code></a> packages comes with great examples and and using them is generally a good idea. I have increased the size of the data to hundred thousand rows so partitioning it will be more realistic</p>
 <pre class="r"><code>library(&quot;wakefield&quot;)
 set.seed(123)
 test_data &lt;- r_data_frame(n = 1e5,
@@ -153,7 +154,7 @@ clean_column_names &lt;- function(x, lowercase_currency_names = FALSE) {
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>In the subsequent articles I will tackle remaining challnges such as automatically generating meanigful strings for the column comments and R to Hive type conversion. The function discussed above</p>
+<p>In the subsequent articles I will tackle remaining challenges such as automatically generating meaningful strings for the column comments and R to Hive type conversion. The function discussed above</p>
 </div>
 <div id="notes-on-spark-etc." class="section level1">
 <h1>Notes on Spark, etc.</h1>
