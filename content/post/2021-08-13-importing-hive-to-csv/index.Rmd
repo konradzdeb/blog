@@ -3,7 +3,7 @@ title: R-based metaprogramming strategies for handling Hive/CSV interaction (Par
 author: Konrad Zdeb
 date: '2021-08-13'
 slug: importing-csv-to-hive
-draft: true
+draft: false
 categories:
   - how-to
 tags:
