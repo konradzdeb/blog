@@ -17,17 +17,18 @@ tags:
 
 <div id="background" class="section level1">
 <h1>Background</h1>
-<p>Handling Hive/CSV interacion is an unfortunate reality of many analytical and data environments. The question on exporting data from Hive to CSV and other formats is frequently raised on online forums. The article provides an opinionated overview of the existing methods and shortcomings.</p>
+<p>Handling Hive/CSV interaction is a common reality of many analytical and data environments. The question on exporting data from Hive to CSV and other formats is frequently raised on online forums with answers frequently suggesting making use of <a href="https://en.wikipedia.org/wiki/Sed"><code>sed</code></a> that combined with nifty regular expressions pipes Hive output into a flat CSV files as an exporting solution. Import of large amounts of data is best handled by suitable tools like <a href="https://flume.apache.org">Apache Flume</a>. That is fine for simpler tables but may prove problematic for tables with a large amount of unstructured text. Frequently analysts and data scientists are faced with a challenge with storing data Hive on a irregular semi-regular basis. For instance, a job may produce new forecasting scenarios that we may want to make available through a Hive tables.</p>
+<p>Relaying on Spark API may prove fiddly when our requirements for resulting Hive table are non-standard. We may be willing to have a detailed control over column types or dynamically store comments providing relevant table context. If our modelling/data creation efforts takes place outside Spark session kicking off a Spark connection only to store some data in Hive feels like unnecessary onerous approach. Generating lengthy HiveQL syntax may also appear unnecessary tedious if we deal with numerous tables of variable structures. Meta-programming paradigm offers a neat solution to that challenge. Using R we can quickly generate HiveQL code that we use to land the CSV data into Hive with minimal overhead and dependencies. The article provides an opinionated overview of how meta-programming could be employed to quickly generate detailed HiveQL that would enable us to generate syntax for inserting data into Hive table controlling for column types/names and automatically generating comments.</p>
 <div id="trial-data" class="section level2">
 <h2>Trial Data</h2>
-<p>Before progressing with the examples and outlining difficulties associated with the export I’m going to create some sample data. I’m using the <a href="https://github.com/big-data-europe/docker-hive">docker-hive</a> Docker image provided by the Big Data Europe to run the example. The <a href="https://github.com/trinker/wakefield"><code>wakefield</code></a> package available for R provides access to a number of functions useful for synthetic data generation. In this example the goal is to generate a data set that will have columns of diverse types, such as freetext, dates, numbers of various formats, etc.. The <a href="https://github.com/trinker/wakefield"><code>wakefield</code></a> packages comes with great examples and and using them is generally a good idea. I have increased the size of the data to hundred thousand rows so partitioning it will be more realistic</p>
+<p>Before progressing with the examples and outlining difficulties associated with the export I’m going to create some sample data. I’m using the <a href="https://github.com/big-data-europe/docker-hive">docker-hive</a> Docker image provided by the Big Data Europe to run the example. The <a href="https://github.com/trinker/wakefield"><code>wakefield</code></a> package available for R provides access to a number of functions useful for synthetic data generation. In this example the goal is to generate a data set that will have columns of diverse types, such as free text, dates, numbers of various formats, etc.. The <a href="https://github.com/trinker/wakefield"><code>wakefield</code></a> packages comes with great examples and using them is generally a good idea. I have increased the size of the data to hundred thousand rows so partitioning it will be more realistic</p>
 <pre class="r"><code>library(&quot;wakefield&quot;)
 set.seed(123)
 test_data &lt;- r_data_frame(n = 1e5,
     id,
     dob,
     animal,
-    grade, grade,
+    grade,
     death,
     dummy,
     grade_letter,
@@ -45,21 +46,20 @@ test_data %&lt;&gt;% mutate(test_data,
     mutate(across(starts_with(&quot;part&quot;), as.integer))</code></pre>
 <p>The trial data looks good; we have generated a number of messy variables that will be “pleasure” to deal with during import/export operation.</p>
 <pre><code>## Rows: 100,000
-## Columns: 14
+## Columns: 13
 ## $ ID           &lt;chr&gt; &quot;00001&quot;, &quot;00002&quot;, &quot;00003&quot;, &quot;00004&quot;, &quot;00005&quot;, &quot;00006&quot;, &quot;00…
-## $ DOB          &lt;date&gt; 2007-10-06, 2007-11-23, 2007-02-12, 2008-01-25, 2007-02-…
+## $ DOB          &lt;date&gt; 2007-10-11, 2007-11-28, 2007-02-17, 2008-01-30, 2007-03-…
 ## $ Animal       &lt;fct&gt; Field Spaniel, Akita, Pool Frog, Akita, Akita, Newfoundla…
-## $ Grade_1      &lt;dbl&gt; 83.1, 87.4, 92.5, 93.7, 90.2, 86.4, 89.0, 86.1, 85.1, 84.…
-## $ Grade_2      &lt;dbl&gt; 88.9, 84.4, 93.0, 83.0, 87.2, 88.0, 86.1, 88.6, 93.3, 88.…
-## $ Death        &lt;lgl&gt; FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE,…
-## $ Dummy        &lt;dbl&gt; 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, …
-## $ Grade_Letter &lt;ord&gt; B, A+, A-, A, B, A-, B-, B+, B+, A-, A-, B, A, A-, B+, A-…
-## $ Gender       &lt;fct&gt; Female, Male, Male, Male, Female, Female, Female, Male, M…
-## $ Paragraph    &lt;chr&gt; &quot;Lorem ipsum dolor sit amet, vitae in sed eget, praesent …
-## $ Sentence     &lt;chr&gt; &quot;Look, I love to I love teachers, and I&#39;m happy to have s…
+## $ Grade        &lt;dbl&gt; 83.1, 87.4, 92.5, 93.7, 90.2, 86.4, 89.0, 86.1, 85.1, 84.…
+## $ Death        &lt;lgl&gt; FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FA…
+## $ Dummy        &lt;dbl&gt; 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, …
+## $ Grade_Letter &lt;ord&gt; B+, B+, B+, B, B+, A-, B, B+, A-, B, B, B, B+, A-, A-, B+…
+## $ Gender       &lt;fct&gt; Male, Female, Female, Male, Female, Male, Female, Female,…
+## $ Paragraph    &lt;chr&gt; &quot;Lorem ipsum dolor sit amet, leo pretium amet eget. Orci …
+## $ Sentence     &lt;chr&gt; &quot;N.&quot;, &quot;As Commander in Chief, I will maintain the stronge…
 ## $ part_year    &lt;int&gt; 2007, 2007, 2007, 2008, 2007, 2006, 2007, 2007, 2007, 200…
-## $ part_mnth    &lt;int&gt; 10, 11, 2, 1, 2, 12, 6, 4, 4, 8, 8, 6, 4, 4, 7, 11, 7, 5,…
-## $ part_day     &lt;int&gt; 6, 23, 12, 25, 28, 13, 12, 3, 18, 31, 26, 12, 10, 11, 26,…</code></pre>
+## $ part_mnth    &lt;int&gt; 10, 11, 2, 1, 3, 12, 6, 4, 4, 9, 8, 6, 4, 4, 7, 11, 8, 6,…
+## $ part_day     &lt;int&gt; 11, 28, 17, 30, 5, 18, 17, 8, 23, 5, 31, 17, 15, 16, 31, …</code></pre>
 </div>
 </div>
 <div id="metaprogramming-paradigm" class="section level1">
@@ -135,9 +135,20 @@ test_data %&lt;&gt;% mutate(test_data,
 #&#39; Arbitrary set of rules transforming string so passed results are consistent
 #&#39;   with HiveQL rules on syntactically correct column names.
 #&#39;
+#&#39; @details Manual replacements are useful for when we may be dealing with
+#&#39;   columns where automatic application of rules is not desired. For instance
+#&#39;   if our intention is to rename column &quot;Super Important Column&quot; to
+#&#39;   &quot;to_delete&quot; we would use the \code{manual_replacement} argument to implement
+#&#39;   that change.
+#&#39;
 #&#39; @param x A character vector with column names to transform
 #&#39; @param lowercase_currency_names A logic, defaults to \code{FALSE}, whether to
 #&#39;   convert the currency names to lower-case.
+#&#39; @param manual_replacement A named vector defining manual replacement for
+#&#39;   column names can be of format c(&quot;Super Important Column&quot; = &quot;to_delete) or
+#&#39;   c(&quot;3&quot; = &quot;to_delete&quot;) for column positions.
+#&#39; @param remove_words A character vector with words we like to remove,
+#&#39;   defaults to commonly occuring words in column name like &quot;per, by, for&quot;
 #&#39;
 #&#39; @return A character vector
 #&#39;
@@ -145,20 +156,31 @@ test_data %&lt;&gt;% mutate(test_data,
 #&#39;
 #&#39; @examples
 #&#39; dirty_col_names &lt;- c(&quot;Date of Birth&quot;, &quot;12-important-column&quot;,
-#&#39;   &quot;14-crucial-column&quot;, &quot; user inputs&quot;, &quot;price in (£)&quot;)
+#&#39;   &quot;14-crucial-column&quot;, &quot; user    inputs&quot;, &quot;price in (£)&quot;)
 #&#39; clean_column_names(x = dirty_col_names)
-clean_column_names &lt;- function(x, lowercase_currency_names = FALSE) {
+clean_column_names &lt;- function(x, lowercase_currency_names = FALSE,
+                               manual_replacement = NULL,
+                               remove_words = c(&quot;per&quot;, &quot;by&quot;, &quot;for&quot;)) {
+  x &lt;- stringi::stri_trim_both(x)
+  x &lt;- stringi::stri_trans_tolower(x)
+  x &lt;- stringi::stri_replace_all_regex(x, &quot;^[^a-z]*&quot;, &quot;&quot;) # Column name should start with a letter
+  x &lt;- stringi::stri_replace_all_charclass(x, &quot;\\p{WHITE_SPACE}&quot;, &quot;_&quot;)
+  x &lt;- stringi::stri_replace_all_regex(x, &quot;^[^a-z]*&quot;, &quot;&quot;) # Column name should start with a letter
+  x &lt;-
+  x
+}
 
-}</code></pre>
+
+dirty_col_names &lt;- c(&quot;Date of Birth&quot;, &quot;12-important-column&quot;,
+   &quot;14-crucial-column&quot;, &quot; user inputs&quot;, &quot;price in (£)&quot;)
+print(clean_column_names(x = dirty_col_names))</code></pre>
+<pre><code>## [1] &quot;date_of_birth&quot;    &quot;important-column&quot; &quot;crucial-column&quot;   &quot;user_inputs&quot;     
+## [5] &quot;price_in_(£)&quot;</code></pre>
 </div>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>In the subsequent articles I will tackle remaining challenges such as automatically generating meaningful strings for the column comments and R to Hive type conversion. The function discussed above</p>
-</div>
-<div id="notes-on-spark-etc." class="section level1">
-<h1>Notes on Spark, etc.</h1>
-<p>The article demonstrates using R to</p>
+<p>In the subsequent articles I will tackle remaining challenges such as automatically generating meaningful strings for the column comments and R to Hive type conversion. The function discussed above will be made available through a dedicated R package that I’m making available on GitHub at <a href="https://github.com/konradzdeb/HiveQLgenerator">konradzdeb/HiveQLgenerator</a>.</p>
 </div>
 <div class="footnotes">
 <hr />

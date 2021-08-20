@@ -14,11 +14,13 @@ tags:
 
 # Background
 
-Handling Hive/CSV interacion is an unfortunate reality of many analytical and data environments. The question on exporting data from Hive to CSV and other formats is frequently raised on online forums. The article provides an opinionated overview of the existing methods and shortcomings. 
+Handling Hive/CSV interaction is a common reality of many analytical and data environments. The question on exporting data from Hive to CSV and other formats is frequently raised on online forums with answers frequently suggesting making use of [`sed`](https://en.wikipedia.org/wiki/Sed) that combined with nifty regular expressions pipes Hive output into a flat CSV files as an exporting solution. Import of large amounts of data is best handled by suitable tools like [Apache Flume](https://flume.apache.org). That is fine for simpler tables but may prove problematic for tables with a large amount of unstructured text. Frequently analysts and data scientists are faced with a challenge with storing data Hive on a irregular semi-regular basis. For instance, a job may produce new forecasting scenarios that we may want to make available through a Hive tables. 
+
+Relaying on Spark API may prove fiddly when our requirements for resulting Hive table are non-standard. We may be willing to have a detailed control over column types or dynamically store comments providing relevant table context. If our modelling/data creation efforts takes place outside Spark session kicking off a Spark connection only to store some data in Hive feels like unnecessary onerous approach. Generating lengthy HiveQL syntax may also appear unnecessary tedious if we deal with numerous tables of variable structures. Meta-programming paradigm offers a neat solution to that challenge. Using R we can quickly generate HiveQL code that we use to land the CSV data into Hive with minimal overhead and dependencies. The article provides an opinionated overview of how meta-programming could be employed to quickly generate detailed HiveQL that would enable us to generate syntax for inserting data into Hive table controlling for column types/names and automatically generating comments.
 
 ## Trial Data
 
-Before progressing with the examples and outlining difficulties associated with the export I'm going to create some sample data. I'm using the [docker-hive](https://github.com/big-data-europe/docker-hive) Docker image provided by the Big Data Europe to run the example. The [`wakefield`](https://github.com/trinker/wakefield) package available for R provides access to a number of functions useful for synthetic data generation. In this example the goal is to generate a data set that will have columns of diverse types, such as freetext, dates, numbers of various formats, etc.. The [`wakefield`](https://github.com/trinker/wakefield) packages comes with great examples and and using them is generally a good idea. I have increased the size of the data to hundred thousand rows so partitioning it will be more realistic
+Before progressing with the examples and outlining difficulties associated with the export I'm going to create some sample data. I'm using the [docker-hive](https://github.com/big-data-europe/docker-hive) Docker image provided by the Big Data Europe to run the example. The [`wakefield`](https://github.com/trinker/wakefield) package available for R provides access to a number of functions useful for synthetic data generation. In this example the goal is to generate a data set that will have columns of diverse types, such as free text, dates, numbers of various formats, etc.. The [`wakefield`](https://github.com/trinker/wakefield) packages comes with great examples and using them is generally a good idea. I have increased the size of the data to hundred thousand rows so partitioning it will be more realistic
 
 ```{r generate_synth_data, echo=TRUE, message=FALSE, warning=FALSE, cache=TRUE}
 library("wakefield")
@@ -27,7 +29,7 @@ test_data <- r_data_frame(n = 1e5,
     id,
     dob,
     animal,
-    grade, grade,
+    grade,
     death,
     dummy,
     grade_letter,
@@ -138,12 +140,6 @@ We can assume a more rigours approach reflecting the prefence that, in all likel
 ```{r column_rename_function, code=xfun::read_utf8("../../../../HiveQLgenerator/R/clean-column-names.R"), echo=TRUE}
 ```
 
-
 # Conclusion
 
-In the subsequent articles I will tackle remaining challenges such as automatically generating meaningful strings for the column comments and R to Hive type conversion. The function discussed above
-
-# Notes on Spark, etc.
-
-The article demonstrates using R to 
-
+In the subsequent articles I will tackle remaining challenges such as automatically generating meaningful strings for the column comments and R to Hive type conversion. The function discussed above will be made available through a dedicated R package that I'm making available on GitHub at [konradzdeb/HiveQLgenerator](https://github.com/konradzdeb/HiveQLgenerator).
