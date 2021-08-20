@@ -5,7 +5,7 @@
 /blogdown
 /public/
 /resources/
-/index_cache/
+index_cache
 
 .DS_Store
 Thumbs.db
