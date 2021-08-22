@@ -3,6 +3,7 @@ title: Why Data Science Teams Write Notoriously Bad Code
 author: Konrad Zdeb
 date: '2021-08-22'
 slug: ata-science-teams-and-bad-code
+draft: true
 categories:
   - business
 tags:
@@ -11,4 +12,36 @@ tags:
   - workflow
 ---
 
+# The problem …
+
+What is most worrisome is not the fact that data science teams deliver poor code but the fact that this is very problem is often ignored in business. The problem has complex roots and can be traced to a few key characteristics:
+
+* Business location of the data science team that is too remote from the proper IT process
+* Lack of independent objectives focusing on code quality
+* Overall training of data scientist
+ 
+# Good Code / Bad Code
+
+Before slagging off data science teams from writing bad code it's good to consider what actually constitutes a good code and a robust coding workflow. In a software-oriented business (i.e. think of a software house that makes living out of churning mobile phone apps) we would pick a number of characteristics that constitute good coding environment. The excellent article defining wider business characteristics was published by Joel XXXX and focuses on characteristics we would like to see in a well-organised software development business. Leaving on side wider office dynamic, from a coding perspective in a good workflow we would anticipate to find the following elements properly defined
+
+* Does the team have a clarity on what is in and out of their tech stack? Imagine that you have a project where ETL is delivered via SAS, ML is programmed in Python and report is generated through R using RMarkdown. The immediate question that arises is why? Are all of those technologies necessary? No, very seldom there is a justifiable technical reason for that state of affairs to emerge; however, surprisingly this is not infreqnet. I will explain later why this happens
+* Is there a peer review process that would be enacted in a transparent, permanent manner? 
+* Is there a searchable dynamic documentation?
+* Do all developers understand unit testing?
+* How about continuous integration?
+* Is the written code modular, re-usable?
+
+In a well functioning software development house we would find that those items are usually well managed. The question that arises is why this is not common acrosss data science teams?
+
+# What are data scientists (frequently) asked to do
+
+The question on why those practices are not frequently followed can be partially answered by why are the key objectives for decision science teams.
+
+## Discovery vs. Discovering
+
+The objective that data science are frequently tasked with is to discover something. Let's imagine that we run a mobile phone company and we would like build a customer attraticion model. The task presented to data science team would be too look at the wealth of data on customer characteristics, activity and come up with a modelling solution flagging customers that are likely to leave the business. It's to imagine that this can be done through a suprvised ML approach. We have details on customers that left the business, we could pick similar patterns across our customer base and, with some degree of confidence, flag those that are likely to leave. So far so good, the next step would be to surface that flag via our CRM system and let our marketing / customer folk approach those customers with an offer inducing them to stay. Naturally, there is whole income/transactional cost element here but that's not the focus. From a quality of coding perspective major mistake was made.
+
+The data science team was asked to deliver *a solution* not *a process for obtaining the solution.* What that means in practice that if we want to try a different model, expand base data or look at different time frames / subsets we have to liaise with our data science team to accomplish that task. More importantly, because we assess our data science team on quality of the modelling outputs (i.e. confusion matrix) they were given (too) much freedom on how to do things. In all likelihood, we don't have a reusable piece of software but a set of analytical scripts, or worse, Jupyter notebooks that do everything from ETL to visualisations and exporting results. Those things are nightmare to support.
+
+If we were to ask our data science team to deliver a *tool* that enables to run different attrition models on heterogeneous data tools the task would be much more complex in a short term but significantly more beneficial to the business. Delivery of a *tool* forces a whole set of requirements that are not surfaced in an analytical project. Tool has to have user-facing documentation, interface, come with some depenendcy managment system (think `requirements.txt` for Python-based or `DESCRIPTION` files for R package). Tool has to be sufficiently data agnostic. We can impose certain requirements concerning the data format but the whole purpose of a tool is that it will deployable again and again against different data subsets
 
