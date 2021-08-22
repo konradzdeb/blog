@@ -1,0 +1,14 @@
+---
+title: Why Data Science Teams Write Notoriously Bad Code
+author: Konrad Zdeb
+date: '2021-08-22'
+slug: ata-science-teams-and-bad-code
+categories:
+  - business
+tags:
+  - practice
+  - coding
+  - workflow
+---
+
+
