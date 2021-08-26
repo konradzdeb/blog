@@ -14,15 +14,21 @@ tags:
 
 # The problem …
 
-What is most worrisome is not the fact that data science teams deliver poor code but the fact that this is very problem is often ignored in business. The problem has complex roots and can be traced to a few key characteristics:
+What is most worrisome is not the fact that data science teams frequently deliver an average quality code but the fact that this is very problem is often ignored by business. The challenge has complex roots and can be traced to a few wider key characteristics associated with the place of data science team in business. Broadly, those will be related to the following aspects:
 
-* Business location of the data science team that is too remote from the proper IT process
+* Functional location of the data science team that is too remote from the proper IT process
 * Lack of independent objectives focusing on code quality
 * Overall training of data scientist
  
 # Good Code / Bad Code
 
-Before slagging off data science teams from writing bad code it's good to consider what actually constitutes a good code and a robust coding workflow. In a software-oriented business (i.e. think of a software house that makes living out of churning mobile phone apps) we would pick a number of characteristics that constitute good coding environment. The excellent article defining wider business characteristics was published by Joel XXX and focuses on characteristics we would like to see in a well-organised software development business. Leaving on side wider office dynamic, from a coding perspective in a good workflow we would anticipate to find the following elements properly defined
+Before slagging off data science teams from writing bad code it's required to consider what are the hallmarks of quality code and what workflow characteristics are conducive to obtaining high quality code. There is no one definition of "high quality code" that would be uniformly accepted, as discussed in a related online conversation^[*How to Quantify Code Quality.* [softwareengineering.stackexchange.com/q/400913](https://softwareengineering.stackexchange.com/q/400913)] one of the best available measures is "WTFs per minute"
+
+![*WTFs per minute*](images/wtfm.jpg){width=500px height=471px}
+
+The relevant academic literature and highlights aspects like test coverage, cyclomatic complexity^[In simplest terms *cyclomatic complexity* reflects the number of linearly independent paths through a program's source code.], duplication / violations of do not repeat yourself principle (DRY) and other elements like quality of comments. 
+
+In a software-oriented business (i.e. think of a software house that makes living out of churning mobile phone apps) we would pick a number of characteristics that constitute good coding environment. The excellent article defining wider business characteristics was published by [Joel Spolsky](https://www.joelonsoftware.com) and focuses on characteristics we would like to see in a well-organised software development business. Leaving on side wider office dynamic, from a coding perspective in a good workflow we would anticipate to find the following elements properly defined
 
 * Does the team have a clarity on what is in and out of their tech stack? Imagine that you have a project where ETL is delivered via SAS, ML is programmed in Python and report is generated through R using RMarkdown. The immediate question that arises is why? Are all of those technologies necessary? No, very seldom there is a justifiable technical reason for that state of affairs to emerge; however, surprisingly this is not infrequent. I will explain later why this happens
 * Is there a peer review process that would be enacted in a transparent, permanent manner? 
