@@ -12,9 +12,9 @@ tags:
   - workflow
 ---
 
-# The problem …
+# The challenge …
 
-What is most worrisome is not the fact that data science teams frequently deliver an average quality code but the fact that this is very problem is often ignored by business. The challenge has complex roots and can be traced to a few wider key characteristics associated with the place of data science team in business. Broadly, those will be related to the following aspects:
+The challenge associated with the managing effective data science teams in business is not necessarily associated with the average quality of coding delivered by the team but with the fact that this is very problem is often ignored by managers. The challenge has complex roots and can be traced to a few wider key characteristics associated with the place of data science team in business. Broadly, those will be related to the following aspects:
 
 * Functional location of the data science team that is too remote from the proper IT process
 * Lack of independent objectives focusing on code quality
@@ -26,11 +26,32 @@ Before slagging off data science teams from writing bad code it's required to co
 
 ![*WTFs per minute*](images/wtfm.jpg){width=500px height=471px}
 
-The relevant academic literature and highlights aspects like test coverage, cyclomatic complexity^[In simplest terms *cyclomatic complexity* reflects the number of linearly independent paths through a program's source code.], duplication / violations of do not repeat yourself principle (DRY) and other elements like quality of comments. 
+The relevant academic literature and highlights aspects like test coverage, cyclomatic complexity^[In simplest terms *cyclomatic complexity* reflects the number of linearly independent paths through a program's source code.], duplication / violations of do not repeat yourself principle (DRY) and other elements like quality of comments. Further characteristics will be applicable to specific languages. Usually, developers would strive to avoid unneccessary complexity. For example, if we are looking to sum two integers we would prefer:
 
-In a software-oriented business (i.e. think of a software house that makes living out of churning mobile phone apps) we would pick a number of characteristics that constitute good coding environment. The excellent article defining wider business characteristics was published by [Joel Spolsky](https://www.joelonsoftware.com) and focuses on characteristics we would like to see in a well-organised software development business. Leaving on side wider office dynamic, from a coding perspective in a good workflow we would anticipate to find the following elements properly defined
+```{r simple_sum}
+resA <- 1 + 2
+resA
+```
+
+over 
+
+```{r naff_sum}
+assign(x = "resB", value = `+`(1, 2), envir = globalenv())
+resB
+```
+
+Both expressions are legal but the second on is unnecessary complex if our intention is to simply store the results in a parent frame of where the expression is evaluated. Then again, `aasign` has a well-earned place in R and there will be legitmate cases where we will be looking to assign value to other environment than a parent frame of the expression. The point here is that incurred complexity should be clearly justifiable. That becomes more challenging in complex projects. When choosing object-orient approach to R Hadley^[Wickham, H. (2019). Advanced R. [https://adv-r.hadley.nz](https://adv-r.hadley.nz)] notes:
+
+> Overall, when picking an OO system, I recommend that you default to S3. S3 is simple, and widely used throughout base R and CRAN. While it’s far from perfect, its idiosyncrasies are well understood and there are known approaches to overcome most shortcomings. If you have an existing background in programming you are likely to lean towards R6, because it will feel familiar. I think you should resist this tendency for two reasons.
+
+to add later:
+
+> Once you’ve mastered S3, S4 is not too difficult to pick up: the underlying ideas are the same, S4 is just more formal, more strict, and more verbose. The strictness and formality of S4 make it well suited for large teams. Since more structure is provided by the system itself, there is less need for convention, and new contributors don’t need as much training. S4 tends to require more upfront design than S3, and this investment is more likely to pay off on larger projects where greater resources are available.
+
+The answer is not simple and depends on multitude of factors, some pertaining to the nature of the project but other related to how the team prefers to operate, available skills and so forth. In a software-oriented business (i.e. think of a software house that makes living out of churning mobile phone apps) we would pick a number of characteristics that constitute good coding environment. The excellent article defining wider business characteristics was published by [Joel Spolsky](https://www.joelonsoftware.com)^[Joel Spolsky. August 2009. [The Joel Test: 12 Steps to Better Code.](https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code/)] and focuses on characteristics we would like to see in a well-organised software development team. Leaving on side wider office dynamic, from a coding perspective in a good workflow we would anticipate to find the following elements properly defined
 
 * Does the team have a clarity on what is in and out of their tech stack? Imagine that you have a project where ETL is delivered via SAS, ML is programmed in Python and report is generated through R using RMarkdown. The immediate question that arises is why? Are all of those technologies necessary? No, very seldom there is a justifiable technical reason for that state of affairs to emerge; however, surprisingly this is not infrequent. I will explain later why this happens
+
 * Is there a peer review process that would be enacted in a transparent, permanent manner? 
 * Is there a searchable dynamic documentation?
 * Do all developers understand unit testing?
@@ -41,15 +62,15 @@ In a well functioning software development house we would find that those items 
 
 # What are data scientists (frequently) asked to do
 
-The question on why those practices are not frequently followed can be partially answered by why are the key objectives for decision science teams.
+This is the crux of the problem. The, frequently poor, code development practices within analytical and data science teams are function of objectives and historical approaches The question on why those practices are not frequently followed can be partially answered by why are the key objectives for decision science teams and partially by the historical, traditional approaches to training data science teams.
 
 ## Discovery vs. Discovering
 
-The objective that data science are frequently tasked with is to discover something. Let's imagine that we run a mobile phone company and we would like build a customer attrition model. The task presented to data science team would be too look at the wealth of data on customer characteristics, activity and come up with a modelling solution flagging customers that are likely to leave the business. It's to imagine that this can be done through a supervised ML approach. We have details on customers that left the business, we could pick similar patterns across our customer base and, with some degree of confidence, flag those that are likely to leave. So far so good, the next step would be to surface that flag via our CRM system and let our marketing / customer folk approach those customers with an offer inducing them to stay. Naturally, there is whole income/transactional cost element here but that's not the focus. From a quality of coding perspective major mistake was made.
+The objective that data science are frequently tasked with is to *discover* something. Let's imagine that we run a mobile phone company and we would like build a customer attrition model. The task given to the data science team would be too look at the wealth of data on customer characteristics, activity and come up with a modelling solution flagging customers that are likely to leave the business. It's easy to conclude that this can be done through a supervised ML approach. We have details on customers that left the business, we could identify similar patterns across our customer base and, with some degree of confidence, flag those that are likely to leave. So far so good; business-wise the next step would be to surface that flag via our CRM system and let our marketing / customer folk approach those customers with an offer inducing them to stay. Naturally, there is whole income/transactional cost element here but that's not the focus. However, from a quality of coding perspective major mistake was made.
 
-The data science team was asked to deliver *a solution* not *a process for obtaining the solution.* What that means in practice that if we want to try a different model, expand base data or look at different time frames / subsets we have to liaise with our data science team to accomplish that task. More importantly, because we assess our data science team on quality of the modelling outputs (i.e. confusion matrix) they were given (too) much freedom on how to do things. In all likelihood, we don't have a reusable piece of software but a set of analytical scripts, or worse, Jupyter notebooks that do everything from ETL to visualisations and exporting results. Those things are nightmare to support. We are in this mess because we asked the team to *discover* a solution not give use a tool that will enable us to keep *discovering* the business relevant insights again and again.
+The data science team was asked to deliver *a solution* not *a process for obtaining solutions.* What this means in practice that if in the future we want to explore a different modelling approach, expand our base data or look at different time frames / subsets we have to task our data science team with some development activity. More importantly, because we assess our data science team on quality of the modelling outputs (i.e. confusion matrix), in all likelihood, they were given (too) much freedom on how to do things. Right now, we don't have a reusable piece of software but a set of analytical scripts, or worse, Jupyter notebooks that do everything from ETL to visualisations and exporting results. Those things are nightmare to support and any further enhancements, fixes or improvements will cost us dearly in time and effort. We are in this mess because we asked the team to *discover* a solution not give use a tool that will enable us to keep *discovering* the business relevant insights again and again.
 
-If we were to ask our data science team to deliver a *tool* that enables to run different attrition models on heterogeneous data tools the task would be much more complex in a short term but significantly more beneficial to the business. Delivery of a *tool* forces a whole set of requirements that are not surfaced in an analytical project. Tool has to have user-facing documentation, interface, come with some dependency management system (think `requirements.txt` for Python-based or `DESCRIPTION` files for R package). Tool has to be sufficiently data agnostic. We can impose certain requirements concerning the data format but the whole purpose of a tool is that it will deployable again and again against different data subsets. 
+If we were to ask our data science team to deliver a *tool* that enables to run different attrition models on heterogeneous data tools the task would be much more complex in a short term but significantly more beneficial to the business. Delivery of a *tool* forces a whole set of requirements that are not surfaced in an analytical project. Tool has to have user-facing documentation, interface, come with some dependency management system (think `requirements.txt` for Python-based or `DESCRIPTION` files for R package). Tool has to be sufficiently data agnostic. We can impose certain requirements concerning the data format but the whole purpose of a tool is that it will deployable again and again against different data subsets. The actual modelling aspect is secondary. Working backwards 
 
 ## What happens at Uni stays at Uni ...
 
@@ -59,10 +80,8 @@ Unfortunately, the phrase **What happens in Vegas stays in Vegas** does not appl
 
 * Maintenance is problematic, in all likelihood we have a bunch of scripts crammed together. The code is not modular and in order to modify the model we can just call in different modelling function. There is no continuous integration / unit testing - we find out if the stuff works after we re-run it, another waste of time
 
-
 # Solutions
 
 ## No pain no gain ...
 
 Humility is often helpful. Eminent developers are often keen to learn new things and are modest in their self-assessment. You can often see really excellent people like XXXX speaking of learning this or that. That's a brilliant attitude. Good manager will be able to pull the team towards the learning journey. Degree in a subject is a first step not the last one on journey to becoming a good programmer. This is a challenge, especially for people coming from stats/maths background that usually seen statistical software to 'run my regression' and where never challenged to reflect on memory management aspect of the `lm` function they may be using. Surely, if you run your stuff once at home to finish your dissertation it doesn't matter if you it takes a minute or five and if you have to spend another few minutes to change the hard-coded paths. 
-

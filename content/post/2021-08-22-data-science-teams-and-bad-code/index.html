@@ -15,9 +15,9 @@ tags:
 <script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
 
-<div id="the-problem" class="section level1">
-<h1>The problem …</h1>
-<p>What is most worrisome is not the fact that data science teams frequently deliver an average quality code but the fact that this is very problem is often ignored by business. The challenge has complex roots and can be traced to a few wider key characteristics associated with the place of data science team in business. Broadly, those will be related to the following aspects:</p>
+<div id="the-challenge" class="section level1">
+<h1>The challenge …</h1>
+<p>The challenge associated with the managing effective data science teams in business is not necessarily associated with the average quality of coding delivered by the team but with the fact that this is very problem is often ignored by managers. The challenge has complex roots and can be traced to a few wider key characteristics associated with the place of data science team in business. Broadly, those will be related to the following aspects:</p>
 <ul>
 <li>Functional location of the data science team that is too remote from the proper IT process</li>
 <li>Lack of independent objectives focusing on code quality</li>
@@ -31,26 +31,41 @@ tags:
 <img src="images/wtfm.jpg" width="500" height="471" alt="" />
 <p class="caption"><em>WTFs per minute</em></p>
 </div>
-<p>The relevant academic literature and highlights aspects like test coverage, cyclomatic complexity<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>, duplication / violations of do not repeat yourself principle (DRY) and other elements like quality of comments.</p>
-<p>In a software-oriented business (i.e. think of a software house that makes living out of churning mobile phone apps) we would pick a number of characteristics that constitute good coding environment. The excellent article defining wider business characteristics was published by <a href="https://www.joelonsoftware.com">Joel Spolsky</a> and focuses on characteristics we would like to see in a well-organised software development business. Leaving on side wider office dynamic, from a coding perspective in a good workflow we would anticipate to find the following elements properly defined</p>
+<p>The relevant academic literature and highlights aspects like test coverage, cyclomatic complexity<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>, duplication / violations of do not repeat yourself principle (DRY) and other elements like quality of comments. Further characteristics will be applicable to specific languages. Usually, developers would strive to avoid unneccessary complexity. For example, if we are looking to sum two integers we would prefer:</p>
+<pre class="r"><code>resA &lt;- 1 + 2
+resA</code></pre>
+<pre><code>## [1] 3</code></pre>
+<p>over</p>
+<pre class="r"><code>assign(x = &quot;resB&quot;, value = `+`(1, 2), envir = globalenv())
+resB</code></pre>
+<pre><code>## [1] 3</code></pre>
+<p>Both expressions are legal but the second on is unnecessary complex if our intention is to simply store the results in a parent frame of where the expression is evaluated. Then again, <code>aasign</code> has a well-earned place in R and there will be legitmate cases where we will be looking to assign value to other environment than a parent frame of the expression. The point here is that incurred complexity should be clearly justifiable. That becomes more challenging in complex projects. When choosing object-orient approach to R Hadley<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> notes:</p>
+<blockquote>
+<p>Overall, when picking an OO system, I recommend that you default to S3. S3 is simple, and widely used throughout base R and CRAN. While it’s far from perfect, its idiosyncrasies are well understood and there are known approaches to overcome most shortcomings. If you have an existing background in programming you are likely to lean towards R6, because it will feel familiar. I think you should resist this tendency for two reasons.</p>
+</blockquote>
+<p>to add later:</p>
+<blockquote>
+<p>Once you’ve mastered S3, S4 is not too difficult to pick up: the underlying ideas are the same, S4 is just more formal, more strict, and more verbose. The strictness and formality of S4 make it well suited for large teams. Since more structure is provided by the system itself, there is less need for convention, and new contributors don’t need as much training. S4 tends to require more upfront design than S3, and this investment is more likely to pay off on larger projects where greater resources are available.</p>
+</blockquote>
+<p>The answer is not simple and depends on multitude of factors, some pertaining to the nature of the project but other related to how the team prefers to operate, available skills and so forth. In a software-oriented business (i.e. think of a software house that makes living out of churning mobile phone apps) we would pick a number of characteristics that constitute good coding environment. The excellent article defining wider business characteristics was published by <a href="https://www.joelonsoftware.com">Joel Spolsky</a><a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> and focuses on characteristics we would like to see in a well-organised software development team. Leaving on side wider office dynamic, from a coding perspective in a good workflow we would anticipate to find the following elements properly defined</p>
 <ul>
-<li>Does the team have a clarity on what is in and out of their tech stack? Imagine that you have a project where ETL is delivered via SAS, ML is programmed in Python and report is generated through R using RMarkdown. The immediate question that arises is why? Are all of those technologies necessary? No, very seldom there is a justifiable technical reason for that state of affairs to emerge; however, surprisingly this is not infrequent. I will explain later why this happens</li>
-<li>Is there a peer review process that would be enacted in a transparent, permanent manner?</li>
-<li>Is there a searchable dynamic documentation?</li>
-<li>Do all developers understand unit testing?</li>
-<li>How about continuous integration?</li>
-<li>Is the written code modular, re-usable?</li>
+<li><p>Does the team have a clarity on what is in and out of their tech stack? Imagine that you have a project where ETL is delivered via SAS, ML is programmed in Python and report is generated through R using RMarkdown. The immediate question that arises is why? Are all of those technologies necessary? No, very seldom there is a justifiable technical reason for that state of affairs to emerge; however, surprisingly this is not infrequent. I will explain later why this happens</p></li>
+<li><p>Is there a peer review process that would be enacted in a transparent, permanent manner?</p></li>
+<li><p>Is there a searchable dynamic documentation?</p></li>
+<li><p>Do all developers understand unit testing?</p></li>
+<li><p>How about continuous integration?</p></li>
+<li><p>Is the written code modular, re-usable?</p></li>
 </ul>
 <p>In a well functioning software development house we would find that those items are usually well managed. The question that arises is why this is not common across data science teams?</p>
 </div>
 <div id="what-are-data-scientists-frequently-asked-to-do" class="section level1">
 <h1>What are data scientists (frequently) asked to do</h1>
-<p>The question on why those practices are not frequently followed can be partially answered by why are the key objectives for decision science teams.</p>
+<p>This is the crux of the problem. The, frequently poor, code development practices within analytical and data science teams are function of objectives and historical approaches The question on why those practices are not frequently followed can be partially answered by why are the key objectives for decision science teams and partially by the historical, traditional approaches to training data science teams.</p>
 <div id="discovery-vs.-discovering" class="section level2">
 <h2>Discovery vs. Discovering</h2>
-<p>The objective that data science are frequently tasked with is to discover something. Let’s imagine that we run a mobile phone company and we would like build a customer attrition model. The task presented to data science team would be too look at the wealth of data on customer characteristics, activity and come up with a modelling solution flagging customers that are likely to leave the business. It’s to imagine that this can be done through a supervised ML approach. We have details on customers that left the business, we could pick similar patterns across our customer base and, with some degree of confidence, flag those that are likely to leave. So far so good, the next step would be to surface that flag via our CRM system and let our marketing / customer folk approach those customers with an offer inducing them to stay. Naturally, there is whole income/transactional cost element here but that’s not the focus. From a quality of coding perspective major mistake was made.</p>
-<p>The data science team was asked to deliver <em>a solution</em> not <em>a process for obtaining the solution.</em> What that means in practice that if we want to try a different model, expand base data or look at different time frames / subsets we have to liaise with our data science team to accomplish that task. More importantly, because we assess our data science team on quality of the modelling outputs (i.e. confusion matrix) they were given (too) much freedom on how to do things. In all likelihood, we don’t have a reusable piece of software but a set of analytical scripts, or worse, Jupyter notebooks that do everything from ETL to visualisations and exporting results. Those things are nightmare to support. We are in this mess because we asked the team to <em>discover</em> a solution not give use a tool that will enable us to keep <em>discovering</em> the business relevant insights again and again.</p>
-<p>If we were to ask our data science team to deliver a <em>tool</em> that enables to run different attrition models on heterogeneous data tools the task would be much more complex in a short term but significantly more beneficial to the business. Delivery of a <em>tool</em> forces a whole set of requirements that are not surfaced in an analytical project. Tool has to have user-facing documentation, interface, come with some dependency management system (think <code>requirements.txt</code> for Python-based or <code>DESCRIPTION</code> files for R package). Tool has to be sufficiently data agnostic. We can impose certain requirements concerning the data format but the whole purpose of a tool is that it will deployable again and again against different data subsets.</p>
+<p>The objective that data science are frequently tasked with is to <em>discover</em> something. Let’s imagine that we run a mobile phone company and we would like build a customer attrition model. The task given to the data science team would be too look at the wealth of data on customer characteristics, activity and come up with a modelling solution flagging customers that are likely to leave the business. It’s easy to conclude that this can be done through a supervised ML approach. We have details on customers that left the business, we could identify similar patterns across our customer base and, with some degree of confidence, flag those that are likely to leave. So far so good; business-wise the next step would be to surface that flag via our CRM system and let our marketing / customer folk approach those customers with an offer inducing them to stay. Naturally, there is whole income/transactional cost element here but that’s not the focus. However, from a quality of coding perspective major mistake was made.</p>
+<p>The data science team was asked to deliver <em>a solution</em> not <em>a process for obtaining solutions.</em> What this means in practice that if in the future we want to explore a different modelling approach, expand our base data or look at different time frames / subsets we have to task our data science team with some development activity. More importantly, because we assess our data science team on quality of the modelling outputs (i.e. confusion matrix), in all likelihood, they were given (too) much freedom on how to do things. Right now, we don’t have a reusable piece of software but a set of analytical scripts, or worse, Jupyter notebooks that do everything from ETL to visualisations and exporting results. Those things are nightmare to support and any further enhancements, fixes or improvements will cost us dearly in time and effort. We are in this mess because we asked the team to <em>discover</em> a solution not give use a tool that will enable us to keep <em>discovering</em> the business relevant insights again and again.</p>
+<p>If we were to ask our data science team to deliver a <em>tool</em> that enables to run different attrition models on heterogeneous data tools the task would be much more complex in a short term but significantly more beneficial to the business. Delivery of a <em>tool</em> forces a whole set of requirements that are not surfaced in an analytical project. Tool has to have user-facing documentation, interface, come with some dependency management system (think <code>requirements.txt</code> for Python-based or <code>DESCRIPTION</code> files for R package). Tool has to be sufficiently data agnostic. We can impose certain requirements concerning the data format but the whole purpose of a tool is that it will deployable again and again against different data subsets. The actual modelling aspect is secondary. Working backwards</p>
 </div>
 <div id="what-happens-at-uni-stays-at-uni" class="section level2">
 <h2>What happens at Uni stays at Uni …</h2>
@@ -73,5 +88,7 @@ tags:
 <ol>
 <li id="fn1"><p><em>How to Quantify Code Quality.</em> <a href="https://softwareengineering.stackexchange.com/q/400913">softwareengineering.stackexchange.com/q/400913</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 <li id="fn2"><p>In simplest terms <em>cyclomatic complexity</em> reflects the number of linearly independent paths through a program’s source code.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>Wickham, H. (2019). Advanced R. <a href="https://adv-r.hadley.nz">https://adv-r.hadley.nz</a><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>Joel Spolsky. August 2009. <a href="https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code/">The Joel Test: 12 Steps to Better Code.</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
