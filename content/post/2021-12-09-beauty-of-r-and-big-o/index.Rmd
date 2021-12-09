@@ -1,0 +1,12 @@
+---
+title: Beauty of R and Big-O
+author: Konrad Zdeb
+date: '2021-12-09'
+slug: []
+categories:
+  - fun
+tags:
+  - R
+  - functional
+---
+
