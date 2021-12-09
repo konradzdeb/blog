@@ -90,15 +90,15 @@ sample_data &lt;- map_dfr(.x = dates, ~ tibble(val_a = runif(2),
                                             update_day = day(.x)))</code></pre>
 <p>The created data looks as follows:</p>
 <pre class="r"><code>head(sample_data)</code></pre>
-<pre><code>## # A tibble: 6 x 6
-##     val_a  val_b val_c update_year update_month update_day
-##     &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
-## 1 0.307   0.694  r            2010            1          1
-## 2 0.535   0.599  s            2010            1          1
-## 3 0.662   0.952  z            2010            1          2
-## 4 0.949   0.534  p            2010            1          2
-## 5 0.00298 0.0167 b            2010            1          3
-## 6 0.575   0.535  d            2010            1          3</code></pre>
+<pre><code>## # A tibble: 6 × 6
+##     val_a val_b val_c update_year update_month update_day
+##     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
+## 1 0.817   0.254 s            2010            1          1
+## 2 0.961   0.999 f            2010            1          1
+## 3 0.165   0.766 k            2010            1          2
+## 4 0.675   0.281 q            2010            1          2
+## 5 0.800   0.916 r            2010            1          3
+## 6 0.00138 0.889 c            2010            1          3</code></pre>
 <p>Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the <a href="https://spark.rstudio.com"><code>sparklyr</code></a> psvksge I’m creating a local connection.</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(sparklyr))
 sc &lt;- spark_connect(master = &quot;local&quot;)</code></pre>
@@ -156,15 +156,17 @@ res_pmap &lt;- pmap(
 sdf_num_partitions(tbl_perm)</code></pre>
 <pre><code>## [1] 118</code></pre>
 <pre class="r"><code>glimpse(tbl_perm)</code></pre>
-<pre><code>## Rows: ??
-## Columns: 6
+<pre><code>## Rows: ??</code></pre>
+<pre><code>## Warning in sdf_collect_static(object, impl, ...): NAs introduced by coercion to
+## integer range</code></pre>
+<pre><code>## Columns: 6
 ## Database: spark_connection
-## $ value_column_a &lt;dbl&gt; 0.48326078, 0.46211860, 0.48326078, 0.46211860, 0.94889…
-## $ value_column_b &lt;dbl&gt; 0.52267477, 0.01484539, 0.52267477, 0.01484539, 0.68882…
-## $ value_column_c &lt;chr&gt; &quot;f&quot;, &quot;p&quot;, &quot;f&quot;, &quot;p&quot;, &quot;q&quot;, &quot;s&quot;, &quot;q&quot;, &quot;s&quot;, &quot;b&quot;, &quot;v&quot;, &quot;b&quot;, …
+## $ value_column_a &lt;dbl&gt; 0.502635479, 0.230471104, 0.502635479, 0.230471104, 0.9…
+## $ value_column_b &lt;dbl&gt; 0.006240059, 0.619928644, 0.006240059, 0.619928644, 0.9…
+## $ value_column_c &lt;chr&gt; &quot;c&quot;, &quot;p&quot;, &quot;c&quot;, &quot;p&quot;, &quot;n&quot;, &quot;r&quot;, &quot;n&quot;, &quot;r&quot;, &quot;w&quot;, &quot;z&quot;, &quot;w&quot;, …
 ## $ part_year      &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
-## $ part_month     &lt;int&gt; 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2…
-## $ part_day       &lt;int&gt; 7, 7, 7, 7, 20, 20, 20, 20, 29, 29, 29, 29, 18, 18, 18,…</code></pre>
+## $ part_month     &lt;int&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2…
+## $ part_day       &lt;int&gt; 11, 11, 11, 11, 24, 24, 24, 24, 15, 15, 15, 15, 8, 8, 8…</code></pre>
 </div>
 </div>
 </div>
@@ -180,7 +182,7 @@ Costa, Eduarda, Carlos Costa, and Maribel Yasmina Santos. 2019. <span>“Evaluat
 </div>
 </div>
 </div>
-<div class="footnotes">
+<div class="footnotes footnotes-end-of-document">
 <hr />
 <ol>
 <li id="fn1"><p>Metaprogramming is a programming paradigm that treats other programming programs as data. In business, a BI setting metaprogramming is frequently used to generate efficiencies in routine data handling tasks, such as automating generation of SQL statements for importing data.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
