@@ -10,3 +10,86 @@ tags:
   - functional
 ---
 
+# Big-O
+
+The purpose of this modest post is not to provide yet another primer on the Big-O notation but to share my enduring appreciation for working with R. I will introduce Big-O only briefly to provide context but I would refer all of those who are interested to the linked materials.
+
+## What is Big-O
+
+The Big-O
+
+# The task at hand ...
+
+So I wanted to compare a speed of some algorithms and reflect on the Big-O curves. I need a quick visual aid where I could plot some most common Landau functions and add a few to quickly eyeball how they faire against standard plots.
+
+## Functions
+
+So I've defined a few functions that correspond to the basic Big-O curves that can be found in majority of introductory literature on the subject.
+
+```{r common_big_o_functions}
+O_1       <- function(n) { (rep(1,length(n))) }
+O_log_n   <- function(n) {log(n)}
+O_n       <- function(n) {n}
+O_n_log_n <- function(n) {n * log(n)}
+O_n_n     <- function(n) {n^2}
+O_2_to_n  <- function(n) {2^n}
+O_fac     <- function(n) {factorial(n)}
+```
+
+## The "requirements"
+
+After defining the above I wanted a quick way of plotting the data. The easiest approach would be to define the table where I could execute all of the functions. Let's say for $n = 10$ we could do the following:
+
+```{r define_big_o_data}
+n <- 10
+suppressPackageStartupMessages(library("tidyverse"))
+tibble(.rows = n) %>% 
+    mutate(O_n = map_dbl(1:n, O_1),
+           O_log_n = map_dbl(1:n, O_log_n)) 
+```
+
+The problems with this approach is apparent. I didn't want to type `O_this_and_that` x number of times to name columns, call functions and then be adding removing the functions I've already tested. I needed for R to:
+
+* Automatically identify all of the relevant function
+* Call each function on a sequence `1:n`
+* Pack everything in a neat table so I can play with it by plotting, etc.
+
+# Solution
+
+The actual solution can condensed further but I have broke it down for easier readability. First I've started with identifying the functions.
+
+```{r find_functions}
+Fun_names <- ls(pattern = "O_*")
+Funs_O <- mget(Fun_names) # Create a list of functions
+head(Funs_O, n = 2) # Preview
+```
+
+Now I needed to call each of those functions and pack the results into a tibble / data.frame. This is achieved by the code below. 
+
+```{r big_o_prop_data}
+map_df(Funs_O, ~ map_dbl(1:n, ~ .x(.x)))
+```
+
+I reckon it requires some explanation. `map_*` function are purrr's take on R's *apply family and map function on an element passed to the function. Starting from the inside the call `map_dbl(1:n, ~.x(.))` calls function `.x` on current element of the sequence, which is passed as `.` but another `.x` could also work!! The `map_df(O_funs, ....)` call is more cheeky as the list is actual collection of functions generated via `mget`. So instead of iterating over numbers of strings or data frames we are iterating over collection of closures. In that case our `.x` becomes a closure. Full solution for $n = 1000$ is provided below.
+
+```{r full_solution}
+n <- 1e4
+dta_big_o <- map_df(mget(Fun_names), ~ map_dbl(1:n, ~ .x(.x)))
+```
+
+#### Prview
+
+For $n = 10,000$ we obtain:
+
+```{r preview_data, echo=FALSE, results='asis'}
+knitr::kable(bind_rows(head(dta_big_o), tail(dta_big_o)),
+             format = "html") %>% 
+    kableExtra::kable_styling(font_size = 10, full_width = TRUE, position = "center")
+    
+```
+
+# Remarks
+
+In a production setting, we probably wouldn't rely on `ls(pattern = ...)` and `mget` sourcing objects by name. There even with setting up `mode` to `call` argument and limiting results to function there is a risk that our code could capture an undesired call that from one or another reason could appear in the environment where `ls` would happen to be executing search.
+
+Neverthless, ability to treat functions as objects is exceptyionally useful, especially if we need to iterate through a number of function, and quickly explore different variations. 

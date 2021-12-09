@@ -1,0 +1,413 @@
+---
+title: Beauty of R and Big-O
+author: Konrad Zdeb
+date: '2021-12-09'
+slug: []
+categories:
+  - fun
+tags:
+  - R
+  - functional
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+<script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
+<link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
+
+
+<div id="big-o" class="section level1">
+<h1>Big-O</h1>
+<p>The purpose of this modest post is not to provide yet another primer on the Big-O notation but to share my enduring appreciation for working with R. I will introduce Big-O only briefly to provide context but I would refer all of those who are interested to the linked materials.</p>
+<div id="what-is-big-o" class="section level2">
+<h2>What is Big-O</h2>
+<p>The Big-O</p>
+</div>
+</div>
+<div id="the-task-at-hand" class="section level1">
+<h1>The task at hand …</h1>
+<p>So I wanted to compare a speed of some algorithms and reflect on the Big-O curves. I need a quick visual aid where I could plot some most common Landau functions and add a few to quickly eyeball how they faire against standard plots.</p>
+<div id="functions" class="section level2">
+<h2>Functions</h2>
+<p>So I’ve defined a few functions that correspond to the basic Big-O curves that can be found in majority of introductory literature on the subject.</p>
+<pre class="r"><code>O_1       &lt;- function(n) { (rep(1,length(n))) }
+O_log_n   &lt;- function(n) {log(n)}
+O_n       &lt;- function(n) {n}
+O_n_log_n &lt;- function(n) {n * log(n)}
+O_n_n     &lt;- function(n) {n^2}
+O_2_to_n  &lt;- function(n) {2^n}
+O_fac     &lt;- function(n) {factorial(n)}</code></pre>
+</div>
+<div id="the-requirements" class="section level2">
+<h2>The “requirements”</h2>
+<p>After defining the above I wanted a quick way of plotting the data. The easiest approach would be to define the table where I could execute all of the functions. Let’s say for <span class="math inline">\(n = 10\)</span> we could do the following:</p>
+<pre class="r"><code>n &lt;- 10
+suppressPackageStartupMessages(library(&quot;tidyverse&quot;))
+tibble(.rows = n) %&gt;% 
+    mutate(O_n = map_dbl(1:n, O_1),
+           O_log_n = map_dbl(1:n, O_log_n)) </code></pre>
+<pre><code>## # A tibble: 10 × 2
+##      O_n O_log_n
+##    &lt;dbl&gt;   &lt;dbl&gt;
+##  1     1   0    
+##  2     1   0.693
+##  3     1   1.10 
+##  4     1   1.39 
+##  5     1   1.61 
+##  6     1   1.79 
+##  7     1   1.95 
+##  8     1   2.08 
+##  9     1   2.20 
+## 10     1   2.30</code></pre>
+<p>The problems with this approach is apparent. I didn’t want to type <code>O_this_and_that</code> x number of times to name columns, call functions and then be adding removing the functions I’ve already tested. I needed for R to:</p>
+<ul>
+<li>Automatically identify all of the relevant function</li>
+<li>Call each function on a sequence <code>1:n</code></li>
+<li>Pack everything in a neat table so I can play with it by plotting, etc.</li>
+</ul>
+</div>
+</div>
+<div id="solution" class="section level1">
+<h1>Solution</h1>
+<p>The actual solution can condensed further but I have broke it down for easier readability. First I’ve started with identifying the functions.</p>
+<pre class="r"><code>Fun_names &lt;- ls(pattern = &quot;O_*&quot;)
+Funs_O &lt;- mget(Fun_names) # Create a list of functions
+head(Funs_O, n = 2) # Preview</code></pre>
+<pre><code>## $O_1
+## function(n) { (rep(1,length(n))) }
+## &lt;bytecode: 0x7fc217203478&gt;
+## 
+## $O_2_to_n
+## function(n) {2^n}</code></pre>
+<p>Now I needed to call each of those functions and pack the results into a tibble / data.frame. This is achieved by the code below.</p>
+<pre class="r"><code>map_df(Funs_O, ~ map_dbl(1:n, ~ .x(.x)))</code></pre>
+<pre><code>## # A tibble: 10 × 7
+##      O_1 O_2_to_n   O_fac O_log_n   O_n O_n_log_n O_n_n
+##    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+##  1     1        2       1   0         1      0        1
+##  2     1        4       2   0.693     2      1.39     4
+##  3     1        8       6   1.10      3      3.30     9
+##  4     1       16      24   1.39      4      5.55    16
+##  5     1       32     120   1.61      5      8.05    25
+##  6     1       64     720   1.79      6     10.8     36
+##  7     1      128    5040   1.95      7     13.6     49
+##  8     1      256   40320   2.08      8     16.6     64
+##  9     1      512  362880   2.20      9     19.8     81
+## 10     1     1024 3628800   2.30     10     23.0    100</code></pre>
+<p>I reckon it requires some explanation. <code>map_*</code> function are purrr’s take on R’s *apply family and map function on an element passed to the function. Starting from the inside the call <code>map_dbl(1:n, ~.x(.))</code> calls function <code>.x</code> on current element of the sequence, which is passed as <code>.</code> but another <code>.x</code> could also work!! The <code>map_df(O_funs, ....)</code> call is more cheeky as the list is actual collection of functions generated via <code>mget</code>. So instead of iterating over numbers of strings or data frames we are iterating over collection of closures. In that case our <code>.x</code> becomes a closure. Full solution for <span class="math inline">\(n = 1000\)</span> is provided below.</p>
+<pre class="r"><code>n &lt;- 1e4
+dta_big_o &lt;- map_df(mget(Fun_names), ~ map_dbl(1:n, ~ .x(.x)))</code></pre>
+<div id="prview" class="section level4">
+<h4>Prview</h4>
+<p>For <span class="math inline">\(n = 10,000\)</span> we obtain:</p>
+<table class="table" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+O_1
+</th>
+<th style="text-align:right;">
+O_2_to_n
+</th>
+<th style="text-align:right;">
+O_fac
+</th>
+<th style="text-align:right;">
+O_log_n
+</th>
+<th style="text-align:right;">
+O_n
+</th>
+<th style="text-align:right;">
+O_n_log_n
+</th>
+<th style="text-align:right;">
+O_n_n
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.000000
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.6931472
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1.386294
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1.0986123
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3.295837
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+1.3862944
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+5.545177
+</td>
+<td style="text-align:right;">
+16
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+1.6094379
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+8.047190
+</td>
+<td style="text-align:right;">
+25
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:right;">
+720
+</td>
+<td style="text-align:right;">
+1.7917595
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+10.750557
+</td>
+<td style="text-align:right;">
+36
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+9.2098402
+</td>
+<td style="text-align:right;">
+9995
+</td>
+<td style="text-align:right;">
+92052.353268
+</td>
+<td style="text-align:right;">
+99900025
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+9.2099403
+</td>
+<td style="text-align:right;">
+9996
+</td>
+<td style="text-align:right;">
+92062.563158
+</td>
+<td style="text-align:right;">
+99920016
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+9.2100403
+</td>
+<td style="text-align:right;">
+9997
+</td>
+<td style="text-align:right;">
+92072.773149
+</td>
+<td style="text-align:right;">
+99940009
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+9.2101404
+</td>
+<td style="text-align:right;">
+9998
+</td>
+<td style="text-align:right;">
+92082.983239
+</td>
+<td style="text-align:right;">
+99960004
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+9.2102404
+</td>
+<td style="text-align:right;">
+9999
+</td>
+<td style="text-align:right;">
+92093.193429
+</td>
+<td style="text-align:right;">
+99980001
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+9.2103404
+</td>
+<td style="text-align:right;">
+10000
+</td>
+<td style="text-align:right;">
+92103.403720
+</td>
+<td style="text-align:right;">
+100000000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="remarks" class="section level1">
+<h1>Remarks</h1>
+<p>In a production setting, we probably wouldn’t rely on <code>ls(pattern = ...)</code> and <code>mget</code> sourcing objects by name. There even with setting up <code>mode</code> to <code>call</code> argument and limiting results to function there is a risk that our code could capture an undesired call that from one or another reason could appear in the environment where <code>ls</code> would happen to be executing search.</p>
+<p>Neverthless, ability to treat functions as objects is exceptyionally useful, especially if we need to iterate through a number of function, and quickly explore different variations.</p>
+</div>
