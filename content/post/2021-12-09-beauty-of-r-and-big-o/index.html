@@ -63,7 +63,7 @@ tibble(.rows = n) %&gt;%
 <ul>
 <li>Automatically identify all of the relevant function</li>
 <li>Call each function on a sequence <code>1:n</code></li>
-<li>Pack everything in a neat table so I can play with it by plotting, etc.</li>
+<li>Pack everything in a neat table so I can play with it by plotting, etc..</li>
 </ul>
 </div>
 </div>
@@ -71,11 +71,11 @@ tibble(.rows = n) %&gt;%
 <h1>Solution</h1>
 <p>The actual solution can condensed further but I have broke it down for easier readability. First I’ve started with identifying the functions.</p>
 <pre class="r"><code>Fun_names &lt;- ls(pattern = &quot;O_*&quot;)
-Funs_O &lt;- mget(Fun_names) # Create a list of functions
+Funs_O &lt;- mget(Fun_names, mode = &quot;function&quot;) # Create a list of functions
 head(Funs_O, n = 2) # Preview</code></pre>
 <pre><code>## $O_1
 ## function(n) { (rep(1,length(n))) }
-## &lt;bytecode: 0x7faed6039238&gt;
+## &lt;bytecode: 0x7fb1c5298ae0&gt;
 ## 
 ## $O_2_to_n
 ## function(n) {2^n}</code></pre>
@@ -97,10 +97,10 @@ head(Funs_O, n = 2) # Preview</code></pre>
 <p>I reckon it requires some explanation. <code>map_*</code> function are purrr’s take on R’s *apply family and map function on an element passed to the function. Starting from the inside the call <code>map_dbl(1:n, ~.x(.))</code> calls function <code>.x</code> on current element of the sequence, which is passed as <code>.</code> but another <code>.x</code> could also work!! The <code>map_df(O_funs, ....)</code> call is more cheeky as the list is actual collection of functions generated via <code>mget</code>. So instead of iterating over numbers of strings or data frames we are iterating over collection of closures. In that case our <code>.x</code> becomes a closure. Full solution for <span class="math inline">\(n = 1000\)</span> is provided below.</p>
 <pre class="r"><code>n &lt;- 1e4
 dta_big_o &lt;- map_df(mget(Fun_names), ~ map_dbl(1:n, ~ .x(.x)))</code></pre>
-<div id="prview" class="section level4">
-<h4>Prview</h4>
+<div id="preview" class="section level4">
+<h4>Preview</h4>
 <p>For <span class="math inline">\(n = 10,000\)</span> we obtain:</p>
-<table class="table" style="font-size: 10px; margin-left: auto; margin-right: auto;">
+<table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:right;">
@@ -138,16 +138,16 @@ O_n_n
 1
 </td>
 <td style="text-align:right;">
-0.0000000
+0.00
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-0.000000
+0.0
 </td>
 <td style="text-align:right;">
-1
+1.0e+00
 </td>
 </tr>
 <tr>
@@ -161,16 +161,16 @@ O_n_n
 2
 </td>
 <td style="text-align:right;">
-0.6931472
+0.69
 </td>
 <td style="text-align:right;">
 2
 </td>
 <td style="text-align:right;">
-1.386294
+1.4
 </td>
 <td style="text-align:right;">
-4
+4.0e+00
 </td>
 </tr>
 <tr>
@@ -184,16 +184,16 @@ O_n_n
 6
 </td>
 <td style="text-align:right;">
-1.0986123
+1.10
 </td>
 <td style="text-align:right;">
 3
 </td>
 <td style="text-align:right;">
-3.295837
+3.3
 </td>
 <td style="text-align:right;">
-9
+9.0e+00
 </td>
 </tr>
 <tr>
@@ -207,16 +207,16 @@ O_n_n
 24
 </td>
 <td style="text-align:right;">
-1.3862944
+1.39
 </td>
 <td style="text-align:right;">
 4
 </td>
 <td style="text-align:right;">
-5.545177
+5.5
 </td>
 <td style="text-align:right;">
-16
+1.6e+01
 </td>
 </tr>
 <tr>
@@ -230,16 +230,16 @@ O_n_n
 120
 </td>
 <td style="text-align:right;">
-1.6094379
+1.61
 </td>
 <td style="text-align:right;">
 5
 </td>
 <td style="text-align:right;">
-8.047190
+8.1
 </td>
 <td style="text-align:right;">
-25
+2.5e+01
 </td>
 </tr>
 <tr>
@@ -253,16 +253,16 @@ O_n_n
 720
 </td>
 <td style="text-align:right;">
-1.7917595
+1.79
 </td>
 <td style="text-align:right;">
 6
 </td>
 <td style="text-align:right;">
-10.750557
+10.8
 </td>
 <td style="text-align:right;">
-36
+3.6e+01
 </td>
 </tr>
 <tr>
@@ -276,16 +276,16 @@ Inf
 Inf
 </td>
 <td style="text-align:right;">
-9.2098402
+9.21
 </td>
 <td style="text-align:right;">
 9995
 </td>
 <td style="text-align:right;">
-92052.353268
+92052.4
 </td>
 <td style="text-align:right;">
-99900025
+1.0e+08
 </td>
 </tr>
 <tr>
@@ -299,16 +299,16 @@ Inf
 Inf
 </td>
 <td style="text-align:right;">
-9.2099403
+9.21
 </td>
 <td style="text-align:right;">
 9996
 </td>
 <td style="text-align:right;">
-92062.563158
+92062.6
 </td>
 <td style="text-align:right;">
-99920016
+1.0e+08
 </td>
 </tr>
 <tr>
@@ -322,16 +322,16 @@ Inf
 Inf
 </td>
 <td style="text-align:right;">
-9.2100403
+9.21
 </td>
 <td style="text-align:right;">
 9997
 </td>
 <td style="text-align:right;">
-92072.773149
+92072.8
 </td>
 <td style="text-align:right;">
-99940009
+1.0e+08
 </td>
 </tr>
 <tr>
@@ -345,16 +345,16 @@ Inf
 Inf
 </td>
 <td style="text-align:right;">
-9.2101404
+9.21
 </td>
 <td style="text-align:right;">
 9998
 </td>
 <td style="text-align:right;">
-92082.983239
+92083.0
 </td>
 <td style="text-align:right;">
-99960004
+1.0e+08
 </td>
 </tr>
 <tr>
@@ -368,16 +368,16 @@ Inf
 Inf
 </td>
 <td style="text-align:right;">
-9.2102404
+9.21
 </td>
 <td style="text-align:right;">
 9999
 </td>
 <td style="text-align:right;">
-92093.193429
+92093.2
 </td>
 <td style="text-align:right;">
-99980001
+1.0e+08
 </td>
 </tr>
 <tr>
@@ -391,16 +391,16 @@ Inf
 Inf
 </td>
 <td style="text-align:right;">
-9.2103404
+9.21
 </td>
 <td style="text-align:right;">
 10000
 </td>
 <td style="text-align:right;">
-92103.403720
+92103.4
 </td>
 <td style="text-align:right;">
-100000000
+1.0e+08
 </td>
 </tr>
 </tbody>
@@ -409,6 +409,6 @@ Inf
 </div>
 <div id="remarks" class="section level1">
 <h1>Remarks</h1>
-<p>In a production setting, we probably wouldn’t rely on <code>ls(pattern = ...)</code> and <code>mget</code> sourcing objects by name. There even with setting up <code>mode</code> to <code>call</code> argument and limiting results to function there is a risk that our code could capture an undesired call that from one or another reason could appear in the environment where <code>ls</code> would happen to be executing search.</p>
-<p>Neverthless, ability to treat functions as objects is exceptyionally useful, especially if we need to iterate through a number of function, and quickly explore different variations.</p>
+<p>In a production setting, we probably wouldn’t rely on <code>ls(pattern = ...)</code> and <code>mget</code> sourcing objects by name. There even with setting up <code>mode</code> to <code>function</code> argument and limiting results to function there is a risk that our code could capture an undesired call that from one or another reason could appear in the environment where <code>ls</code> would happen to be executing search.</p>
+<p>Nevertheless, ability to treat functions as objects is exceptionally useful, especially if we need to iterate through a number of function, and quickly explore different variations.</p>
 </div>
