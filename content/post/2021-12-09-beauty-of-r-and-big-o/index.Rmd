@@ -118,6 +118,6 @@ map_df(mget(Fun_names), ~ map_dbl(1:n, ~ .x(.x))) %>%
 
 # Remarks
 
-In a production setting, we probably wouldn't rely on `ls(pattern = ...)` and `mget` sourcing objects by name. There even with setting up `mode` argument and limiting results to function there is a risk that our code could capture an undesired call that from one or another reason could appear in the environment where `ls` would happen to be executing search. Finally for quickly plotting trivial functions, like $y=log(x)^2$
+In a production setting, we probably wouldn't rely on `ls(pattern = ...)` and `mget` sourcing objects by name. There even with setting up `mode` argument and limiting results to function there is a risk that our code could capture an undesired call that from one or another reason could appear in the environment where `ls` would happen to be executing search. Finally for quickly plotting trivial functions, like $y=log(x)^2$ can be easily achieved with use of dedicated software. Mac users will already have [Grapher](https://support.apple.com/en-gb/guide/grapher/gcalb3dec608/mac) installed that meets that requirement.
 
 Nevertheless, ability to treat functions as objects is exceptionally useful, especially if we need to iterate through a number of function, and quickly compare the results on a set of data.

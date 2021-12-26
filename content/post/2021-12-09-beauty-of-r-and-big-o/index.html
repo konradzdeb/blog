@@ -111,7 +111,7 @@ Funs_O &lt;- mget(Fun_names) # Create a list of functions
 head(Funs_O, n = 2) # Preview</code></pre>
 <pre><code>## $O_1
 ## function(n) {(rep(1,length(n)))}
-## &lt;bytecode: 0x7f8ce25e9e50&gt;
+## &lt;bytecode: 0x7fe495b8ba50&gt;
 ## 
 ## $O_2_to_n
 ## function(n) {2^n}</code></pre>
@@ -458,7 +458,7 @@ O_n_n
 </div>
 <div id="remarks" class="section level1">
 <h1>Remarks</h1>
-<p>In a production setting, we probably wouldn’t rely on <code>ls(pattern = ...)</code> and <code>mget</code> sourcing objects by name. There even with setting up <code>mode</code> argument and limiting results to function there is a risk that our code could capture an undesired call that from one or another reason could appear in the environment where <code>ls</code> would happen to be executing search. Finally for quickly plotting trivial functions, like <span class="math inline">\(y=log(x)^2\)</span></p>
+<p>In a production setting, we probably wouldn’t rely on <code>ls(pattern = ...)</code> and <code>mget</code> sourcing objects by name. There even with setting up <code>mode</code> argument and limiting results to function there is a risk that our code could capture an undesired call that from one or another reason could appear in the environment where <code>ls</code> would happen to be executing search. Finally for quickly plotting trivial functions, like <span class="math inline">\(y=log(x)^2\)</span> can be easily achieved with use of dedicated software. Mac users will already have <a href="https://support.apple.com/en-gb/guide/grapher/gcalb3dec608/mac">Grapher</a> installed that meets that requirement.</p>
 <p>Nevertheless, ability to treat functions as objects is exceptionally useful, especially if we need to iterate through a number of function, and quickly compare the results on a set of data.</p>
 </div>
 <div class="footnotes footnotes-end-of-document">
