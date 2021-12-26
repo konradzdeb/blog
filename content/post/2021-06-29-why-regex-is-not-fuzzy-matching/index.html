@@ -53,7 +53,7 @@ data_A |&gt;
     mutate(manufacturer = str_remove(manufacturer, &quot;\\s.*&quot;)) |&gt; 
     left_join(data_B)</code></pre>
 <pre><code>## Joining, by = &quot;manufacturer&quot;</code></pre>
-<pre><code>## # A tibble: 5 x 3
+<pre><code>## # A tibble: 5 × 3
 ##   manufacturer price subjective_rating
 ##   &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;            
 ## 1 &quot;Ford&quot;         100 &lt;NA&gt;             
@@ -68,7 +68,7 @@ data_A |&gt;
            manufacturer = str_remove(manufacturer, &quot;\\s.*&quot;)) |&gt; 
     left_join(data_B)</code></pre>
 <pre><code>## Joining, by = &quot;manufacturer&quot;</code></pre>
-<pre><code>## # A tibble: 5 x 3
+<pre><code>## # A tibble: 5 × 3
 ##   manufacturer price subjective_rating
 ##   &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;            
 ## 1 Ford           100 &lt;NA&gt;             
@@ -83,7 +83,7 @@ data_A |&gt;
            manufacturer = str_to_lower(manufacturer),
            manufacturer = str_remove(manufacturer, &quot;\\s.*&quot;)) |&gt; 
     fuzzyjoin::regex_left_join(data_B, by = &quot;manufacturer&quot;)</code></pre>
-<pre><code>## # A tibble: 5 x 4
+<pre><code>## # A tibble: 5 × 4
 ##   manufacturer.x price manufacturer.y subjective_rating
 ##   &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;            
 ## 1 ford             100 &lt;NA&gt;           &lt;NA&gt;             
@@ -111,7 +111,7 @@ jw(&quot;Mercedes&quot;, &quot;mecedes&quot;)</code></pre>
 <pre class="r"><code>fuzzyjoin::fuzzy_left_join(x = data_A, y = data_B, by = &quot;manufacturer&quot;,
                            match_fun = function(x, y) { jw(x, y) &gt;= 0.65}
                            )</code></pre>
-<pre><code>## # A tibble: 5 x 4
+<pre><code>## # A tibble: 5 × 4
 ##   manufacturer.x           price manufacturer.y subjective_rating
 ##   &lt;chr&gt;                    &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;            
 ## 1 &quot;Ford Focus&quot;               100 Frod           B                
@@ -126,7 +126,7 @@ jw(&quot;Mercedes&quot;, &quot;mecedes&quot;)</code></pre>
 <h1>So what</h1>
 <p>First be honest with what do you need, can you live with a few mismatched records? If you are building data to predict trends reflecting substantial populations the likely answer is <em>yes,</em> if you are building data set to email personalised marketing communication to existing customers the likely answer is <em>no.</em></p>
 </div>
-<div class="footnotes">
+<div class="footnotes footnotes-end-of-document">
 <hr />
 <ol>
 <li id="fn1"><p>SO discussion on: <a href="https://stackoverflow.com/a/68182330/1655567"><em>Fuzzy Join with Partial String Match in R</em></a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
