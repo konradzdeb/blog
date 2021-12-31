@@ -7,6 +7,7 @@
 /resources/
 index_cache
 
+# Mac os files
 .DS_Store
 Thumbs.db
 sessionInfoLog
@@ -15,3 +16,6 @@ sessionInfoLog
 derby.log
 logs/
 spark-warehouse/
+
+# Hugo build
+.hugo_build.lock
