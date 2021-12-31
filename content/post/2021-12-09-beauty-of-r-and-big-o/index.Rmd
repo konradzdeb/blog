@@ -32,11 +32,11 @@ When analysing functions, we may be interested in knowing how fast a function gr
 
 # The task at hand ...
 
-So I wanted to compare a speed of some algorithms and reflecting a few common curves, say $n*\log(n)$, $\log(n)$, $n^2$ and so forth. I need a quick visual aid where I could plot some most common running times and add a few to quickly eyeball how they faire against the algorithm I was working on. 
+So I wanted to compare a speed of some algorithms, say $n*\log(n)$, $\log(n)$, $n^2$ and so forth. I need a quick visual aid where I could plot some most common running times and quickly add more to compare how the common implementations perform against the algorithm I was working on. 
 
 ## Functions
 
-So I've defined a few functions that correspond to the basic Big-O curves that can be found in majority of introductory literature on the subject with the intention of quickly producing visual base for the subject.
+So I've defined a few functions that correspond to the frequently-used Big-O curves that can be found in majority of introductory literature on the subject with the intention of quickly producing visual base for the subject.
 
 ```{r common_big_o_functions}
 O_1       <- function(n) {(rep(1,length(n)))}

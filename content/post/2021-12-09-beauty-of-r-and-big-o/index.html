@@ -62,10 +62,10 @@ tags:
 </div>
 <div id="the-task-at-hand" class="section level1">
 <h1>The task at hand …</h1>
-<p>So I wanted to compare a speed of some algorithms and reflecting a few common curves, say <span class="math inline">\(n*\log(n)\)</span>, <span class="math inline">\(\log(n)\)</span>, <span class="math inline">\(n^2\)</span> and so forth. I need a quick visual aid where I could plot some most common running times and add a few to quickly eyeball how they faire against the algorithm I was working on.</p>
+<p>So I wanted to compare a speed of some algorithms, say <span class="math inline">\(n*\log(n)\)</span>, <span class="math inline">\(\log(n)\)</span>, <span class="math inline">\(n^2\)</span> and so forth. I need a quick visual aid where I could plot some most common running times and quickly add more to compare how the common implementations perform against the algorithm I was working on.</p>
 <div id="functions" class="section level2">
 <h2>Functions</h2>
-<p>So I’ve defined a few functions that correspond to the basic Big-O curves that can be found in majority of introductory literature on the subject with the intention of quickly producing visual base for the subject.</p>
+<p>So I’ve defined a few functions that correspond to the frequently-used Big-O curves that can be found in majority of introductory literature on the subject with the intention of quickly producing visual base for the subject.</p>
 <pre class="r"><code>O_1       &lt;- function(n) {(rep(1,length(n)))}
 O_log_n   &lt;- function(n) {log(n)}
 O_n       &lt;- function(n) {n}
@@ -111,7 +111,7 @@ Funs_O &lt;- mget(Fun_names) # Create a list of functions
 head(Funs_O, n = 2) # Preview</code></pre>
 <pre><code>## $O_1
 ## function(n) {(rep(1,length(n)))}
-## &lt;bytecode: 0x7fce3a9ea2e8&gt;
+## &lt;bytecode: 0x7fcad06564e8&gt;
 ## 
 ## $O_2_to_n
 ## function(n) {2^n}</code></pre>
