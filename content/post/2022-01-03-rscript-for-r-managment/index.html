@@ -1,0 +1,36 @@
+---
+title: Using RScript for R Installation Managment
+author: Konrad Zdeb
+date: '2022-01-03'
+slug: rscript-for-r-managment
+categories:
+  - how-to
+tags:
+  - bash
+  - R
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<p>Most frequently, users tend to undertake common R installation and management tasks from within the R session. On numerous occasions, users frequently make use of commands, like <code>install.packages</code>, <code>update.packages</code> or <code>old.packages</code> to obtain or update packages. Frequently, those common tasks are accomplished via the GUI offered within RStudio, which provides an effortless mechanism for undertaking those operations or when working through console. This is OK for vast majority of cases; however, there are some instances when working within REPL to accomplish common installation tasks is not as convenient as it could be.</p>
+<p>For example, we may be utilising multiple library paths and our intention may be to update only one of the available libraries. If our <code>.libPaths()</code> returns a content similar to the one below, we may be interested only in updating the first repository.</p>
+<pre class="r"><code>.libPaths()
+# [1] &quot;/Users/thisUserName/Library/R/4/library&quot;
+# [2] &quot;/usr/local/Cellar/r/4.1.2/lib/R/library&quot;</code></pre>
+<p>This can be achieved using <code>update.packages(lib.loc =  .libPaths()[1])</code> but if our intention is to pass more arguments to the call, this becomes more tedious and unnecessarily onerous, especially with frequent command execution. Python users will be familiar with Conda and pip and may be longing for a solution offering convenient command line mechanism facilitating installation of packages. For instance in Conda we would simply do <code>conda install package-name=2.3.4</code> to install a package of a specific version. Similarly we can simply run <code>conda update --all -y</code> to update all packages unprompted or pass further arguments to update packages within a specific environment and so forth. Pip offers a number of similar convenience features.</p>
+<div id="requirements" class="section level2">
+<h2>“Requirements”</h2>
+<p>I was interested in obtaining a comparable level of convenience that I could utilise with my R installation. However, as R does not offer package management mechanism that would be out of the box accessible via command line.</p>
+</div>
+<div id="solution" class="section level1">
+<h1>Solution</h1>
+<p>R offers two interfaces for running scripts and commands without starting an interactive session: <code>R CMD</code> and <code>RScript</code>. <code>R CMD</code> is an older interface facilitating command and script execution via command line.</p>
+<div id="updating-packages" class="section level2">
+<h2>Updating Packages</h2>
+<p>In the process of updating packages we will be usually interested in achieving two goals:</p>
+<ul>
+<li>Identifying any outdated packages that may benefit from updating</li>
+</ul>
+</div>
+</div>
