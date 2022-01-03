@@ -1,0 +1,12 @@
+---
+title: Using RScript for R Installation Managment
+author: Konrad Zdeb
+date: '2022-01-03'
+slug: rscript-for-r-managment
+categories:
+  - how-to
+tags:
+  - bash
+  - R
+---
+
