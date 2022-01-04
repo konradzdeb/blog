@@ -56,6 +56,18 @@ A point of note, if you specify your library paths using `RProfile` file you may
 
 ## Installing packages
 
-Installing packages from console is useful if we want to undertake those tasks outside the ongoing workflow. Let's say that we are working on a project and looking for package facilitating quick generation of tabular summaries or some relevant visuals. We could use `install.packages` from the REPL session we are in but if the package is requiring compilation we are get quite a lot of output that is not pertinent to the task at hand. Another common approach would be to start another session and run install command there. RStudio also facilitates running background processes but that's a little bit of an overkill for a simple task. 
+Installing packages from console is useful if we want to undertake those tasks outside the ongoing workflow. Let's say that we are working on a project and looking for package facilitating quick generation of tabular summaries or some relevant visuals. We could use `install.packages` from the REPL session we are in but if the package is requiring compilation we are get quite a lot of output that is not pertinent to the task at hand. Another common approach would be to start another session and run install command there. RStudio also facilitates running background processes but that's a little bit of an overkill for a simple task.
 
+A sensible middle ground solution would be to run the package installation via `RScript` we could conveniently call it as a background process or just start in a new tab when working with any popular terminal client supporting this functionality. 
 
+```{bash, engine.opts='-l'}
+# Function body
+function rinst () {
+	declare pkgnme=$1
+	Rscript --vanilla -e "install.packages('$pkgnme', dependencies = TRUE, repos = 'https://cloud.r-project.org/', lib = '/Users/konrad/Library/R/4/library')"
+}
+```
+
+### Explanation
+
+As I want for this function to install only to a specific library and from a specific repository I'm using the `--vanilla` switch to let Rscript know that I don't need it to process `.RProfile` and other files.
