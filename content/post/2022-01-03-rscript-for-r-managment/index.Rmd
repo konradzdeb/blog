@@ -34,7 +34,7 @@ R offers two interfaces for running scripts and commands without starting an int
 In the process of updating packages we will be usually interested in achieving two goals:
 
 * Identifying any outdated packages that may benefit from updating
-* Running an update for outdated packages every so often. This is relatiely good habit, comparable to running `brew upgrade` with some frequency so we can avoid our production environment differentiating more from the current stable releases.
+* Running an update for outdated packages every so often. This is relatively good habit, comparable to running `brew upgrade` with some frequency so we can avoid our production environment differentiating more from the current stable releases.
 
 ### Outdated packages
 
@@ -48,7 +48,14 @@ Rscript --no-save --no-restore --no-init-file -e 'as.data.frame(old.packages(rep
 
 `Rscript` can be run with multiple switches:
 
-* `--no-init-file` skips reading of the `.Rprofile` files. As I keep my library path stored within the `Renviron` file, I'm skipping processing of the `.RProfile` file.
-* `--no-save` prevents `RScript` from saving data
+* `--no-init-file` skips reading of the `.Rprofile` files. As I keep my library path stored within the `Renviron` file, I'm skipping processing of the `.RProfile` file. Traditionally, `.RProfile` is used to configure default repositories but I pref to specify the repository directly in the call as I want to update against RStudio's one
+* `--no-save` prevents `RScript` from saving data on exit
+* `-e` is used to specify the call that `RScript` is expected to execute
+
+A point of note, if you specify your library paths using `RProfile` file you may need to remove the `--no-init-file` switch.
+
+## Installing packages
+
+Installing packages from console is useful if we want to undertake those tasks outside the ongoing workflow. Let's say that we are working on a project and looking for package facilitating quick generation of tabular summaries or some relevant visuals. We could use `install.packages` from the REPL session we are in but if the package is requiring compilation we are get quite a lot of output that is not pertinent to the task at hand. Another common approach would be to start another session and run install command there. RStudio also facilitates running background processes but that's a little bit of an overkill for a simple task. 
 
 

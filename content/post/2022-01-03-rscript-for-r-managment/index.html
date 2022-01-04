@@ -31,7 +31,7 @@ tags:
 <p>In the process of updating packages we will be usually interested in achieving two goals:</p>
 <ul>
 <li>Identifying any outdated packages that may benefit from updating</li>
-<li>Running an update for outdated packages every so often. This is relatiely good habit, comparable to running <code>brew upgrade</code> with some frequency so we can avoid our production environment differentiating more from the current stable releases.</li>
+<li>Running an update for outdated packages every so often. This is relatively good habit, comparable to running <code>brew upgrade</code> with some frequency so we can avoid our production environment differentiating more from the current stable releases.</li>
 </ul>
 <div id="outdated-packages" class="section level3">
 <h3>Outdated packages</h3>
@@ -49,10 +49,16 @@ tags:
 <h4>Explanation</h4>
 <p><code>Rscript</code> can be run with multiple switches:</p>
 <ul>
-<li><code>--no-init-file</code> skips reading of the <code>.Rprofile</code> files. As I keep my library path stored within the <code>Renviron</code> file, I’m skipping processing of the <code>.RProfile</code> file.</li>
-<li><code>--no-save</code> prevents <code>RScript</code> from saving data</li>
+<li><code>--no-init-file</code> skips reading of the <code>.Rprofile</code> files. As I keep my library path stored within the <code>Renviron</code> file, I’m skipping processing of the <code>.RProfile</code> file. Traditionally, <code>.RProfile</code> is used to configure default repositories but I pref to specify the repository directly in the call as I want to update against RStudio’s one</li>
+<li><code>--no-save</code> prevents <code>RScript</code> from saving data on exit</li>
+<li><code>-e</code> is used to specify the call that <code>RScript</code> is expected to execute</li>
 </ul>
+<p>A point of note, if you specify your library paths using <code>RProfile</code> file you may need to remove the <code>--no-init-file</code> switch.</p>
 </div>
 </div>
+</div>
+<div id="installing-packages" class="section level2">
+<h2>Installing packages</h2>
+<p>Installing packages from console is useful if we want to undertake those tasks outside the ongoing workflow. Let’s say that we are working on a project and looking for package facilitating quick generation of tabular summaries or some relevant visuals. We could use <code>install.packages</code> from the REPL session we are in but if the package is requiring compilation we are get quite a lot of output that is not pertinent to the task at hand. Another common approach would be to start another session and run install command there. RStudio also facilitates running background processes but that’s a little bit of an overkill for a simple task.</p>
 </div>
 </div>
