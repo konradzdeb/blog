@@ -21,8 +21,10 @@ params:
     # defaultTheme: dark
     defaultTheme: auto # to switch between dark or light according to browser theme
     ShowReadingTime: true
-    ShowShareButtons: true  
+    ShowShareButtons: true
     ShowPostNavLinks: true
+    ShowCodeCopyButtons: true
+    analytics.google.SiteVerificationTag: "UA-129716792-1"
     homeInfoParams:
         Title:  R in Business
         Content: Yet another blog on using R with focus on R in business.
