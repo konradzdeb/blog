@@ -25,8 +25,8 @@ When analysing functions, we may be interested in knowing how fast a function gr
 
 | Notation             | Growth Rate                                                  | Running Case | Comparison                                                    |
 |----------------------+--------------------------------------------------------------+--------------+---------------------------------------------------------------|
-| Big-O                | Equivalent to $\le$, growth less or equal specifc value      | Worst case   | Longest amount of time it could take to algorithm to complete |
-| Big-Omega $(\Omega)$ | Equivalent to $\ge$, growrth greater or equal specific value | Best case    | Compared to Big-O, reflects smaller amount of time            |
+| Big-O                | Equivalent to $\le$, growth less or equal specific value      | Worst case   | Longest amount of time it could take to algorithm to complete |
+| Big-Omega $(\Omega)$ | Equivalent to $\ge$, growth greater or equal specific value | Best case    | Compared to Big-O, reflects smaller amount of time            |
 | Big-Theta $(\Theta)$ | Equivalent to $=$, growth equal specific value               | Average case | Reflects lower and upper bound of the running time            |
 
 
@@ -85,7 +85,7 @@ map_df(Funs_O, ~ map_dbl(1:n, ~ .x(.x)))
 I reckon it requires some explanation. `map_*` function are purrr's take on R's \*apply family and map function on an element passed to the function. Starting from the inside the call `map_dbl(1:n, ~.x(.))` calls function `.x` on current element of the sequence, which is passed as `.` but another `.x` could also work!! The `map_df(O_funs, ....)` call is more cheeky as the list is actual collection of functions generated via `mget`. So instead of iterating over numbers of strings or data frames we are iterating over collection of closures. In that case our `.x` becomes a closure. Full solution for $n = 1000$ is provided below.
 
 ```{r full_solution}
-n <- 1e3 # This is a bad habit of mine but while in R, I've a strong preference for using 1e6 for million, 1e2 for hundred and so forth
+n <- 1e3 # This is a bad habit of mine but while in R, I've a strong preference for using 1e6 for a million, 1e2 for hundred and so forth
 dta_big_o <- map_df(mget(Fun_names), ~ map_dbl(1:n, ~ .x(.x)))
 ```
 

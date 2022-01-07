@@ -1,3 +1,3 @@
 # R in Business Blog
 
-Personal blog mostly concerned with using R in business.
+Personal blog, mostly concerned with practical aspects related to R usage in work setting.
