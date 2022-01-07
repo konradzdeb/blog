@@ -40,13 +40,13 @@ tags:
 <tbody>
 <tr class="odd">
 <td>Big-O</td>
-<td>Equivalent to <span class="math inline">\(\le\)</span>, growth less or equal specifc value</td>
+<td>Equivalent to <span class="math inline">\(\le\)</span>, growth less or equal specific value</td>
 <td>Worst case</td>
 <td>Longest amount of time it could take to algorithm to complete</td>
 </tr>
 <tr class="even">
 <td>Big-Omega <span class="math inline">\((\Omega)\)</span></td>
-<td>Equivalent to <span class="math inline">\(\ge\)</span>, growrth greater or equal specific value</td>
+<td>Equivalent to <span class="math inline">\(\ge\)</span>, growth greater or equal specific value</td>
 <td>Best case</td>
 <td>Compared to Big-O, reflects smaller amount of time</td>
 </tr>
@@ -111,7 +111,7 @@ Funs_O &lt;- mget(Fun_names) # Create a list of functions
 head(Funs_O, n = 2) # Preview</code></pre>
 <pre><code>## $O_1
 ## function(n) {(rep(1,length(n)))}
-## &lt;bytecode: 0x7fcad06564e8&gt;
+## &lt;bytecode: 0x7fe900045820&gt;
 ## 
 ## $O_2_to_n
 ## function(n) {2^n}</code></pre>
@@ -131,7 +131,7 @@ head(Funs_O, n = 2) # Preview</code></pre>
 ##  9     1      512  362880   2.20      9     19.8     81
 ## 10     1     1024 3628800   2.30     10     23.0    100</code></pre>
 <p>I reckon it requires some explanation. <code>map_*</code> function are purrr’s take on R’s *apply family and map function on an element passed to the function. Starting from the inside the call <code>map_dbl(1:n, ~.x(.))</code> calls function <code>.x</code> on current element of the sequence, which is passed as <code>.</code> but another <code>.x</code> could also work!! The <code>map_df(O_funs, ....)</code> call is more cheeky as the list is actual collection of functions generated via <code>mget</code>. So instead of iterating over numbers of strings or data frames we are iterating over collection of closures. In that case our <code>.x</code> becomes a closure. Full solution for <span class="math inline">\(n = 1000\)</span> is provided below.</p>
-<pre class="r"><code>n &lt;- 1e3 # This is a bad habit of mine but while in R, I&#39;ve a strong preference for using 1e6 for million, 1e2 for hundred and so forth
+<pre class="r"><code>n &lt;- 1e3 # This is a bad habit of mine but while in R, I&#39;ve a strong preference for using 1e6 for a million, 1e2 for hundred and so forth
 dta_big_o &lt;- map_df(mget(Fun_names), ~ map_dbl(1:n, ~ .x(.x)))</code></pre>
 <div id="preview" class="section level4">
 <h4>Preview</h4>
