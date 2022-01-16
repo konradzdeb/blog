@@ -10,3 +10,13 @@ tags:
   - team
 ---
 
+Creating highly performance data science teams is a subject that presently occupies a lot of business thinking. A subsntial amount of literature concerned with creating efficient software development techniques exists but the subject of efficient data science teams is receiving somhow smaller attention. A partial reason behind this may be relatively new 
+
+## What's different data science
+
+The key element that differentiates data science teams from other teams is concerned with
+
+```{r trad_flow_diagram, echo=FALSE, strip.white=TRUE}
+DiagrammeR::mermaid(diagram = "trad_flow.mmd")
+```
+
