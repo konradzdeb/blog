@@ -19,12 +19,122 @@ tags:
 <link href="{{< blogdown/postref >}}index_files/DiagrammeR-styles/styles.css" rel="stylesheet" />
 <script src="{{< blogdown/postref >}}index_files/chromatography/chromatography.js"></script>
 <script src="{{< blogdown/postref >}}index_files/DiagrammeR-binding/DiagrammeR.js"></script>
+<script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
+<link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
 
 
-<p>Creating highly performance data science teams is a subject that presently occupies a lot of business thinking. A subsntial amount of literature concerned with creating efficient software development techniques exists but the subject of efficient data science teams is receiving somhow smaller attention. A partial reason behind this may be relatively new</p>
+<p>Creating highly performance data science teams is a subject that presently occupies a lot of business thinking. A subsntial amount of literature concerned with creating efficient software development techniques exists but the subject of efficient data science teams is receiving somhow smaller attention. A partial reason behind this may be relatively new nature of the teams</p>
 <div id="whats-different-data-science" class="section level2">
 <h2>What’s different data science</h2>
-<p>The key element that differentiates data science teams from other teams is concerned with</p>
+<p>What data science team for an organisation can be understood on three layers:</p>
+<ul>
+<li>On a <strong>conceptual</strong> layer a data science team answers certain types of question, such how many customers may leave organisation if change pricing on product</li>
+<li>On an <strong>analytical layer</strong> data science team “models” those answers, in practice that boils down to old good statistical analysis where</li>
+<li>On an <strong>artefact</strong> level the team will be responsible for generating
+<ul>
+<li>Modelling code, such as Python, Java, R and other implementations</li>
+<li>Statistical reports outlining methodologies</li>
+<li>Documentation for generated data</li>
+<li>Result summaries
+<ul>
+<li>In form of interactive dashboards</li>
+<li>Periodical reports</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>Personally, I would argue against a notion where role of Data Science Team is defined as productionisg Machine Learning solutions. Such ramification narrow down the scope of the team and make the structure inherently more efficient. A substantial data science may have a designed function responsible for ML implementation. As such that function would focus on certain type of modelling in opposition to other unit that may hone expertise in space-time modelling and so forth. Any data science team should be open to embrace statistical techniques that solve the problem best, not fit the problem to the modelling pipeline. If this is not stated, we are running a risk of creating a team that will attempt to solve even most trival challenges using sophisticated approach where a simpler approach would suffice.</p>
+</div>
+<div id="data-science-team-in-business" class="section level2">
+<h2>Data Science Team in business</h2>
+<p>In this post, I want to focus on the <strong>artefact</strong> layer of data science activity but before doing so I would like to outline how the engagement of the data science team with business actually happens.</p>
+<div id="example" class="section level3">
+<h3>Example</h3>
+<p>Let’s consider a hypothetical example of a company that sells widget subscription and wants to build attrition modelling solution. In terms of a flow, we can imagine this process looking similar to the one below.</p>
 <div id="htmlwidget-1" style="width:672px;height:480px;" class="DiagrammeR html-widget"></div>
 <script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"graph TD\nExploratoryAnalysis-->data\nsubgraph Development\ndata[Data Access]\nend\nsubgraph Idea Formulation\nstart(Business Requirement)--analytical team engagement-->analysis[Analytical Conceptualisation]\nanalysis-->decision{Recognised as viable <br> by business}\ndecision--No-->start\ndecision--Yes-->ExploratoryAnalysis[Exploratory Anlysis]\nExploratoryAnalysis-.potential evaluation.->start\nend\n"},"evals":[],"jsHooks":[]}</script>
+<p>In terms of practical examples, usually we would expect for things on the lines of the below points to take place during each of the stages. In practice, some of the events may be compressed for instance business may be aware of feasibility behind the original solution. There is an ample amount of literature on ML development cycles so I’m not giving details of that process<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Stage
+</th>
+<th style="text-align:left;">
+Example
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="4">
+<td colspan="2" style="border-bottom: 1px solid;">
+<strong>Idea Formulation</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Business Requirements
+</td>
+<td style="text-align:left;">
+Business wants to identify customers likely to leave
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Analytical Conceptualisation
+</td>
+<td style="text-align:left;">
+Classical supervised learning approach. We have some data on customers that already left and data on how customers use our service.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Business Acceptance
+</td>
+<td style="text-align:left;">
+Viable, we are on track with initial requirement. Clarification was needed that instead of providing TRUE / FALSE flag on customers being likely to leave it may be more informative to provide a percentage. Business then can decide to approach customers that are 90% or more likely to leave first.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Exploratory Analysis
+</td>
+<td style="text-align:left;">
+Usually at this stage some informal analysis took place. In this stage data science team would look to provide some initial insight on how robust is the solution.
+</td>
+</tr>
+<tr grouplength="2">
+<td colspan="2" style="border-bottom: 1px solid;">
+<strong>Development</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Data Access
+</td>
+<td style="text-align:left;">
+Two things will happen at this stage. The team will seek data to train the initial modelling solution and assure that this form of access is usuable in production.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Modelling
+</td>
+<td style="text-align:left;">
+The usual modelling cycle.
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="efficiency" class="section level2">
+<h2>Efficiency</h2>
+<p>I would imagine that people may have a variable view on the process outlined above but we would agree that majority of elements are to a greater or smaller degree present across modern business environment. For the sake of brevity, I haven’t dive deep into actual process around development such as code generation, peer review, test building and so on but I will do a little bit of this now. In order to understand whether a given team is efficient and if it could be mode more we have to gain a deep insight into the artefacts that team generates and processes around it. Functional / engagement perspective only gives us part of the definition. To say that data science team delivers a “modelling solution” is comparable to saying that local sandwich maker and Gordon Ramsay are “making food”.</p>
+<p>This is true in a classical logic sense but doesn’t give a full picture as they are different levels of sophistication and complexity. Let’s look at the team workflow from <strong>an artefact</strong> generation perspective.</p>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>A robust overview of data science development pipeline is <a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
