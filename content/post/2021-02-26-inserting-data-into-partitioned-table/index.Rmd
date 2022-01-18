@@ -99,7 +99,7 @@ The created data looks as follows:
 head(sample_data)
 ```
 
-Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the [`sparklyr`](https://spark.rstudio.com) psvksge I'm creating a local connection. 
+Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the [`sparklyr`](https://spark.rstudio.com) package I'm creating a local connection. 
 
 ```{r connect_spark}
 suppressPackageStartupMessages(library(sparklyr))
@@ -110,6 +110,10 @@ For the purpose of the article I've also executed the provided-above HiveQL via 
 ```{r clean_table, echo=FALSE, eval=TRUE}
 # Clean table if exists to facilitate easier rendering of the blog post
 DBI::dbSendQuery(sc, "DROP TABLE IF EXISTS blog.sample_partitioned_table")
+table_artefacts <- file.path(getwd(), "spark-warehouse/blog.db/sample_partitioned_table")
+if (dir.exists(table_artefacts)) {
+    unlink(table_artefacts, recursive = TRUE)
+}
 ```
 
 ```{r create_spark_data}

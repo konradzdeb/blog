@@ -91,15 +91,15 @@ sample_data &lt;- map_dfr(.x = dates, ~ tibble(val_a = runif(2),
 <p>The created data looks as follows:</p>
 <pre class="r"><code>head(sample_data)</code></pre>
 <pre><code>## # A tibble: 6 × 6
-##    val_a   val_b val_c update_year update_month update_day
-##    &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
-## 1 0.217  0.432   k            2010            1          1
-## 2 0.943  0.148   h            2010            1          1
-## 3 0.0872 0.738   z            2010            1          2
-## 4 0.850  0.630   d            2010            1          2
-## 5 0.504  0.768   z            2010            1          3
-## 6 0.150  0.00624 h            2010            1          3</code></pre>
-<p>Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the <a href="https://spark.rstudio.com"><code>sparklyr</code></a> psvksge I’m creating a local connection.</p>
+##    val_a  val_b val_c update_year update_month update_day
+##    &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
+## 1 0.0848 0.291  l            2010            1          1
+## 2 0.581  0.160  u            2010            1          1
+## 3 0.331  0.787  b            2010            1          2
+## 4 0.137  0.0473 g            2010            1          2
+## 5 0.334  0.417  u            2010            1          3
+## 6 0.282  0.0196 w            2010            1          3</code></pre>
+<p>Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the <a href="https://spark.rstudio.com"><code>sparklyr</code></a> package I’m creating a local connection.</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(sparklyr))
 sc &lt;- spark_connect(master = &quot;local&quot;)</code></pre>
 <p>For the purpose of the article I’ve also executed the provided-above HiveQL via Spark to ensure accessibility to data structures that would be structurally equivalent, ensuring smooth execution of the example code. Naturally, in a production setting, we would seldom look to create new Hive schema from an R script layer. Similarly, core tables storing results would be usually established outside regular production processes.</p>
@@ -161,12 +161,12 @@ sdf_num_partitions(tbl_perm)</code></pre>
 ## integer range</code></pre>
 <pre><code>## Columns: 6
 ## Database: spark_connection
-## $ value_column_a &lt;dbl&gt; 0.612993300, 0.985163510, 0.612993300, 0.985163510, 0.4…
-## $ value_column_b &lt;dbl&gt; 0.30834914, 0.87838640, 0.30834914, 0.87838640, 0.92793…
-## $ value_column_c &lt;chr&gt; &quot;y&quot;, &quot;j&quot;, &quot;y&quot;, &quot;j&quot;, &quot;b&quot;, &quot;q&quot;, &quot;b&quot;, &quot;q&quot;, &quot;q&quot;, &quot;h&quot;, &quot;q&quot;, …
+## $ value_column_a &lt;dbl&gt; 0.08477167, 0.58097422, 0.08477167, 0.58097422, 0.57180…
+## $ value_column_b &lt;dbl&gt; 0.29125660, 0.16006139, 0.29125660, 0.16006139, 0.42753…
+## $ value_column_c &lt;chr&gt; &quot;l&quot;, &quot;u&quot;, &quot;l&quot;, &quot;u&quot;, &quot;m&quot;, &quot;w&quot;, &quot;m&quot;, &quot;w&quot;, &quot;u&quot;, &quot;d&quot;, &quot;u&quot;, …
 ## $ part_year      &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
-## $ part_month     &lt;int&gt; 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2…
-## $ part_day       &lt;int&gt; 22, 22, 22, 22, 17, 17, 17, 17, 9, 9, 9, 9, 23, 23, 23,…</code></pre>
+## $ part_month     &lt;int&gt; 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1…
+## $ part_day       &lt;int&gt; 1, 1, 1, 1, 6, 6, 6, 6, 18, 18, 18, 18, 14, 14, 14, 14,…</code></pre>
 </div>
 </div>
 </div>

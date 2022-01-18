@@ -1,0 +1,13 @@
+graph TD
+ExploratoryAnalysis-->data
+subgraph Development
+data[Data Access]
+end
+subgraph Idea Formulation
+start(Business Requirement)--analytical team engagement-->analysis[Analytical Conceptualisation]
+analysis-->decision{Recognised as viable <br> by business}
+decision--No-->start
+decision--Yes-->ExploratoryAnalysis[Exploratory Anlysis]
+ExploratoryAnalysis-.potential evaluation.->start
+end
+
