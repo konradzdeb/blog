@@ -2,7 +2,7 @@ theme: "hugo-PaperMod"
 baseURL: https://konradzdeb.netlify.com/
 languageCode: en-gb
 googleAnalytics: "UA-129716792-1"
-title: R in Business
+title: The Final Artefact
 ignoreFiles: [
   "\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\\.md$"
 ]
