@@ -1,5 +1,5 @@
 ---
-title: On structuring Python projects or collection
+title: On structuring Python Projects
 author: Konrad Zdeb
 date: '2022-03-16'
 slug: python-project-structre
@@ -10,11 +10,15 @@ tags:
   - Python
 ---
 
-# Types of projects
+## Types of projects
 
-Personally, I find that reference to a *Python project* is somehow misleading. Wheras languages conceived for a presisly definable purpose such as Swift, whcih is used to generate macOS/iOS apps, components and framework, Python is used more versitaly. A *Python project,* may reflect analytical solutiuon developed across multiple Jupyter notebooks, a standalone script querying database API and extractacting a result to file an application or package facilitating deployment of models. Each of those projects will have some key usability requirements. For instance, if we envisage that end users will utilisie our project through command line interface we will focus on argument parsing and other elements facilitating user-friendly execution.
+Personally, I find that reference to a *Python project* is somehow misleading. Whereas languages conceived for a precisely definable purpose such as Swift, which is used to generate macOS/iOS apps, components and framework, Python is used more versatilely. A *Python project,* may reflect analytical solution developed across multiple Jupyter notebooks, a standalone script querying database API and extracting a result to file an application or package facilitating deployment of models. Each of those projects will have some key usability requirements. For instance, if we envisage that end users will utilise our project through command line interface we will focus on argument parsing and other elements facilitating user-friendly execution.
 
-# Set-up
+### Data Science, Model, Tool and Hybrid
+
+In business practice, I have came across a few common types of projects. The distinction I draw between pure *data science* and *model* projects is somehow arbitrary and frequently blurred but useful. 
+
+## Set-up
 
 ## File structure
 
@@ -28,4 +32,4 @@ In majority of the cases using `setup.cfg` is a better solution. Whereas users m
 
 # Summary
 
-In business and any 
+In business and any
