@@ -16,7 +16,17 @@ Personally, I find that reference to a *Python project* is somehow misleading. W
 
 ### Data Science, Model, Tool and Hybrid
 
-In business practice, I have came across a few common types of projects. The distinction I draw between pure *data science* and *model* projects is somehow arbitrary and frequently blurred but useful. 
+In business practice, I have came across a few common types of projects. The distinction I draw between pure *data science* and *model* projects is somehow arbitrary and frequently blurred but useful. I draw my 
+
+### Time horizon
+
+The time horizon approacj to project structure is hugely beneficial as it enables us to narrow down a gap between the complexity of the project scaffolding and time horizon. If visualised 
+
+
+```r
+library("ggplot2")
+```
+
 
 ## Set-up
 

@@ -18,6 +18,22 @@ Personally, I find that reference to a *Python project* is somehow misleading. W
 
 In business practice, I have came across a few common types of projects. The distinction I draw between pure *data science* and *model* projects is somehow arbitrary and frequently blurred but useful. I draw my 
 
+### Time horizon
+
+The time horizon approacj to project structure is hugely beneficial as it enables us to narrow down a gap between the complexity of the project scaffolding and time horizon. If visualised 
+
+```{r line_plot_complexity, echo=FALSE}
+library("ggplot2")
+ggplot(data = data.frame(x = 1:100, y = log(1:100)),
+       mapping = aes(x = x, y = y)) +
+    geom_line() +
+    theme_minimal() +
+    xlab("Time Horizon") +
+    ylab("Scaffolding Complexity") +
+    scale_x_continuous(labels = function(x) {})
+```
+
+
 ## Set-up
 
 ## File structure
