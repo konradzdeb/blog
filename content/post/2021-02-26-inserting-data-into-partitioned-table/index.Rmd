@@ -111,7 +111,6 @@ For the purpose of the article I've also executed the provided-above HiveQL via 
 # Clean table if exists to facilitate easier rendering of the blog post
 DBI::dbSendQuery(sc, "DROP TABLE IF EXISTS blog.sample_partitioned_table")
 DBI::dbSendQuery(sc, "DROP DATABASE IF EXISTS blog")
-unlink(grep(".*blog\\.db.*", list.files(full.names = TRUE), value = TRUE))
 ```
 
 ```{r create_spark_data}
