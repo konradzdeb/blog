@@ -10,7 +10,6 @@ tags:
   - R
 ---
 
-<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
 
 <p>Most frequently, users tend to undertake common R installation and management tasks from within the R session. Frequently making use of commands, like <code>install.packages</code>, <code>update.packages</code> or <code>old.packages</code> to obtain or update packages or update/verify the existing packages. Those common tasks can also be accomplished via the GUI offered within RStudio, which provides an effortless mechanism for undertaking basic package management tasks. This is approach is usually sufficient for the vast majority of cases; however, there are some examples when working within REPL<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> to accomplish common installation tasks is not hugely convenient.</p>
@@ -44,20 +43,12 @@ tags:
         -e &#39;as.data.frame(old.packages(repos = &quot;https://cran.rstudio.com&quot;))[,-c(1,6)]&#39;
 }
 routdated</code></pre>
-<pre><code>##                                        LibPath Installed Built ReposVer
-## broom        /Users/konrad/Library/R/4/library    0.7.10 4.1.1   0.7.11
-## carData      /Users/konrad/Library/R/4/library     3.0-4 4.1.1    3.0-5
-## gert         /Users/konrad/Library/R/4/library     1.4.3 4.1.2    1.5.0
-## highcharter  /Users/konrad/Library/R/4/library     0.8.2 4.0.3    0.9.4
-## htmlTable    /Users/konrad/Library/R/4/library     2.3.0 4.1.1    2.4.0
-## httpuv       /Users/konrad/Library/R/4/library     1.6.4 4.1.2    1.6.5
-## igraph       /Users/konrad/Library/R/4/library    1.2.10 4.1.2   1.2.11
-## IRdisplay    /Users/konrad/Library/R/4/library       1.0 4.1.0      1.1
-## RcppParallel /Users/konrad/Library/R/4/library     5.1.4 4.0.5    5.1.5
-## renv         /Users/konrad/Library/R/4/library    0.14.0 4.1.0   0.15.0
-## repr         /Users/konrad/Library/R/4/library     1.1.3 4.0.3    1.1.4
-## waiter       /Users/konrad/Library/R/4/library     0.2.4 4.1.1    0.2.5
-## wk           /Users/konrad/Library/R/4/library     0.5.0 4.1.0    0.6.0</code></pre>
+<pre><code>##                                            LibPath Installed Built ReposVer
+## lavaan           /Users/konrad/Library/R/4/library    0.6-14 4.2.2   0.6-15
+## lme4             /Users/konrad/Library/R/4/library    1.1-30 4.2.1   1.1-33
+## pbkrtest         /Users/konrad/Library/R/4/library     0.5.1 4.1.1    0.5.2
+## quantreg         /Users/konrad/Library/R/4/library      5.94 4.2.1     5.95
+## Matrix   /usr/local/Cellar/r/4.3.0_1/lib/R/library     1.5-4 4.3.0  1.5-4.1</code></pre>
 <div id="explanation" class="section level4">
 <h4>Explanation</h4>
 <p>Let’s break this down. <code>Rscript</code> can be run with multiple switches:</p>
@@ -76,8 +67,8 @@ routdated</code></pre>
 <p>A sensible middle ground solution would be to run the package installation via <code>RScript</code> we could conveniently call it as a background process or just start in a new tab when working with any popular terminal client supporting this functionality.</p>
 <pre class="bash"><code># Function body
 function rinst () {
-    declare pkgnme=$1
-    Rscript --vanilla -e &quot;install.packages(&#39;$pkgnme&#39;, dependencies = TRUE, repos = &#39;https://cloud.r-project.org/&#39;, lib = &#39;/Users/konrad/Library/R/4/library&#39;)&quot;
+	declare pkgnme=$1
+	Rscript --vanilla -e &quot;install.packages(&#39;$pkgnme&#39;, dependencies = TRUE, repos = &#39;https://cloud.r-project.org/&#39;, lib = &#39;/Users/konrad/Library/R/4/library&#39;)&quot;
 }</code></pre>
 <div id="explanation-1" class="section level3">
 <h3>Explanation</h3>

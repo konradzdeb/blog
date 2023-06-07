@@ -32,12 +32,11 @@ references:
     month: 4
 ---
 
-<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
 
 <div id="rationale" class="section level1">
 <h1>Rationale</h1>
-<p>Maintaining partitioned Hive tables is a frequent practice in a business. Properly structured tables are conducive to achieving robust performance through speeding up query execution <span class="citation">(see <a href="#ref-costa2019" role="doc-biblioref">Costa, Costa, and Santos 2019</a>)</span>. Frequent use cases pertain to creating tables with hierarchical partition structure. In context of a data that is refreshed daily, the frequently utilised partition structure reflects years, months and dates.</p>
+<p>Maintaining partitioned Hive tables is a frequent practice in a business. Properly structured tables are conducive to achieving robust performance through speeding up query execution <span class="citation">(see <a href="#ref-costa2019">Costa, Costa, and Santos 2019</a>)</span>. Frequent use cases pertain to creating tables with hierarchical partition structure. In context of a data that is refreshed daily, the frequently utilised partition structure reflects years, months and dates.</p>
 <div id="creating-partitioned-table" class="section level2">
 <h2>Creating partitioned table</h2>
 <p>In HiveQL we would create the table with the following structure using the syntax below. In order to keep the development tidy, I’m creating a separate database on Hive which I will use for the purpose of creating tables for this article.</p>
@@ -45,18 +44,18 @@ references:
 CREATE DATABASE blog COMMENT &#39;Blog article samples, can be deleted.&#39;;
 -- Example table is created
 CREATE TABLE blog.sample_partitioned_table (
-        value_column_a FLOAT    COMMENT &#39;Column will hold 4-byte number&#39;, 
-        value_column_b DOUBLE   COMMENT &#39;8-byte double precision&#39;, 
-        value_column_c CHAR(1)  COMMENT &#39;Fixed length varchar&#39;) 
-    COMMENT &#39;Sample partitioned table stored as text file&#39; 
-    PARTITIONED BY (
-        part_year SMALLINT  COMMENT &#39;Data load year, partition&#39;, 
-        part_month TINYINT  COMMENT &#39;Data load month, partition&#39;,
-        part_day TINYINT    COMMENT &#39;Data load day, partition&#39;)
-    ROW FORMAT DELIMITED
-    FIELDS TERMINATED BY &#39;\t&#39;
-    LINES TERMINATED BY &#39;\n&#39;
-    STORED AS TEXTFILE;</code></pre>
+		value_column_a FLOAT 	COMMENT &#39;Column will hold 4-byte number&#39;, 
+		value_column_b DOUBLE 	COMMENT &#39;8-byte double precision&#39;, 
+		value_column_c CHAR(1) 	COMMENT &#39;Fixed length varchar&#39;) 
+	COMMENT &#39;Sample partitioned table stored as text file&#39; 
+	PARTITIONED BY (
+		part_year SMALLINT 	COMMENT &#39;Data load year, partition&#39;, 
+		part_month TINYINT 	COMMENT &#39;Data load month, partition&#39;,
+		part_day TINYINT	COMMENT &#39;Data load day, partition&#39;)
+	ROW FORMAT DELIMITED
+	FIELDS TERMINATED BY &#39;\t&#39;
+	LINES TERMINATED BY &#39;\n&#39;
+	STORED AS TEXTFILE;</code></pre>
 <p>The code snippet above achieves the following:</p>
 <ul>
 <li>Table <code>sample_partitioned_table</code> is created within newly created database <code>blog</code>.</li>
@@ -91,14 +90,14 @@ sample_data &lt;- map_dfr(.x = dates, ~ tibble(val_a = runif(2),
 <p>The created data looks as follows:</p>
 <pre class="r"><code>head(sample_data)</code></pre>
 <pre><code>## # A tibble: 6 × 6
-##    val_a   val_b val_c update_year update_month update_day
-##    &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
-## 1 0.217  0.432   k            2010            1          1
-## 2 0.943  0.148   h            2010            1          1
-## 3 0.0872 0.738   z            2010            1          2
-## 4 0.850  0.630   d            2010            1          2
-## 5 0.504  0.768   z            2010            1          3
-## 6 0.150  0.00624 h            2010            1          3</code></pre>
+##     val_a val_b val_c update_year update_month update_day
+##     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
+## 1 0.727   0.283 x            2010            1          1
+## 2 0.914   0.832 b            2010            1          1
+## 3 0.00121 0.657 s            2010            1          2
+## 4 0.165   0.799 d            2010            1          2
+## 5 0.152   0.416 f            2010            1          3
+## 6 0.672   0.797 r            2010            1          3</code></pre>
 <p>Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the <a href="https://spark.rstudio.com"><code>sparklyr</code></a> psvksge I’m creating a local connection.</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(sparklyr))
 sc &lt;- spark_connect(master = &quot;local&quot;)</code></pre>
@@ -109,18 +108,18 @@ sc &lt;- spark_connect(master = &quot;local&quot;)</code></pre>
 ##        Changed: 0</code></pre>
 <pre class="r"><code>res_DBI_data &lt;- DBI::dbSendQuery(sc, &quot;CREATE DATABASE blog COMMENT &#39;Blog article samples,                                           can be deleted.&#39;&quot;)
 res_DBI_tble &lt;- DBI::dbSendQuery(sc, &quot;CREATE TABLE blog.sample_partitioned_table (
-        value_column_a FLOAT    COMMENT &#39;Column will hold 4-byte number&#39;, 
-        value_column_b DOUBLE   COMMENT &#39;8-byte double precision&#39;, 
-        value_column_c CHAR(1)  COMMENT &#39;Fixed length varchar&#39;) 
-    COMMENT &#39;Sample partitioned table stored as text file&#39; 
-    PARTITIONED BY (
-        part_year SMALLINT  COMMENT &#39;Data load year, partition&#39;, 
-        part_month TINYINT  COMMENT &#39;Data load month, partition&#39;,
-        part_day TINYINT    COMMENT &#39;Data load day, partition&#39;)
-    ROW FORMAT DELIMITED
-    FIELDS TERMINATED BY &#39;\t&#39;
-    LINES TERMINATED BY &#39;\n&#39;
-    STORED AS TEXTFILE&quot;)</code></pre>
+		value_column_a FLOAT 	COMMENT &#39;Column will hold 4-byte number&#39;, 
+		value_column_b DOUBLE 	COMMENT &#39;8-byte double precision&#39;, 
+		value_column_c CHAR(1) 	COMMENT &#39;Fixed length varchar&#39;) 
+	COMMENT &#39;Sample partitioned table stored as text file&#39; 
+	PARTITIONED BY (
+		part_year SMALLINT 	COMMENT &#39;Data load year, partition&#39;, 
+		part_month TINYINT 	COMMENT &#39;Data load month, partition&#39;,
+		part_day TINYINT	COMMENT &#39;Data load day, partition&#39;)
+	ROW FORMAT DELIMITED
+	FIELDS TERMINATED BY &#39;\t&#39;
+	LINES TERMINATED BY &#39;\n&#39;
+	STORED AS TEXTFILE&quot;)</code></pre>
 </div>
 <div id="insert-mechanism" class="section level3">
 <h3>Insert mechanism</h3>
@@ -136,8 +135,8 @@ res_pmap &lt;- pmap(
                                                 part_month={..2},
                                                 part_day={..3})
                                      SELECT val_a, val_b, val_c
-                        FROM spark_sample_data
-                                        WHERE update_year={..1} AND
+				     	FROM spark_sample_data
+                                     	WHERE update_year={..1} AND
                                         update_month={..2} AND
                                         update_day={..3}&quot;)))</code></pre>
 <p>Let’s unpack the code below. Our key goals are:
@@ -156,17 +155,15 @@ res_pmap &lt;- pmap(
 sdf_num_partitions(tbl_perm)</code></pre>
 <pre><code>## [1] 118</code></pre>
 <pre class="r"><code>glimpse(tbl_perm)</code></pre>
-<pre><code>## Rows: ??</code></pre>
-<pre><code>## Warning in sdf_collect_static(object, impl, ...): NAs introduced by coercion to
-## integer range</code></pre>
-<pre><code>## Columns: 6
+<pre><code>## Rows: ??
+## Columns: 6
 ## Database: spark_connection
-## $ value_column_a &lt;dbl&gt; 0.612993300, 0.985163510, 0.612993300, 0.985163510, 0.4…
-## $ value_column_b &lt;dbl&gt; 0.30834914, 0.87838640, 0.30834914, 0.87838640, 0.92793…
-## $ value_column_c &lt;chr&gt; &quot;y&quot;, &quot;j&quot;, &quot;y&quot;, &quot;j&quot;, &quot;b&quot;, &quot;q&quot;, &quot;b&quot;, &quot;q&quot;, &quot;q&quot;, &quot;h&quot;, &quot;q&quot;, …
+## $ value_column_a &lt;dbl&gt; 0.3974119, 0.8172787, 0.3974119, 0.8172787, 0.3142581, …
+## $ value_column_b &lt;dbl&gt; 0.89519877, 0.38352755, 0.89519877, 0.38352755, 0.04601…
+## $ value_column_c &lt;chr&gt; &quot;o&quot;, &quot;v&quot;, &quot;o&quot;, &quot;v&quot;, &quot;q&quot;, &quot;k&quot;, &quot;q&quot;, &quot;k&quot;, &quot;z&quot;, &quot;x&quot;, &quot;z&quot;, …
 ## $ part_year      &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
-## $ part_month     &lt;int&gt; 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2…
-## $ part_day       &lt;int&gt; 22, 22, 22, 22, 17, 17, 17, 17, 9, 9, 9, 9, 23, 23, 23,…</code></pre>
+## $ part_month     &lt;int&gt; 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1…
+## $ part_day       &lt;int&gt; 19, 19, 19, 19, 16, 16, 16, 16, 7, 7, 7, 7, 19, 19, 19,…</code></pre>
 </div>
 </div>
 </div>

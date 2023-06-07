@@ -26,8 +26,8 @@ params:
     ShowPostNavLinks: true
     ShowCodeCopyButtons: true
     homeInfoParams:
-        Title:  R in Business
-        Content: Yet another blog on using R with focus on R in business.
+        Title:  The Final Artefact
+        Content: Yet another blog on coding and business
     socialIcons:
         - name: "LinkedIn"
           url: "https://www.linkedin.com/in/konradzdeb"
