@@ -2,7 +2,7 @@
 title: Inserting Data into Partitioned Table
 author: Konrad Zdeb
 date: '2021-02-26'
-slug: []
+slug: inserting-data-into-partitioned-table
 categories:
   - how-to
   - example
@@ -90,20 +90,24 @@ sample_data &lt;- map_dfr(.x = dates, ~ tibble(val_a = runif(2),
 <p>The created data looks as follows:</p>
 <pre class="r"><code>head(sample_data)</code></pre>
 <pre><code>## # A tibble: 6 × 6
-##     val_a val_b val_c update_year update_month update_day
-##     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
-## 1 0.727   0.283 x            2010            1          1
-## 2 0.914   0.832 b            2010            1          1
-## 3 0.00121 0.657 s            2010            1          2
-## 4 0.165   0.799 d            2010            1          2
-## 5 0.152   0.416 f            2010            1          3
-## 6 0.672   0.797 r            2010            1          3</code></pre>
-<p>Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the <a href="https://spark.rstudio.com"><code>sparklyr</code></a> psvksge I’m creating a local connection.</p>
+##   val_a  val_b val_c update_year update_month update_day
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
+## 1 0.361 0.0683 u            2010            1          1
+## 2 0.384 0.557  f            2010            1          1
+## 3 0.858 0.896  q            2010            1          2
+## 4 0.871 0.0351 d            2010            1          2
+## 5 0.393 0.920  y            2010            1          3
+## 6 0.211 0.828  v            2010            1          3</code></pre>
+<p>Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the <a href="https://spark.rstudio.com"><code>sparklyr</code></a> package I’m creating a local connection.</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(sparklyr))
 sc &lt;- spark_connect(master = &quot;local&quot;)</code></pre>
 <p>For the purpose of the article I’ve also executed the provided-above HiveQL via Spark to ensure accessibility to data structures that would be structurally equivalent, ensuring smooth execution of the example code. Naturally, in a production setting, we would seldom look to create new Hive schema from an R script layer. Similarly, core tables storing results would be usually established outside regular production processes.</p>
 <pre><code>## &lt;DBISparkResult&gt;
 ##   SQL  DROP TABLE IF EXISTS blog.sample_partitioned_table
+##   ROWS Fetched: 0 [complete]
+##        Changed: 0</code></pre>
+<pre><code>## &lt;DBISparkResult&gt;
+##   SQL  DROP DATABASE IF EXISTS blog
 ##   ROWS Fetched: 0 [complete]
 ##        Changed: 0</code></pre>
 <pre class="r"><code>res_DBI_data &lt;- DBI::dbSendQuery(sc, &quot;CREATE DATABASE blog COMMENT &#39;Blog article samples,                                           can be deleted.&#39;&quot;)
@@ -158,12 +162,12 @@ sdf_num_partitions(tbl_perm)</code></pre>
 <pre><code>## Rows: ??
 ## Columns: 6
 ## Database: spark_connection
-## $ value_column_a &lt;dbl&gt; 0.3974119, 0.8172787, 0.3974119, 0.8172787, 0.3142581, …
-## $ value_column_b &lt;dbl&gt; 0.89519877, 0.38352755, 0.89519877, 0.38352755, 0.04601…
-## $ value_column_c &lt;chr&gt; &quot;o&quot;, &quot;v&quot;, &quot;o&quot;, &quot;v&quot;, &quot;q&quot;, &quot;k&quot;, &quot;q&quot;, &quot;k&quot;, &quot;z&quot;, &quot;x&quot;, &quot;z&quot;, …
+## $ value_column_a &lt;dbl&gt; 0.6787892, 0.9769289, 0.6787892, 0.9769289, 0.8955172, …
+## $ value_column_b &lt;dbl&gt; 0.94976431, 0.19634011, 0.94976431, 0.19634011, 0.86141…
+## $ value_column_c &lt;chr&gt; &quot;r&quot;, &quot;y&quot;, &quot;r&quot;, &quot;y&quot;, &quot;x&quot;, &quot;c&quot;, &quot;x&quot;, &quot;c&quot;, &quot;u&quot;, &quot;f&quot;, &quot;u&quot;, …
 ## $ part_year      &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
-## $ part_month     &lt;int&gt; 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1…
-## $ part_day       &lt;int&gt; 19, 19, 19, 19, 16, 16, 16, 16, 7, 7, 7, 7, 19, 19, 19,…</code></pre>
+## $ part_month     &lt;int&gt; 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2…
+## $ part_day       &lt;int&gt; 20, 20, 20, 20, 6, 6, 6, 6, 1, 1, 1, 1, 13, 13, 13, 13,…</code></pre>
 </div>
 </div>
 </div>

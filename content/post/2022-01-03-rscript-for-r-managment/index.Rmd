@@ -41,14 +41,14 @@ In the process of updating packages we will be usually interested in achieving t
 
 For a start, let's attempt to construct a data frame containing the outdated packages using `Rscript`. This is achieved in the following manner
 
-```{bash, engine.opts='-l', results='hide'}
+```{bash, engine.opts='-l', results='hide', eval=FALSE}
 Rscript --no-save --no-restore --no-init-file \
         -e 'as.data.frame(old.packages(repos = "https://cran.rstudio.com"))[,-c(1,6)]'
 ```
 
 If we intend to execute this command frequently it may be useful to wrap in a function. As we are not intending to pass any arguments to the function this is trivial:
 
-```{bash rlistoutdated, engine.ops='-l'}
+```{bash rlistoutdated, engine.ops='-l', eval=FALSE}
 function routdated () {
         Rscript --no-save --no-restore --no-init-file \
         -e 'as.data.frame(old.packages(repos = "https://cran.rstudio.com"))[,-c(1,6)]'
@@ -73,7 +73,7 @@ Installing packages from console is useful if we want to undertake those tasks o
 
 A sensible middle ground solution would be to run the package installation via `RScript` we could conveniently call it as a background process or just start in a new tab when working with any popular terminal client supporting this functionality. 
 
-```{bash, engine.opts='-l'}
+```{bash, engine.opts='-l', eval=FALSE}
 # Function body
 function rinst () {
 	declare pkgnme=$1

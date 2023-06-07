@@ -3,6 +3,7 @@ title: On structuring Python Projects
 author: Konrad Zdeb
 date: '2022-03-16'
 slug: python-project-structre
+draft: true
 categories:
   - dev
   - example
@@ -20,12 +21,9 @@ In business practice, I have came across a few common types of projects. The dis
 
 ### Time horizon
 
-The time horizon approacj to project structure is hugely beneficial as it enables us to narrow down a gap between the complexity of the project scaffolding and time horizon. If visualised 
+The time horizon approach to project structure is hugely beneficial as it enables us to narrow down a gap between the complexity of the project scaffolding and time horizon. If visualised 
 
-
-```r
-library("ggplot2")
-```
+<img src="{{< blogdown/postref >}}index_files/figure-html/line_plot_complexity-1.png" width="672" />
 
 
 ## Set-up
