@@ -1,0 +1,16 @@
+---
+title: Learning ChatGPT How to Draw
+author: Konrad Zdeb
+date: '2023-06-14'
+slug: drawing-chat-gpt
+categories:
+  - fun
+tags:
+  - AI
+  - LaTeX
+  - TikZ
+---
+
+# Background
+
+Assuming 
