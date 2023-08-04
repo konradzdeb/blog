@@ -3,6 +3,8 @@ title: Learning ChatGPT How to Draw
 author: Konrad Zdeb
 date: '2023-06-14'
 slug: drawing-chat-gpt
+header-includes: 
+  - \usetikzlibrary{positioning}
 categories:
   - fun
 tags:
@@ -13,7 +15,48 @@ tags:
 
 
 
+
 <div id="background" class="section level1">
 <h1>Background</h1>
-<p>Assuming</p>
+<p>Assuming that you are familiar with the Internet you have heard about the ChatGPT.</p>
+<div id="what-is-latex" class="section level2">
+<h2>What is LaTeX</h2>
+<div id="tikz-subsystem" class="section level3">
+<h3>TikZ Subsystem</h3>
+</div>
+</div>
+</div>
+<div id="chatgpt-conversation" class="section level1">
+<h1>ChatGPT Conversation</h1>
+<p>Let’s jump right in and see how ChatGPT deals with simple request to draw a class diagram? For the request:
+&gt; Can you draw an example of a class “Person” with the properties “name” and “age” using TikZ?</p>
+<p>The ChatGPT will return the following code.</p>
+<pre class="tex"><code>\begin{tikzpicture}
+  \node[draw, class] (Person) at (0,0) {Person};
+  \node[draw, attribute] (name) at (-2.5,-1.5) {name};
+  \node[draw, attribute] (age) at (2.5,-1.5) {age};
+  
+  \draw[-&gt;] (name) -- (-0.5,-1.5) -- (-0.5,0.1) -- (Person);
+  \draw[-&gt;] (age) -- (0.5,-1.5) -- (0.5,0.1) -- (Person);
+\end{tikzpicture}</code></pre>
+<p>There are certain mistakes in that code. The code refers to <code>attribute</code> and <code>class</code> styles that are not defined. We can amend that by giving ChatGPT are more specific set of instructions. The code compiles but looks horribly.</p>
+<pre class="tex"><code>\begin{tikzpicture}[
+  class/.style={draw, rectangle, minimum width=2cm, minimum height=1cm},
+  attribute/.style={draw, rectangle, minimum width=2cm, minimum height=0.5cm}
+]
+  \node[class] (Person) at (0,0) {Person};
+  \node[attribute] (name) at (-2.5,-1.5) {name};
+  \node[attribute] (age) at (2.5,-1.5) {age};
+  
+  \draw[-&gt;] (name) -- (-0.5,-1.5) -- (-0.5,0.1) -- (Person);
+  \draw[-&gt;] (age) -- (0.5,-1.5) -- (0.5,0.1) -- (Person);
+\end{tikzpicture}</code></pre>
+<div class="figure"><span style="display:block;" id="fig:TrivialClassAmended"></span>
+<img src="{{< blogdown/postref >}}index_files/figure-html/TrivialClassAmended-1.png" alt="Sample Class" width="672" />
+<p class="caption">
+Figure 1: Sample Class
+</p>
+</div>
+<p>A relative positioning may prove better. With the sentence:
+&gt; Can you re-generate an tikz drawing of a person class using relative positioning between nodes?</p>
 </div>

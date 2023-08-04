@@ -3,6 +3,8 @@ title: Learning ChatGPT How to Draw
 author: Konrad Zdeb
 date: '2023-06-14'
 slug: drawing-chat-gpt
+header-includes: 
+  - \usetikzlibrary{positioning}
 categories:
   - fun
 tags:
@@ -11,6 +13,63 @@ tags:
   - TikZ
 ---
 
+```{r setup, echo=FALSE}
+options(tikzDefaultEngine = "xetex")
+```
+
 # Background
 
-Assuming 
+Assuming that you are familiar with the Internet you have heard about the ChatGPT. 
+
+## What is LaTeX
+
+### TikZ Subsystem
+
+# ChatGPT Conversation
+Let's jump right in and see how ChatGPT deals with simple request to draw a class diagram? For the request:
+> Can you draw an example of a class "Person" with the properties "name" and "age" using TikZ?
+
+The ChatGPT will return the following code. 
+
+```{tikz, TrivialClass, fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png', fig.cap='Sample Class', echo=TRUE, eval=FALSE}
+\begin{tikzpicture}
+  \node[draw, class] (Person) at (0,0) {Person};
+  \node[draw, attribute] (name) at (-2.5,-1.5) {name};
+  \node[draw, attribute] (age) at (2.5,-1.5) {age};
+  
+  \draw[->] (name) -- (-0.5,-1.5) -- (-0.5,0.1) -- (Person);
+  \draw[->] (age) -- (0.5,-1.5) -- (0.5,0.1) -- (Person);
+\end{tikzpicture}
+```
+
+There are certain mistakes in that code. The code refers to `attribute` and `class` styles that are not defined. We can amend that by giving ChatGPT are more specific set of instructions. The code compiles but looks horribly.
+
+```{tikz, TrivialClassAmended, fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png', fig.cap='Sample Class', echo=TRUE, eval=TRUE}
+\begin{tikzpicture}[
+  class/.style={draw, rectangle, minimum width=2cm, minimum height=1cm},
+  attribute/.style={draw, rectangle, minimum width=2cm, minimum height=0.5cm}
+]
+  \node[class] (Person) at (0,0) {Person};
+  \node[attribute] (name) at (-2.5,-1.5) {name};
+  \node[attribute] (age) at (2.5,-1.5) {age};
+  
+  \draw[->] (name) -- (-0.5,-1.5) -- (-0.5,0.1) -- (Person);
+  \draw[->] (age) -- (0.5,-1.5) -- (0.5,0.1) -- (Person);
+\end{tikzpicture}
+```
+
+A relative positioning may prove better. With the sentence:
+
+> Can you re-generate an tikz drawing of a person class using relative positioning between nodes?
+
+```{tikz, TrivialClassRelative, fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png', fig.cap='Sample Class', echo=TRUE, eval=TRUE}
+\begin{tikzpicture}[
+  class/.style={draw, rectangle, minimum width=2cm, minimum height=1cm},
+  attribute/.style={draw, rectangle, minimum width=2cm, minimum height=0.5cm}
+]
+  \node[class] (Person) {Person};
+  \node[attribute, below left = 1cm and -1.5cm of Person] (name) {name};
+  \node[attribute, below right = 1cm and -1.5cm of Person] (age) {age};
+\end{tikzpicture}
+```
+
