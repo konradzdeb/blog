@@ -14,19 +14,20 @@ tags:
 ---
 
 ```{r setup, echo=FALSE}
-options(tikzDefaultEngine = "xetex")
+options(tikzDefaultEngine = "lualatex")
+options(tinytex.verbose = TRUE)
 ```
 
 # Background
 
 Assuming that you are familiar with the Internet you have heard about the ChatGPT. 
 
-## What is LaTeX
+## What is LaTeX and TikZ
 
-### TikZ Subsystem
 
 # ChatGPT Conversation
 Let's jump right in and see how ChatGPT deals with simple request to draw a class diagram? For the request:
+
 > Can you draw an example of a class "Person" with the properties "name" and "age" using TikZ?
 
 The ChatGPT will return the following code. 
@@ -58,18 +59,73 @@ There are certain mistakes in that code. The code refers to `attribute` and `cla
 \end{tikzpicture}
 ```
 
-A relative positioning may prove better. With the sentence:
+The graphs are horrible but by providing ChatGPT with additional instructions, likely we would be able to arrive at an acceptable solution. It would possibly make sense to test how the ChatGPT would handle a more complex request. 
 
-> Can you re-generate an tikz drawing of a person class using relative positioning between nodes?
+> Could you create a flow chart illustrating a recursive implementation for computing Fibonacci numbers?
 
-```{tikz, TrivialClassRelative, fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png', fig.cap='Sample Class', echo=TRUE, eval=TRUE}
-\begin{tikzpicture}[
-  class/.style={draw, rectangle, minimum width=2cm, minimum height=1cm},
-  attribute/.style={draw, rectangle, minimum width=2cm, minimum height=0.5cm}
-]
-  \node[class] (Person) {Person};
-  \node[attribute, below left = 1cm and -1.5cm of Person] (name) {name};
-  \node[attribute, below right = 1cm and -1.5cm of Person] (age) {age};
+```{tikz, FlowChart, fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png', fig.cap='Fibonacci Flow Chart', echo=TRUE, eval=TRUE}
+\usetikzlibrary{shapes.geometric, arrows}
+
+\begin{tikzpicture}[node distance=2cm]
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\node (start) [startstop] {Start};
+\node (decide) [process, below of=start] {Is n $\leq$ 1?};
+\node (result) [process, below of=decide, yshift=-0.5cm] {Return n};
+\node (calc1) [process, below left of=decide, xshift=-2cm] {Calculate Fibonacci(n-1)};
+\node (calc2) [process, below right of=decide, xshift=2cm] {Calculate Fibonacci(n-2)};
+\node (add) [process, below of=calc1] {Return Fibonacci(n-1) + Fibonacci(n-2)};
+\node (stop) [startstop, below of=add] {Stop};
+
+\draw [arrow] (start) -- (decide);
+\draw [arrow] (decide) -- node[anchor=east] {Yes} (result);
+\draw [arrow] (decide) -- node[anchor=south] {No} (calc1);
+\draw [arrow] (decide) -- node[anchor=south] {No} (calc2);
+\draw [arrow] (calc1) -- (add);
+\draw [arrow] (calc2) -- (add);
+\draw [arrow] (add) -- (stop);
+
 \end{tikzpicture}
+```
+
+Clearly ChatGPT version struggles to attend to all small details of the proper flow chart representation as the produced visuals makes this nodes overlap and arrows are cutting across nodes which is also rather undesirable; nevertheless, in a broad sense the produced flow chart contains elements that we would be expecting to find in a professionally produced diagram.
+
+# Drawing Real Life Object
+
+As demonstrated, ChatGPT can handle fairly involve instructions and deliver usable results. The produced outputs require further tweaking, which we could achieve by issuing more detailed instructions to the ChatGPT or by manually adjusting placement of node elements and arrows. The goal was to check how the ChatGPT will handle generating real-life objects using TikZ.
+
+## Table
+
+Following [relevant discussion](https://tex.stackexchange.com/a/14878/123504) on StackExchange, we can get the following example of table drawn using TikZ.
+
+
+```{tikz, StackTable, fig.ext=if (knitr:::is_latex_output()) 'pdf' else 'png', fig.cap='Sample Table', echo=TRUE, eval=TRUE}
+\begin{tikzpicture}[fill=lightgray]
+
+%legs
+\foreach \leg in {(0.3,0,0),(4.9,0,0),(4.9,0,-2.7),(0.3,0,-2.7)}{
+\begin{scope}[shift=\leg,draw=red]
+\draw[fill] (0,0,0) -- (0,0,-0.2) -- (0,2,-0.2) -- (0,2,0);
+\draw[fill] (0,0,0) rectangle (-0.2,2,0);
+\end{scope}}
+
+%table
+\begin{scope}[draw=blue,shift={(0,2,0)}]
+\draw[fill] (0,0,0) -- (5,0,0) -- (5,0,-3) -- (0,0,-3) -- cycle;
+\draw[fill] (0,0,0) -- (5,0,0) -- (5,-0.1,0)-- (0,-0.1,0) -- cycle;
+\draw[fill] (5,0,0) -- (5,0,-3) -- (5,-0.1,-3)-- (5,-0.1,0) -- cycle;
+\end{scope}
+
+\end{tikzpicture}
+```
+
+
+
+
+```{r cleanLogArtefacts, echo=FALSE, eval=FALSE, include=FALSE}
+unlink(list.files(pattern = "\\.log$", full.names=TRUE))
 ```
 

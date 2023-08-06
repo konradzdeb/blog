@@ -19,17 +19,16 @@ tags:
 <div id="background" class="section level1">
 <h1>Background</h1>
 <p>Assuming that you are familiar with the Internet you have heard about the ChatGPT.</p>
-<div id="what-is-latex" class="section level2">
-<h2>What is LaTeX</h2>
-<div id="tikz-subsystem" class="section level3">
-<h3>TikZ Subsystem</h3>
-</div>
+<div id="what-is-latex-and-tikz" class="section level2">
+<h2>What is LaTeX and TikZ</h2>
 </div>
 </div>
 <div id="chatgpt-conversation" class="section level1">
 <h1>ChatGPT Conversation</h1>
-<p>Let’s jump right in and see how ChatGPT deals with simple request to draw a class diagram? For the request:
-&gt; Can you draw an example of a class “Person” with the properties “name” and “age” using TikZ?</p>
+<p>Let’s jump right in and see how ChatGPT deals with simple request to draw a class diagram? For the request:</p>
+<blockquote>
+<p>Can you draw an example of a class “Person” with the properties “name” and “age” using TikZ?</p>
+</blockquote>
 <p>The ChatGPT will return the following code.</p>
 <pre class="tex"><code>\begin{tikzpicture}
   \node[draw, class] (Person) at (0,0) {Person};
@@ -57,6 +56,44 @@ tags:
 Figure 1: Sample Class
 </p>
 </div>
-<p>A relative positioning may prove better. With the sentence:
-&gt; Can you re-generate an tikz drawing of a person class using relative positioning between nodes?</p>
+<p>The graphs are horrible but by providing ChatGPT with additional instructions, likely we would be able to arrive at an acceptable solution. It would possibly make sense to test how the ChatGPT would handle a more complex request.</p>
+<blockquote>
+<p>Could you create a flow chart illustrating a recursive implementation for computing Fibonacci numbers?</p>
+</blockquote>
+<pre class="tex"><code>\usetikzlibrary{shapes.geometric, arrows}
+
+\begin{tikzpicture}[node distance=2cm]
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{arrow} = [thick,-&gt;,&gt;=stealth]
+
+\node (start) [startstop] {Start};
+\node (decide) [process, below of=start] {Is n $\leq$ 1?};
+\node (result) [process, below of=decide, yshift=-0.5cm] {Return n};
+\node (calc1) [process, below left of=decide, xshift=-2cm] {Calculate Fibonacci(n-1)};
+\node (calc2) [process, below right of=decide, xshift=2cm] {Calculate Fibonacci(n-2)};
+\node (add) [process, below of=calc1] {Return Fibonacci(n-1) + Fibonacci(n-2)};
+\node (stop) [startstop, below of=add] {Stop};
+
+\draw [arrow] (start) -- (decide);
+\draw [arrow] (decide) -- node[anchor=east] {Yes} (result);
+\draw [arrow] (decide) -- node[anchor=south] {No} (calc1);
+\draw [arrow] (decide) -- node[anchor=south] {No} (calc2);
+\draw [arrow] (calc1) -- (add);
+\draw [arrow] (calc2) -- (add);
+\draw [arrow] (add) -- (stop);
+
+\end{tikzpicture}</code></pre>
+<div class="figure"><span style="display:block;" id="fig:FlowChart"></span>
+<img src="{{< blogdown/postref >}}index_files/figure-html/FlowChart-1.png" alt="Fibonacci Flow Chart" width="672" />
+<p class="caption">
+Figure 2: Fibonacci Flow Chart
+</p>
+</div>
+<p>Clearly ChatGPT version struggles to attend to all small details of the proper flow chart representation as the produced visuals makes this nodes overlap and arrows are cutting across nodes which is also rather undesirable; nevertheless, in a broad sense the produced flow chart contains elements that we would be expecting to find in a professionally produced diagram.</p>
+</div>
+<div id="drawing-real-life-object" class="section level1">
+<h1>Drawing Real Life Object</h1>
+<p>As demonstrated, ChatGPT can handle fairly involve instructions and deliver usable results. The produced outputs require further tweaking, which we could achieve by issuing more detailed instructions to the ChatGPT or by manually adjusting placement of node elements and arrows.</p>
 </div>
