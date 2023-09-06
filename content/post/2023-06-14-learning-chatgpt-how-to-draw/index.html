@@ -18,10 +18,7 @@ tags:
 
 <div id="background" class="section level1">
 <h1>Background</h1>
-<p>Assuming that you are familiar with the Internet you have heard about the ChatGPT.</p>
-<div id="what-is-latex-and-tikz" class="section level2">
-<h2>What is LaTeX and TikZ</h2>
-</div>
+<p>For a computer, an image is collection of interpretable instructions that amount to a visual representation. Raster images are composed from using pixels, containing unique colours, whereas vector images keep track of points and equations that join them. In <span class="math inline">\(\LaTeX\)</span> PGF/TikZ is used to generate vector graphics from algebraic descriptions. TikZ is mostly used to conveniently draw various scientific figures. ChatGPT is capable of generating computer code in majority of popular languages. I wanted to test how far I can get with ChatGPT generating illustrations using TikZ.</p>
 </div>
 <div id="chatgpt-conversation" class="section level1">
 <h1>ChatGPT Conversation</h1>
@@ -95,5 +92,42 @@ Figure 2: Fibonacci Flow Chart
 </div>
 <div id="drawing-real-life-object" class="section level1">
 <h1>Drawing Real Life Object</h1>
-<p>As demonstrated, ChatGPT can handle fairly involve instructions and deliver usable results. The produced outputs require further tweaking, which we could achieve by issuing more detailed instructions to the ChatGPT or by manually adjusting placement of node elements and arrows.</p>
+<p>As demonstrated, ChatGPT can handle fairly involve instructions and deliver usable results. The produced outputs require further tweaking, which we could achieve by issuing more detailed instructions to the ChatGPT or by manually adjusting placement of node elements and arrows. The goal was to check how the ChatGPT will handle generating real-life objects using TikZ. Finally, I’ve asked ChatGPT to do the following:</p>
+<blockquote>
+<p>Can you draw a German Shepherd using TikZ?</p>
+</blockquote>
+<p>ChatGPT correctly recognised the impossibility of this task:</p>
+<blockquote>
+<p>Creating a detailed drawing of a German Shepherd using TikZ would be a complex and time-consuming task, as TikZ is primarily a vector graphics tool for creating diagrams and shapes. It’s not ideal for highly detailed illustrations like a realistic dog.</p>
+</blockquote>
+<p>Still was able to produce the following results:</p>
+<pre class="tex"><code>\begin{tikzpicture}
+  % Dog body
+  \draw[gray!50, fill=gray!30] (0,0) ellipse (1.5 and 0.7);
+
+  % Dog head
+  \draw[gray!50, fill=gray!30] (2.2,0) circle (0.8);
+
+  % Dog ears
+  \fill[gray!50] (3,0.7) ellipse (0.3 and 0.4);
+  \fill[gray!50] (3,-0.7) ellipse (0.3 and 0.4);
+
+  % Dog eyes
+  \fill[white] (2.5,0.2) ellipse (0.15 and 0.25);
+  \fill[white] (2.5,-0.2) ellipse (0.15 and 0.25);
+  \fill[black] (2.5,0.2) circle (0.05);
+  \fill[black] (2.5,-0.2) circle (0.05);
+
+  % Dog nose
+  \fill[black] (2.7,0) circle (0.08);
+
+  % Dog tail
+  \draw[line width=2pt] (-0.8,0) to[out=70,in=250] (-1.3,1.2);
+\end{tikzpicture}</code></pre>
+<div class="figure"><span style="display:block;" id="fig:GermanShephard"></span>
+<img src="{{< blogdown/postref >}}index_files/figure-html/GermanShephard-1.png" alt="German Shephard" width="672" />
+<p class="caption">
+Figure 3: German Shephard
+</p>
+</div>
 </div>
