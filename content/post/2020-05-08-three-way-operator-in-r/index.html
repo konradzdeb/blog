@@ -9,7 +9,6 @@ tags:
   - R
 ---
 
-<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
 
 <p>Is there a merit for a three-way operator in R?</p>
@@ -163,7 +162,8 @@ ifelse(a == b, 0, ifelse(a &lt; b, -1, 1))</code></pre>
 a &lt;- c(1,2,3)
 b &lt;- c(1,2)
 a %&lt;=&gt;% b</code></pre>
-<pre><code>## Error in recycle_args(list(.x, .y)): all(lengths == 1L | lengths == n) is not TRUE</code></pre>
+<pre><code>## Error in `map2()`:
+## ! Can&#39;t recycle `.x` (size 3) to match `.y` (size 2).</code></pre>
 </div>
 </div>
 </div>

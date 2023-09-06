@@ -11,7 +11,6 @@ tags:
   - functional
 ---
 
-<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 <script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
 <link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
 
@@ -111,7 +110,7 @@ Funs_O &lt;- mget(Fun_names) # Create a list of functions
 head(Funs_O, n = 2) # Preview</code></pre>
 <pre><code>## $O_1
 ## function(n) {(rep(1,length(n)))}
-## &lt;bytecode: 0x7ff71ce4e0a8&gt;
+## &lt;bytecode: 0x7fdefa246b30&gt;
 ## 
 ## $O_2_to_n
 ## function(n) {2^n}</code></pre>
@@ -446,13 +445,13 @@ Inf
 <h2>Plotting</h2>
 <p>Plotting functions actually becomes trivial with use of <code>dplyr</code> and <code>ggplot2</code>. As shown below, we can leverage the previous solution using <code>mget</code> to dynamically pull all of the refreshed functions and keep on re-generating the plot to get a view on the running time of the relevant algorithm. Here, I’m using <code>Fun_names</code> to avoid unnecessary verbosity but this could be replaced with the <code>ls</code> call.</p>
 <pre class="r"><code>map_df(mget(Fun_names), ~ map_dbl(1:n, ~ .x(.x))) %&gt;%
-    rownames_to_column(&quot;n_val&quot;) %&gt;%
-    mutate(n_val = as.integer(n_val)) %&gt;%
-    pivot_longer(!n_val, names_to = &quot;O_fun&quot;, values_to = &quot;n_t&quot;) %&gt;%
-    ggplot(aes(x = n_val, y = n_t, group = O_fun, colour = O_fun)) +
-    geom_line() +
-    scale_y_continuous(trans = &quot;log10&quot;) + 
-    theme_minimal()</code></pre>
+	rownames_to_column(&quot;n_val&quot;) %&gt;%
+	mutate(n_val = as.integer(n_val)) %&gt;%
+	pivot_longer(!n_val, names_to = &quot;O_fun&quot;, values_to = &quot;n_t&quot;) %&gt;%
+	ggplot(aes(x = n_val, y = n_t, group = O_fun, colour = O_fun)) +
+	geom_line() +
+	scale_y_continuous(trans = &quot;log10&quot;) + 
+	theme_minimal()</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/create_plot-1.png" width="672" /></p>
 </div>
 </div>

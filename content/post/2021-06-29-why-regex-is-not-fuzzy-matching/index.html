@@ -10,7 +10,6 @@ tags:
   - StackOverflow
 ---
 
-<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
 
 <p>Recently, I cam across an interesting discussion on StackOverflow<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> pertaining to approach to fuzzy matching tables in R. Good answer contributed by one of the most resilient and excellent contributors to whom I owe a lot of thanks for help suggested relying on regular expression, combining this with basic sting removal and transformations like <code>toupper</code> to deterministically match the tables. The solution solved the problem and was accepted.</p>
@@ -52,7 +51,7 @@ data_B &lt;- tibble::tribble(
 data_A |&gt; 
     mutate(manufacturer = str_remove(manufacturer, &quot;\\s.*&quot;)) |&gt; 
     left_join(data_B)</code></pre>
-<pre><code>## Joining, by = &quot;manufacturer&quot;</code></pre>
+<pre><code>## Joining with `by = join_by(manufacturer)`</code></pre>
 <pre><code>## # A tibble: 5 × 3
 ##   manufacturer price subjective_rating
 ##   &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;            
@@ -67,7 +66,7 @@ data_A |&gt;
     mutate(manufacturer = str_trim(manufacturer),
            manufacturer = str_remove(manufacturer, &quot;\\s.*&quot;)) |&gt; 
     left_join(data_B)</code></pre>
-<pre><code>## Joining, by = &quot;manufacturer&quot;</code></pre>
+<pre><code>## Joining with `by = join_by(manufacturer)`</code></pre>
 <pre><code>## # A tibble: 5 × 3
 ##   manufacturer price subjective_rating
 ##   &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;            
