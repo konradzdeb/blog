@@ -90,14 +90,14 @@ sample_data &lt;- map_dfr(.x = dates, ~ tibble(val_a = runif(2),
 <p>The created data looks as follows:</p>
 <pre class="r"><code>head(sample_data)</code></pre>
 <pre><code>## # A tibble: 6 × 6
-##   val_a  val_b val_c update_year update_month update_day
-##   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
-## 1 0.504 0.0372 g            2010            1          1
-## 2 0.275 0.701  t            2010            1          1
-## 3 0.205 0.621  a            2010            1          2
-## 4 0.130 0.282  j            2010            1          2
-## 5 0.154 0.503  b            2010            1          3
-## 6 0.906 0.404  i            2010            1          3</code></pre>
+##   val_a   val_b val_c update_year update_month update_day
+##   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;      &lt;int&gt;
+## 1 0.301 0.941   g            2010            1          1
+## 2 0.505 0.335   y            2010            1          1
+## 3 0.951 0.00213 v            2010            1          2
+## 4 0.837 0.126   n            2010            1          2
+## 5 0.177 0.277   f            2010            1          3
+## 6 0.179 0.0934  a            2010            1          3</code></pre>
 <p>Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the <a href="https://spark.rstudio.com"><code>sparklyr</code></a> package I’m creating a local connection.</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(sparklyr))
 sc &lt;- spark_connect(master = &quot;local&quot;)</code></pre>
@@ -162,12 +162,12 @@ sdf_num_partitions(tbl_perm)</code></pre>
 <pre><code>## Rows: ??
 ## Columns: 6
 ## Database: spark_connection
-## $ value_column_a &lt;dbl&gt; 0.86109686, 0.65282738, 0.86109686, 0.65282738, 0.78114…
-## $ value_column_b &lt;dbl&gt; 0.22237399, 0.17974974, 0.22237399, 0.17974974, 0.83282…
-## $ value_column_c &lt;chr&gt; &quot;n&quot;, &quot;m&quot;, &quot;n&quot;, &quot;m&quot;, &quot;p&quot;, &quot;g&quot;, &quot;p&quot;, &quot;g&quot;, &quot;s&quot;, &quot;j&quot;, &quot;s&quot;, …
+## $ value_column_a &lt;dbl&gt; 0.07851540, 0.37605986, 0.07851540, 0.37605986, 0.68049…
+## $ value_column_b &lt;dbl&gt; 0.1775387, 0.7773055, 0.1775387, 0.7773055, 0.9433490, …
+## $ value_column_c &lt;chr&gt; &quot;r&quot;, &quot;s&quot;, &quot;r&quot;, &quot;s&quot;, &quot;n&quot;, &quot;x&quot;, &quot;n&quot;, &quot;x&quot;, &quot;g&quot;, &quot;i&quot;, &quot;g&quot;, …
 ## $ part_year      &lt;int&gt; 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
-## $ part_month     &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1…
-## $ part_day       &lt;int&gt; 9, 9, 9, 9, 20, 20, 20, 20, 16, 16, 16, 16, 20, 20, 20,…</code></pre>
+## $ part_month     &lt;int&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1…
+## $ part_day       &lt;int&gt; 22, 22, 22, 22, 4, 4, 4, 4, 15, 15, 15, 15, 8, 8, 8, 8,…</code></pre>
 </div>
 </div>
 </div>
