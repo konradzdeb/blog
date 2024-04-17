@@ -16,7 +16,7 @@ tags:
 <p>Vim offers variety of functions that can be used to format files. Starting with basic functionalities, like <code>reident</code></p>
 <div id="implementation-1" class="section level2">
 <h2>Implementation 1</h2>
-<p>In this implementato</p>
+<p>In this implementation file path is passed into the formatting function and formatted file is then read back into the buffer.</p>
 <pre class="viml"><code>&quot; Aggresively and quickly format Python file
 function! FormatThisPythonFile()
 	 let filename = expand(&quot;%&quot;)
@@ -25,6 +25,11 @@ function! FormatThisPythonFile()
 	 execute(&#39;:edit! &#39; . filename)
 	 echo result
 endfunction</code></pre>
+<p>This implementation has a few major drawbacks:</p>
+<ul>
+<li>In order to pass the most recent content of the file into the <code>autopep8</code> the file has to be saved</li>
+<li>More importantly, the history of the file is also lost</li>
+</ul>
 </div>
 <div id="notable-mentions" class="section level2">
 <h2>Notable mentions</h2>
