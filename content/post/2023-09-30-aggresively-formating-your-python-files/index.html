@@ -1,0 +1,32 @@
+---
+title: Aggresively formating your Python files!
+author: Konrad Zdeb
+date: '2023-09-30'
+slug: []
+categories:
+  - how-to
+tags:
+  - Python
+  - vim
+  - VimL
+---
+
+
+
+<p>Vim offers variety of functions that can be used to format files. Starting with basic functionalities, like <code>reident</code></p>
+<div id="implementation-1" class="section level2">
+<h2>Implementation 1</h2>
+<p>In this implementato</p>
+<pre class="viml"><code>&quot; Aggresively and quickly format Python file
+function! FormatThisPythonFile()
+	 let filename = expand(&quot;%&quot;)
+	 let cmd = &quot;autopep8 --verbose --in-place --aggressive --aggressive &quot; . filename
+	 let result = system(cmd)
+	 execute(&#39;:edit! &#39; . filename)
+	 echo result
+endfunction</code></pre>
+</div>
+<div id="notable-mentions" class="section level2">
+<h2>Notable mentions</h2>
+<p>Autopep8</p>
+</div>
