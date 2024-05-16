@@ -16,7 +16,19 @@ menu:
           url: /tags/
           weight: 20
 
+# Use Hugo markup formatting
+markup:
+  highlight:
+    anchorLineNos: true
+    codeFences: true
+    guessSyntax: true
+    lineNos: true
+    # noClasses: false
+    style: monokai
+
 params:
+    assets:
+      disableHLJS: false
     # defaultTheme: light
     # defaultTheme: dark
     defaultTheme: auto # to switch between dark or light according to browser theme
@@ -33,7 +45,3 @@ params:
         - name: "GitHub"
           url: "https://github.com/konradzdeb"
 
-markup:
-  goldmark:
-    renderer:
-      unsafe: true

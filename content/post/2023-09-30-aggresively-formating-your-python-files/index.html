@@ -1,5 +1,5 @@
 ---
-title: Aggresively formating your Python files!
+title: Aggresively formating your Python files
 author: Konrad Zdeb
 date: '2023-09-30'
 slug: []
@@ -14,10 +14,12 @@ tags:
 
 
 <p>Vim offers variety of functions that can be used to format files. Starting with basic functionalities, like <code>reident</code></p>
-<div id="implementation-1" class="section level2">
-<h2>Implementation 1</h2>
+<div id="viml-implementation" class="section level2">
+<h2>VimL Implementation</h2>
+<p>Creating a function within Vim to process the file is, likely, the most straightforward choice. In effect, the role of the function is to pass the filename to the call below:</p>
+<pre class="shell"><code>autopep8 --verbose --in-place --aggressive --aggressive   ${our_python_file}</code></pre>
 <p>In this implementation file path is passed into the formatting function and formatted file is then read back into the buffer.</p>
-<pre class="viml"><code>&quot; Aggresively and quickly format Python file
+<pre class="vim"><code>&quot; Aggresively and quickly format Python file
 function! FormatThisPythonFile()
 	 let filename = expand(&quot;%&quot;)
 	 let cmd = &quot;autopep8 --verbose --in-place --aggressive --aggressive &quot; . filename
@@ -28,8 +30,9 @@ endfunction</code></pre>
 <p>This implementation has a few major drawbacks:</p>
 <ul>
 <li>In order to pass the most recent content of the file into the <code>autopep8</code> the file has to be saved</li>
-<li>More importantly, the history of the file is also lost</li>
+<li>More importantly, the history of the file is also lost at this stage</li>
 </ul>
+<p>An alternative implementation would refrain from replacing the file content by writing to file and replace the content with the</p>
 </div>
 <div id="notable-mentions" class="section level2">
 <h2>Notable mentions</h2>
