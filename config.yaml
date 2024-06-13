@@ -1,5 +1,6 @@
 theme: "hugo-PaperMod"
 baseURL: https://konradzdeb.netlify.com/
+paginate: 5
 languageCode: en-gb
 title: The Final Artefact
 ignoreFiles: [
@@ -23,12 +24,12 @@ markup:
     codeFences: true
     guessSyntax: true
     lineNos: true
-    # noClasses: false
+    noClasses: false
     style: monokai
 
 params:
     assets:
-      disableHLJS: false
+      disableHLJS: true
     # defaultTheme: light
     # defaultTheme: dark
     defaultTheme: auto # to switch between dark or light according to browser theme
