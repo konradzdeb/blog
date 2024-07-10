@@ -1,5 +1,5 @@
 theme: "hugo-PaperMod"
-baseURL: https://konradzdeb.netlify.com/
+baseURL: https://konradzdeb.netlify.app/
 paginate: 5
 languageCode: en-gb
 title: The Final Artefact
@@ -19,30 +19,38 @@ menu:
 
 # Use Hugo markup formatting
 markup:
+  goldmark:
+    renderer:
+      unsafe: yes
   highlight:
     anchorLineNos: true
     codeFences: true
     guessSyntax: true
+    hl_Lines: ""
+    lineAnchors: ""
+    lineNoStart: 1
     lineNos: true
-    noClasses: false
+    lineNumbersInTable: true
+    noClasses: true
     style: monokai
+    tabWidth: 4
 
 params:
-    assets:
-      disableHLJS: true
-    # defaultTheme: light
-    # defaultTheme: dark
-    defaultTheme: auto # to switch between dark or light according to browser theme
-    ShowReadingTime: true
-    ShowShareButtons: true
-    ShowPostNavLinks: true
-    ShowCodeCopyButtons: true
-    homeInfoParams:
-        Title:  The Final Artefact
-        Content: Yet another blog on coding and business
+  assets:
+    disableHLJS: true
+  # defaultTheme: light
+  # defaultTheme: dark
+  defaultTheme: auto # to switch between dark or light according to browser theme
+  ShowReadingTime: true
+  ShowShareButtons: true
+  ShowPostNavLinks: true
+  ShowCodeCopyButtons: true
+  homeInfoParams:
+    Title:  The Final Artefact
+    Content: Yet another blog on coding and business
     socialIcons:
-        - name: "LinkedIn"
-          url: "https://www.linkedin.com/in/konradzdeb"
-        - name: "GitHub"
-          url: "https://github.com/konradzdeb"
+      - name: "LinkedIn"
+        url: "https://www.linkedin.com/in/konradzdeb"
+      - name: "GitHub"
+        url: "https://github.com/konradzdeb"
 

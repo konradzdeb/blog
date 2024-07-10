@@ -1,0 +1,215 @@
+---
+title: R-based metaprogramming strategies for handling Hive/CSV interaction (Part I, imports)
+author: Konrad Zdeb
+date: '2021-08-13'
+slug: importing-csv-to-hive
+draft: false
+categories:
+  - how-to
+tags:
+  - Hive
+  - bash
+  - R
+---
+
+# Background
+
+Handling Hive/CSV interaction is a common reality of many analytical and data environments. The question on exporting data from Hive to CSV and other formats is frequently raised on online forums with answers frequently suggesting making use of [`sed`](https://en.wikipedia.org/wiki/Sed) that combined with nifty regular expressions pipes Hive output into a flat CSV files as an exporting solution. Import of large amounts of data is best handled by suitable tools like [Apache Flume](https://flume.apache.org). That is fine for simpler tables but may prove problematic for tables with a large amount of unstructured text. Frequently analysts and data scientists are faced with a challenge with storing data Hive on a irregular semi-regular basis. For instance, a job may produce new forecasting scenarios that we may want to make available through a Hive tables. 
+
+Relaying on Spark API may prove fiddly when our requirements for resulting Hive table are non-standard. We may be willing to have a detailed control over column types or dynamically store comments providing relevant table context. If our modelling/data creation efforts takes place outside Spark session kicking off a Spark connection only to store some data in Hive feels like unnecessary onerous approach. Generating lengthy HiveQL syntax may also appear unnecessary tedious if we deal with numerous tables of variable structures. Meta-programming paradigm offers a neat solution to that challenge. Using R we can quickly generate HiveQL code that we use to land the CSV data into Hive with minimal overhead and dependencies. The article provides an opinionated overview of how meta-programming could be employed to quickly generate detailed HiveQL that would enable us to generate syntax for inserting data into Hive table controlling for column types/names and automatically generating comments.
+
+## Trial Data
+
+Before progressing with the examples and outlining difficulties associated with the export I'm going to create some sample data. I'm using the [docker-hive](https://github.com/big-data-europe/docker-hive) Docker image provided by the Big Data Europe to run the example. The [`wakefield`](https://github.com/trinker/wakefield) package available for R provides access to a number of functions useful for synthetic data generation. In this example the goal is to generate a data set that will have columns of diverse types, such as free text, dates, numbers of various formats, etc.. The [`wakefield`](https://github.com/trinker/wakefield) packages comes with great examples and using them is generally a good idea. I have increased the size of the data to hundred thousand rows so partitioning it will be more realistic
+
+
+```r
+library("wakefield")
+set.seed(123)
+test_data <- r_data_frame(n = 1e5,
+    id,
+    dob,
+    animal,
+    grade,
+    death,
+    dummy,
+    grade_letter,
+    gender,
+    paragraph,
+    sentence
+)
+```
+
+I will add a few columns to create partitions so our trial data is more "realistic".
+
+
+``` r
+suppressPackageStartupMessages(library("tidyverse"))
+suppressPackageStartupMessages(library("magrittr")) # For %<>%
+test_data %<>% mutate(test_data, 
+                      part_year = lubridate::year(DOB),
+                      part_mnth = lubridate::month(DOB),
+                      part_day = lubridate::day(DOB)) %>%
+    mutate(across(starts_with("part"), as.integer))
+```
+
+
+The trial data looks good; we have generated a number of messy variables that will be "pleasure" to deal with during import/export operation.
+
+
+```
+## Rows: 100,000
+## Columns: 13
+## $ ID           <chr> "00001", "00002", "00003", "00004", "00005", "00006", "00…
+## $ DOB          <date> 2008-01-31, 2008-03-19, 2007-06-09, 2008-05-21, 2007-06-…
+## $ Animal       <fct> Field Spaniel, Akita, Pool Frog, Akita, Akita, Newfoundla…
+## $ Grade        <dbl> 83.1, 87.4, 92.5, 93.7, 90.2, 86.4, 89.0, 86.1, 85.1, 84.…
+## $ Death        <lgl> FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FA…
+## $ Dummy        <dbl> 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, …
+## $ Grade_Letter <ord> B+, B+, B+, B, B+, A-, B, B+, A-, B, B, B, B+, A-, A-, B+…
+## $ Gender       <fct> Male, Female, Female, Male, Female, Male, Female, Female,…
+## $ Paragraph    <chr> "Lorem ipsum dolor sit amet, leo pretium amet eget. Orci …
+## $ Sentence     <chr> "N.", "As Commander in Chief, I will maintain the stronge…
+## $ part_year    <int> 2008, 2008, 2007, 2008, 2007, 2007, 2007, 2007, 2007, 200…
+## $ part_mnth    <int> 1, 3, 6, 5, 6, 4, 10, 7, 8, 12, 12, 10, 8, 8, 11, 3, 11, …
+## $ part_day     <int> 31, 19, 9, 21, 25, 9, 7, 29, 13, 26, 21, 7, 5, 6, 20, 13,…
+```
+
+# Metaprogramming paradigm
+
+Metaprogramming paradigm assumes using computer code to generate more computer code. In effect metaprogramming gives other programs ability to treat code like data. As stated by Levy^[L. S. Levy, "A metaprogramming method and its economic justification," in IEEE Transactions on Software Engineering, vol. SE-12, no. 2, pp. 272-277, Feb. 1986, doi: [10.1109/TSE.1986.6312943](https://doi.org/10.1109/TSE.1986.6312943).]:
+
+> Metaprogramming, defined as creating application programs by writing programs that produce programs, is presented as the basis of a method for reducing software costs and improving software quality.
+
+The question is how this relates to our task of importing relatively messy "real-life" data into nice, partitioned Hive table that will be a pleasure to work with. Let's consider the simplest way to import the data. We would use `CREATE_TABLE`
+
+
+``` sql
+CREATE TABLE IF NOT EXISTS blog.test_data (
+ id int,
+ dob date,
+ age int COMMENT 'This column was renamed or something else happened',
+ gender string
+ ...
+ )
+ COMMENT 'Our sample data'
+ PARTITIONED BY (txn_date STRING)
+ ROW FORMAT DELIMITED
+ FIELDS TERMINATED BY ',';
+```
+
+We would then point to the load statement, that would look more or less like that:
+
+
+``` sql
+LOAD DATA INPATH '/user/hive/data/data.csv' INTO TABLE blog.test_data;
+```
+
+The first observation that emerges is that generating all of the relevant code will be particular onerous and verbose. In the following scenario we may be willing to:
+
+- Comment on the columns we are souring reflecting original name, type and summarising any other transformations we have applied
+- Table comments could reflect details on the source, such as the location of the file or any other characteristics that we can gather through `file.info`.
+
+In  context of importing wide tables this will prove particulary painful. If we are in position where we are at a risk of undertaking that type of exercise more frequently, reflecting on a process that would enable us to automate or part-automate the data load can prove beneficial. 
+
+# Generating code
+
+This is where R's flexibility and data structures come into play. We can use R to generate our HiveQL code and come up with a generic function that could be easily deployed against data frames that we would like to make permanent in Hive. The most subsantial element in will be concerned with generating code responsible for provisioning column names. We will also have to generate code that will create initial opening code and final elements pertaining to providing input on table characteristics.
+
+# Importing data
+
+Before uploading the data we devise a table structure that will be used to hold it. Following the displayed variable types this can be done in the following manner. From a development perspective, breaking functions into managable smaller pieces will make it easier to develop.  
+
+## Generating column names
+
+For this particular function we would like to obtain a string that would form the column part of the data generation query
+
+
+``` sql
+CREATE TABLE IF NOT EXISTS blog.test_data (
+ -- <! Function output starts>
+ id int,
+ dob date,
+ age int COMMENT 'This column was renamed or something else happened',
+ gender string
+ ...
+ -- <! Function output ends>
+ )
+ COMMENT 'Our sample data'
+ PARTITIONED BY (txn_date STRING)
+ ROW FORMAT DELIMITED
+ FIELDS TERMINATED BY ',';
+```
+
+
+This implies the following requirements:
+
+- We want to come up with syntaticaly valid column names that can be used in HiveQL. As stated in the [official documentation](https://cwiki.apache.org/confluence/display/hive/languagemanual+ddl), the Hive is fairly pemissive in acceptable column names:
+
+> In Hive 0.13 and later, column names can contain any Unicode character (see HIVE-6013), however, dot (.) and colon (:) yield errors on querying, so they are disallowed in Hive 1.2.0 (see HIVE-10120). Any column name that is specified within backticks (\`) is treated literally. Within a backtick string, use double backticks (\`\`) to represent a backtick character. Backtick quotation also enables the use of reserved keywords for table and column identifiers.
+
+We can assume a more rigours approach reflecting the prefence that, in all likelihood, majority of us would endorse:
+
+- We don't want for the columns to start with a number
+- We want for the function to replace spaces with `_`
+- We would like to remove non-letter characters
+  - On that for currency characters we would like for the function to repplace those with a three letter currency code
+- With expection of the three letter currency code, the column name should be in lowercase. Hive is case-insesitive but pedentically, I would prefer for the column to be named `price_GBP` instead of `price_gbp`. As this is matter of preference we may make this operation optional
+- We would like for the column to remove common three letter words; for instance `price_item` is sufficiently clear and we don't need `price_for_an_item`. Pedentically, we may be even temepted to reverse common words so the order reads more natural, `item_price` reads better than `price_item` (although, there is no loss in meaning.)
+
+
+``` r
+#' Clean Column Names
+#'
+#' Arbitrary set of rules transforming string so passed results are consistent
+#'   with HiveQL rules on syntactically correct column names.
+#'
+#' @details Manual replacements are useful for when we may be dealing with
+#'   columns where automatic application of rules is not desired. For instance
+#'   if our intention is to rename column "Super Important Column" to
+#'   "to_delete" we would use the \code{manual_replacement} argument to implement
+#'   that change.
+#'
+#' @param x A character vector with column names to transform
+#' @param lowercase_currency_names A logic, defaults to \code{FALSE}, whether to
+#'   convert the currency names to lower-case.
+#' @param manual_replacement A named vector defining manual replacement for
+#'   column names can be of format c("Super Important Column" = "to_delete) or
+#'   c("3" = "to_delete") for column positions.
+#' @param remove_words A character vector with words we like to remove,
+#'   defaults to commonly occuring words in column name like "per, by, for"
+#'
+#' @return A character vector
+#'
+#' @export
+#'
+#' @examples
+#' dirty_col_names <- c("Date of Birth", "12-important-column",
+#'   "14-crucial-column", " user    inputs", "price in (£)")
+#' clean_column_names(x = dirty_col_names)
+clean_column_names <- function(x, lowercase_currency_names = FALSE,
+                               manual_replacement = NULL,
+                               remove_words = c("per", "by", "for")) {
+  x <- stringi::stri_trim_both(x)
+  x <- stringi::stri_trans_tolower(x)
+  x <- stringi::stri_replace_all_regex(x, "^[^a-z]*", "") # Column name should start with a letter
+  x <- stringi::stri_replace_all_charclass(x, "\\p{WHITE_SPACE}", "_")
+  x <- stringi::stri_replace_all_regex(x, "^[^a-z]*", "") # Column name should start with a letter
+  x <-
+  x
+}
+
+
+dirty_col_names <- c("Date of Birth", "12-important-column",
+   "14-crucial-column", " user inputs", "price in (£)")
+print(clean_column_names(x = dirty_col_names))
+```
+
+```
+## [1] "date_of_birth"    "important-column" "crucial-column"   "user_inputs"     
+## [5] "price_in_(£)"
+```
+
+# Conclusion
+
+In the subsequent articles I will tackle remaining challenges such as automatically generating meaningful strings for the column comments and R to Hive type conversion. The function discussed above will be made available through a dedicated R package that I'm making available on GitHub at [konradzdeb/HiveQLgenerator](https://github.com/konradzdeb/HiveQLgenerator).

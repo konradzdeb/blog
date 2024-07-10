@@ -29,7 +29,7 @@ tags:
 <col width="39%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Notation</th>
 <th>Growth Rate</th>
 <th>Running Case</th>
@@ -37,19 +37,19 @@ tags:
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Big-O</td>
 <td>Equivalent to <span class="math inline">\(\le\)</span>, growth less or equal specific value</td>
 <td>Worst case</td>
 <td>Longest amount of time it could take to algorithm to complete</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Big-Omega <span class="math inline">\((\Omega)\)</span></td>
 <td>Equivalent to <span class="math inline">\(\ge\)</span>, growth greater or equal specific value</td>
 <td>Best case</td>
 <td>Compared to Big-O, reflects smaller amount of time</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Big-Theta <span class="math inline">\((\Theta)\)</span></td>
 <td>Equivalent to <span class="math inline">\(=\)</span>, growth equal specific value</td>
 <td>Average case</td>
@@ -110,7 +110,7 @@ Funs_O &lt;- mget(Fun_names) # Create a list of functions
 head(Funs_O, n = 2) # Preview</code></pre>
 <pre><code>## $O_1
 ## function(n) {(rep(1,length(n)))}
-## &lt;bytecode: 0x7fc7815a8ad8&gt;
+## &lt;bytecode: 0x7feb25a776f0&gt;
 ## 
 ## $O_2_to_n
 ## function(n) {2^n}</code></pre>
