@@ -1,6 +1,6 @@
 # The Final Artefact
 
-**[thefinalartefact.blog](http://thefinalartefact.blog)
+**[thefinalartefact.blog](http://thefinalartefact.blog)**
 
 Blog, opinionaned perspective on coding, business and a wide range of other issues.
 
