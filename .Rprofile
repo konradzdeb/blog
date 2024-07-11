@@ -3,8 +3,8 @@
 # First, execute the global .Rprofile if it exists. You may configure blogdown
 # options there, too, so they apply to any blogdown projects. Feel free to
 # ignore this part if it sounds too complicated to you.
-if (file.exists("~/.Rprofile")) {
-  base::sys.source("~/.Rprofile", envir = environment())
+if (file.exists("~/.RProfile")) {
+  base::sys.source("~/.RProfile", envir = environment())
 }
 
 # Now set options to customize the behavior of blogdown for this project. Below
@@ -16,8 +16,9 @@ options(
   # to disable knitting Rmd files on save, set this option to FALSE
   blogdown.knit.on_save = TRUE,
   # build .Rmd to .html (via Pandoc); to build to Markdown, set this option to 'markdown'
-  blogdown.method = 'html'
+  # blogdown.method = 'html' # This was original configuration
+  blogdown.method = 'markdown'
 )
 
 # fix Hugo version
-# options(blogdown.hugo.version = "0.91.2")
+options(blogdown.hugo.version = "0.125.0")
