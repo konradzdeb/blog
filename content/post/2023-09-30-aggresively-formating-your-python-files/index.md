@@ -39,9 +39,27 @@ This implementation has a few major drawbacks:
 * In order to pass the most recent content of the file into the `autopep8` the file has to be saved
 * More importantly, the history of the file is also lost at this stage
 
-An alternative implementation would refrain from replacing the file content by writing to file and replace the content with the 
+An alternative implementation would refrain from replacing the file content by writing to file and replace the content with the formatted content sourced from buffer. This function could look as follows:
+
+```vim
+function! FormatThisPythonFile()
+	let filename = expand("%")
+	let cmd = "autopep8 --aggressive --aggressive " . filename
+	let result = system(cmd)
+	execute "%d"
+	put =result
+	exec "1,1d"
+endfunction
+command FormatThisPythonFile call FormatThisPythonFile()
+```
+
+The result of the system command is stored in the `cmd` variable and subsequently pasted into the document content allowing for maintaining the document history and conveniently switching between initial and unformatted version. 
+
+## Example
+
+The GIF below shows changes between formatted and unformatted file following the use of the function together with history accessible via [undotree](https://github.com/mbbill/undotree).
 
 ## Notable mentions
 
-Autopep8 
+[vim-autopep8](https://github.com/tell-k/vim-autopep8) maintained by [tell-k](https://github.com/tell-k) provides even more complete implementation taking care of such detail as cursor position and ability to format selected parts of the file. 
 

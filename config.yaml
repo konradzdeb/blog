@@ -19,11 +19,8 @@ menu:
 
 # Use Hugo markup formatting
 markup:
-  goldmark:
-    renderer:
-      unsafe: yes
   highlight:
-    anchorLineNos: true
+    anchorLineNos: false
     codeFences: true
     guessSyntax: true
     hl_Lines: ""
