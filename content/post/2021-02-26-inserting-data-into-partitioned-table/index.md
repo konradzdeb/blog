@@ -102,14 +102,14 @@ head(sample_data)
 ```
 
     ## # A tibble: 6 × 6
-    ##    val_a  val_b val_c update_year update_month update_day
-    ##    <dbl>  <dbl> <chr>       <dbl>        <dbl>      <int>
-    ## 1 0.555  0.860  z            2010            1          1
-    ## 2 0.418  0.0410 c            2010            1          1
-    ## 3 0.0907 0.508  l            2010            1          2
-    ## 4 0.707  0.291  b            2010            1          2
-    ## 5 0.115  0.560  g            2010            1          3
-    ## 6 0.758  0.202  b            2010            1          3
+    ##    val_a val_b val_c update_year update_month update_day
+    ##    <dbl> <dbl> <chr>       <dbl>        <dbl>      <int>
+    ## 1 0.307  0.393 z            2010            1          1
+    ## 2 0.202  0.245 t            2010            1          1
+    ## 3 0.543  0.230 d            2010            1          2
+    ## 4 0.956  0.155 l            2010            1          2
+    ## 5 0.0567 0.579 g            2010            1          3
+    ## 6 0.534  0.434 c            2010            1          3
 
 Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the [`sparklyr`](https://spark.rstudio.com) package I’m creating a local connection.
 
@@ -201,12 +201,12 @@ glimpse(tbl_perm)
     ## Rows: ??
     ## Columns: 6
     ## Database: spark_connection
-    ## $ value_column_a <dbl> 0.28261963, 0.79176873, 0.28261963, 0.79176873, 0.08824…
-    ## $ value_column_b <dbl> 0.799219974, 0.315003684, 0.799219974, 0.315003684, 0.0…
-    ## $ value_column_c <chr> "w", "r", "w", "r", "a", "b", "a", "b", "d", "o", "d", …
+    ## $ value_column_a <dbl> 0.3948508, 0.7263154, 0.3948508, 0.7263154, 0.4618037, …
+    ## $ value_column_b <dbl> 0.70250167, 0.57753248, 0.70250167, 0.57753248, 0.22042…
+    ## $ value_column_c <chr> "d", "o", "d", "o", "o", "g", "o", "g", "g", "v", "g", …
     ## $ part_year      <int> 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
-    ## $ part_month     <int> 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1…
-    ## $ part_day       <int> 9, 9, 9, 9, 20, 20, 20, 20, 25, 25, 25, 25, 18, 18, 18,…
+    ## $ part_month     <int> 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1…
+    ## $ part_day       <int> 27, 27, 27, 27, 30, 30, 30, 30, 17, 17, 17, 17, 12, 12,…
 
 # Summary
 

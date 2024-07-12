@@ -1,5 +1,5 @@
 theme: "hugo-PaperMod"
-baseURL: https://konradzdeb.netlify.app/
+baseURL: https://thefinalartefact.blog/
 paginate: 5
 languageCode: en-gb
 title: The Final Artefact
@@ -39,9 +39,14 @@ params:
   # defaultTheme: dark
   defaultTheme: auto # to switch between dark or light according to browser theme
   ShowReadingTime: true
+  ShowBreadCrumbs: true
   ShowShareButtons: true
   ShowPostNavLinks: true
   ShowCodeCopyButtons: true
+  editPost:
+    URL: "https://github.com/konradzdeb/blog/content"
+    Text: "Suggest Changes" # edit text
+    appendFilePath: true # to append file path to Edit link
   homeInfoParams:
     Title:  The Final Artefact
     Content: Yet another blog on coding and business
