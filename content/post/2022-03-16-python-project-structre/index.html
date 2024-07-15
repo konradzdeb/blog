@@ -1,0 +1,107 @@
+---
+title: On Structuring Python Projects
+author: Konrad Zdeb
+date: '2022-03-16'
+slug: python-project-structure
+draft: false
+categories:
+  - dev
+  - example
+tags:
+  - Python
+---
+
+
+
+<div id="types-of-projects" class="section level2">
+<h2>Types of Projects</h2>
+<p>The term <em>Python project</em> can be somewhat misleading. While languages like Swift are designed for specific purposes such as generating macOS/iOS apps, components, and frameworks, Python is used in a much more versatile manner. A <em>Python project</em> might range from an analytical solution developed across multiple Jupyter notebooks to a standalone script querying a database API and extracting results to an application or package facilitating the deployment of models. Each of these projects has its own key usability requirements. For instance, if end-users will utilize our project through a command-line interface, we will focus on argument parsing and other elements facilitating user-friendly execution.</p>
+<div id="data-science-model-tool-and-hybrid" class="section level3">
+<h3>Data Science, Model, Tool, and Hybrid</h3>
+<p>In business practice, I have come across a few common types of projects. The distinction I draw between pure <em>data science</em> and <em>model</em> projects is somewhat arbitrary and frequently blurred but useful.</p>
+</div>
+<div id="time-horizon" class="section level3">
+<h3>Time Horizon</h3>
+<p>The time horizon approach to project structure is hugely beneficial as it enables us to narrow down the gap between the complexity of the project scaffolding and the time horizon. If visualized, it might look something like this:</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/line_plot_compl-1.png" width="672" /></p>
+</div>
+</div>
+<div id="set-up" class="section level2">
+<h2>Set-up</h2>
+</div>
+<div id="file-structure" class="section level2">
+<h2>File structure</h2>
+<p>While in certain scenarios we may get away with a single-file setup, any wider collaboration is usually easier if the project structure spans multiple files.</p>
+</div>
+<div id="testing" class="section level2">
+<h2>Testing</h2>
+<p>When structuring Python projects, it’s essential to understand the difference between <code>setup.py</code> and <code>setup.cfg</code>, as both are used for packaging and distribution but serve slightly different purposes.</p>
+<div id="setup.py" class="section level3">
+<h3><code>setup.py</code></h3>
+<p><code>setup.py</code> is a Python script traditionally used for configuring a Python package. It contains a <code>setup()</code> function from the <code>setuptools</code> module, which defines the metadata and dependencies of the project.</p>
+<div id="pros" class="section level4">
+<h4>Pros:</h4>
+<ul>
+<li><strong>Flexibility</strong>: Being a Python script, <code>setup.py</code> allows for complex logic to determine the package’s configuration.</li>
+<li><strong>Wide Usage</strong>: It has been the standard for many years, meaning it is widely supported and understood within the Python community.</li>
+<li><strong>Dynamic Configuration</strong>: You can dynamically set values, run additional code, or perform custom setup steps.</li>
+</ul>
+</div>
+<div id="cons" class="section level4">
+<h4>Cons:</h4>
+<ul>
+<li><strong>Readability</strong>: Because it can contain arbitrary code, it might be harder to read and understand compared to a static configuration file.</li>
+<li><strong>Complexity</strong>: For simple projects, the added flexibility might be overkill and lead to unnecessary complexity.</li>
+</ul>
+</div>
+</div>
+<div id="example-of-setup.py" class="section level3">
+<h3>Example of <code>setup.py</code>:</h3>
+<pre class="python"><code>from setuptools import setup, find_packages
+
+setup(
+    name=&#39;example_package&#39;,
+    version=&#39;0.1&#39;,
+    packages=find_packages(),
+    install_requires=[
+        &#39;numpy&#39;,
+        &#39;pandas&#39;
+    ],
+)</code></pre>
+</div>
+<div id="setup.cfg" class="section level3">
+<h3><code>setup.cfg</code></h3>
+<p><code>setup.cfg</code> is an INI file used to configure a Python package. It serves the same purpose as <code>setup.py</code> but in a declarative manner. This means you can specify the metadata and dependencies of the project in a static, easy-to-read format.</p>
+<div id="pros-1" class="section level4">
+<h4>Pros:</h4>
+<ul>
+<li><strong>Readability</strong>: The INI format is more readable and easier to understand, especially for those who are not familiar with Python.</li>
+<li><strong>Simplicity</strong>: For many projects, especially simpler ones, <code>setup.cfg</code> provides all the needed configuration without the complexity of a script.</li>
+<li><strong>Separation of Concerns</strong>: Keeps configuration separate from code, adhering to the principle of separating configuration from the implementation.</li>
+</ul>
+</div>
+<div id="cons-1" class="section level4">
+<h4>Cons:</h4>
+<ul>
+<li><strong>Limited Flexibility</strong>: Being a static file, it cannot perform dynamic operations or complex logic.</li>
+<li><strong>Less Dynamic</strong>: If you need to compute values or execute code during setup, <code>setup.cfg</code> cannot handle these scenarios.</li>
+</ul>
+</div>
+</div>
+<div id="example-of-setup.cfg" class="section level3">
+<h3>Example of <code>setup.cfg</code>:</h3>
+<pre class="ini"><code>[metadata]
+name = example_package
+version = 0.1
+
+[options]
+packages = find:
+install_requires =
+    numpy
+    pandas</code></pre>
+</div>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>Structuring Python projects effectively requires understanding the different types of projects and their unique needs. Whether it’s a data science project, a model, a tool, or a hybrid, each has its own requirements for usability and collaboration. The choice between using <code>setup.py</code> and <code>setup.cfg</code> for project configuration also plays a significant role. While <code>setup.py</code> offers flexibility and dynamic configuration through Python scripting, <code>setup.cfg</code> provides a more readable, simpler, and declarative approach. Each option has its pros and cons, and the right choice depends on the specific needs and complexity of the project. By carefully considering these factors, you can ensure your Python projects are well-organized, maintainable, and easy to collaborate on.</p>
+</div>
