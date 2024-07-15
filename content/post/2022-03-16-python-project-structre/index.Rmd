@@ -34,6 +34,8 @@ ggplot(data = data.frame(x = 1:100, y = log(1:100)),
     scale_x_continuous(labels = function(x) {x})
 ```
 
+![Complexity and scaffolding structure ](images/complexity_line.png)
+
 ## Set-up
 
 ## File structure

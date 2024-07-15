@@ -25,6 +25,8 @@ The time horizon approach to project structure is hugely beneficial as it enable
 
 <img src="{{< blogdown/postref >}}index_files/figure-html/line_plot_compl-1.png" width="672" />
 
+![Complexity and scaffolding structure ](images/complexity_line.png)
+
 ## Set-up
 
 ## File structure
