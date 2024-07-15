@@ -98,7 +98,7 @@ head(Funs_O, n = 2) # Preview
 ```
 ## $O_1
 ## function(n) {(rep(1,length(n)))}
-## <bytecode: 0x7fc221c6a898>
+## <bytecode: 0x7fa2f1bea0a0>
 ## 
 ## $O_2_to_n
 ## function(n) {2^n}
