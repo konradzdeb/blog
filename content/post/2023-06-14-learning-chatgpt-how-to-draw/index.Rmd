@@ -1,16 +1,16 @@
 ---
-title: Showing ChatGPT How to Draw
-author: Konrad Zdeb
-date: '2023-06-14'
-slug: drawing-chat-gpt
-header-includes: 
-  - \usetikzlibrary{positioning}
-categories:
-  - fun
+title: "Showing ChatGPT How to Draw"
+author: "Konrad Zdeb"
+date: "2023-06-14"
+slug: "drawing-chat-gpt"
+header-includes:
+- \usetikzlibrary{positioning}
+- \usetikzlibrary{shapes}
+categories: fun
 tags:
-  - AI
-  - LaTeX
-  - TikZ
+- AI
+- LaTeX
+- TikZ
 ---
 
 ```{r setup, echo=FALSE}
@@ -20,10 +20,11 @@ options(tinytex.verbose = TRUE)
 
 
 # Background
+
 For a computer, an image is collection of interpretable instructions that amount to a visual representation. Raster images are composed from using pixels, containing unique colours, whereas vector images keep track of points and equations that join them.  In $\LaTeX$ PGF/TikZ is used to generate vector graphics from algebraic descriptions. TikZ is mostly used to conveniently draw various scientific figures. ChatGPT is capable of generating computer code in majority of popular languages. I wanted to test how far I can get with ChatGPT generating illustrations using TikZ.
 
-
 # ChatGPT Conversation
+
 Let's jump right in and see how ChatGPT deals with simple request to draw a class diagram? For the request:
 
 > Can you draw an example of a class "Person" with the properties "name" and "age" using TikZ?

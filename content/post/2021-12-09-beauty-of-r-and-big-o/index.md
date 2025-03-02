@@ -97,11 +97,17 @@ head(Funs_O, n = 2) # Preview
 
 ```
 ## $O_1
-## function(n) {(rep(1,length(n)))}
-## <bytecode: 0x7fa2f1bea0a0>
+## function (n) 
+## {
+##     (rep(1, length(n)))
+## }
+## <bytecode: 0x7fd522b8c0f8>
 ## 
 ## $O_2_to_n
-## function(n) {2^n}
+## function (n) 
+## {
+##     2^n
+## }
 ```
 
 Now I needed to call each of those functions and pack the results into a tibble or a data.frame. This is achieved by the code below.
