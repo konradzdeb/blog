@@ -3,7 +3,7 @@ title: Installing Hortonworks Sanbox on Mac with Docker
 author: Konrad
 date: '2019-02-23'
 slug: installing-hortonworks-sanbox-deployment-hdp-on-docker-mac
-draft: true
+draft: false
 categories:
   - how-to
 tags:
