@@ -112,4 +112,4 @@ print(helloTwo)
 
 By setting up a custom Swift engine in knitr, you can seamlessly execute Swift REPL commands within an R Markdown document and capture the output for immediate display. This allows for rapid experimentation, straightforward debugging, and convenient sharing of code alongside explanatory text—qualities essential for any data science workflow. With just a few lines of configuration, Swift’s performance and safety become accessible in an interactive environment, letting you prototype data manipulation, statistical analysis, or even machine learning models right in your R Markdown files.
 
-[^1]: The original code was contributed via [StackOverflow discussion](https://stackoverflow.com/a/79484446/1655567); I've re-wrote it using [R's functional programming](http://adv-r.had.co.nz/Functionals.html#functionals-fp) and reduced the code to ~6 lines.
+[^1]: The original code was contributed via [StackOverflow discussion](https://stackoverflow.com/a/79484446/1655567); I've re-wrote it using [R's functional programming](http://adv-r.had.co.nz/Functionals.html#functionals-fp) and reduced the code to a few lines.
