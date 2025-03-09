@@ -1,0 +1,54 @@
+---
+title: Interactivly Loading Shiny Modules
+author: Konrad
+date: '2018-11-24'
+slug: interactive-module
+categories:
+  - how-to
+  - BI
+tags:
+  - R
+  - Shiny
+---
+
+
+
+<div id="tldr" class="section level1">
+<h1>TL;DR</h1>
+<p>If you want to see the implemented solution, please refer to:
+GitHub repo.</p>
+</div>
+<div id="context" class="section level1">
+<h1>Context</h1>
+<p>Shiny is a widely popular web application framework for a R. In simple tearms it enables any R programmer to develop and deploy web application. This application could be simple - an interactive document consiting of a few charts and tables or a c complex “behemoth” with multiple functionalities enabling end-users to run models, query external data, generate exportable reports and sophisticated visuals.</p>
+<p>In business, it is frequently efficient to capitalise on existing solution and develop / upgrade existing products. In a business intelligence web application context this may mean adding modules and functionalities to an existing application so a wider audiance can be served and more user needs can be met.</p>
+<p>This has certain advanatges, mostly:</p>
+<ul>
+<li>Deployment cycle is faster, we are working on an existing product and adding new functionalities</li>
+<li>We are leveraging existing dissemination mechanism, authentication, server, data connections. Where possible we can use tested and working solutions. This is conducive to stability.</li>
+<li>Testing will be easier as we have an established user group that is familiar with the product</li>
+</ul>
+</div>
+<div id="challenges" class="section level1">
+<h1>Challenges</h1>
+<p>Challenges are more interesting, as this is what I’m going to discuss. The challenges can be groupped in two main themes:</p>
+<ul>
+<li>Development</li>
+<li>User exeperience</li>
+</ul>
+<div id="development" class="section level2">
+<h2>Development</h2>
+<p>Let’s address development challenges first. Traditionally Shiny application would consist of <code>server.R</code> and <code>ui.R</code>. Each file containing function definitions for server and user interface. Recently both of those are saved as in one file as in examples provided with Shiny package. To see available examples run:</p>
+<pre class="r"><code>list.files(
+    path = system.file(&quot;examples&quot;, package = &quot;shiny&quot;),
+    pattern = glob2rx(&quot;*.R&quot;),
+    recursive = TRUE,
+    full.names = TRUE
+)</code></pre>
+<p>Now this won’t fly. Best case scenario we will end-up with <a href="https://craftofcoding.wordpress.com/2013/10/07/what-is-spaghetti-code/">sphagetti code</a> mostly likely we will end up with nothhing.</p>
+<div id="modules" class="section level3">
+<h3>Modules</h3>
+<p>Modueles solve that problem by breakig down application architecture into</p>
+</div>
+</div>
+</div>

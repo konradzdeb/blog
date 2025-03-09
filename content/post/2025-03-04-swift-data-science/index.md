@@ -42,27 +42,43 @@ In data science workflows, the Swift [REPL (Read-Eval-Print Loop)](https://swift
 
 ## Adding Swift as engine to `knitr`
 
-The first step is to add Swift engine to knitr, this can be done using a standard command:
+The first step is to add Swift engine to knitr. We have a few objectives for that function:
+1. We need to keep accumulating created objects, i.e. if in a previous chunk we have defined a variable `varA` and in the second chunk we have defined `varB` we would like for the second namespace utilised in evaluation of second chunk to contain `varA` and `varB`.
+2. On the same lines, if we have defined `varC` in thrid chunk we would like for that variable to made availale only in the third chunk but not in the first two.
+3.  We would like to exclude 
+This can be done using the below command[^1]. 
 
 
 ``` r
+# Wrap code chunks
+knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 80), tidy = TRUE)
+
+# Define Swift as engine
 knitr::knit_engines$set(swift = function(options) {
-  code <- paste(options$code, collapse = '\n')
-  out  <- system2(
-      command = "swift",
-      args = "repl",
-      input = code, 
-      stdout = TRUE,
-      stderr = TRUE
-  )
-  knitr::engine_output(options, code, out)
+    # Get all Swift chunks
+    swift_chunk_names <- knitr::all_labels(engine == "swift")
+    # Preceding chunks
+    prior_chunk_names <- swift_chunk_names[seq_len(Position(\(x) x == knitr::opts_current$get("label"),
+        swift_chunk_names))]
+    # All Swift code
+    collected_swift_code <- Reduce(\(x, y) {
+        paste(x, knitr::knit_code$get(y), sep = "\n")
+    }, prior_chunk_names, init = "")
+    # Filter Swift code
+    filtered_swift_code <- Filter(\(x) {
+        !grepl(".*print.*", x)
+    }, collected_swift_code)
+    # Run the collected Swift code
+    out <- system2(command = "swift", args = "repl", input = filtered_swift_code,
+        stdout = TRUE, stderr = TRUE)
+    knitr::engine_output(options, options$code, out)
 })
 ```
 
 What happens here:
 1. Function `knitr::knit_engines$set` registers new engine. Engine is define as new function called `swift`
 2. Call `paste` with argument `collapse = '\n'`
-3. Call
+3. Call `system2` is responsible for passing the actual command
 
 
 ## Testing
@@ -78,7 +94,6 @@ print(helloText)
 
 ```
 ## helloText: String = "Hello from Swift REPL"
-## Hello from Swift REPL
 ```
 
 Let's see if we can continue using the variables created below and re-use variable from the previous satetement
@@ -92,12 +107,8 @@ print(helloTwo)
 
 ```
 ## punctuationMark: String = "!"
-## error: repl.swift:2:23: cannot find 'helloText' in scope
-## let helloTwo:String = helloText + punctuationMark
-##                       ^~~~~~~~~
-## 
-## 
-## error: repl.swift:2:7: cannot find 'helloTwo' in scope
-## print(helloTwo)
-##       ^~~~~~~~
+## helloText: String = "Hello from Swift REPL"
+## helloTwo: String = "Hello from Swift REPL!"
 ```
+
+[^1]: The original code was contributed via [StackOverflow discussion](https://stackoverflow.com/a/79484446/1655567); I've re-wrote it using [R's functional programming](http://adv-r.had.co.nz/Functionals.html#functionals-fp) and reduced the code to ~6 lines.

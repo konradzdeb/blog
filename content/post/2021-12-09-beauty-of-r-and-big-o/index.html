@@ -1,0 +1,473 @@
+---
+title: Beauty of R and Big-O
+author: Konrad Zdeb
+date: '2021-12-09'
+slug: []
+math: true
+categories:
+  - fun
+tags:
+  - R
+  - functional
+---
+
+<script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
+<link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
+
+
+<div id="big-o" class="section level1">
+<h1>Big-O</h1>
+<p>The purpose of this is not to provide yet another primer on the Big-O/<span class="math inline">\(\Omega\)</span>/<span class="math inline">\(\Theta\)</span> notation but to share my enduring appreciation for working with R. I will introduce Big-O only briefly to provide context but I would refer all of those who are interested to the linked materials.</p>
+<div id="what-is-big-sth-notation" class="section level2">
+<h2>What is Big-sth notation…</h2>
+<p>When analysing functions, we may be interested in knowing how fast a function grows. For instance, for function <span class="math inline">\(T(n)=4n^2-2n+2\)</span>, after ignoring constants, we would say that <span class="math inline">\(T(n)\)</span> grows at the order of <span class="math inline">\(n^2\)</span>. With respect to the <em>Big-O</em> notation we would write <span class="math inline">\(T(n)=O(n^2)\)</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. Most commonly, in computer science, we would differentiate between Big O, Big Theta <span class="math inline">\((\Theta)\)</span> and Big Omega <span class="math inline">\((\Omega)\)</span>. In a nutshell, the differences between those common notations can be summarised as follows:</p>
+<table>
+<colgroup>
+<col width="13%" />
+<col width="38%" />
+<col width="8%" />
+<col width="39%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Notation</th>
+<th>Growth Rate</th>
+<th>Running Case</th>
+<th>Comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Big-O</td>
+<td>Equivalent to <span class="math inline">\(\le\)</span>, growth less or equal specific value</td>
+<td>Worst case</td>
+<td>Longest amount of time it could take to algorithm to complete</td>
+</tr>
+<tr class="even">
+<td>Big-Omega <span class="math inline">\((\Omega)\)</span></td>
+<td>Equivalent to <span class="math inline">\(\ge\)</span>, growth greater or equal specific value</td>
+<td>Best case</td>
+<td>Compared to Big-O, reflects smaller amount of time</td>
+</tr>
+<tr class="odd">
+<td>Big-Theta <span class="math inline">\((\Theta)\)</span></td>
+<td>Equivalent to <span class="math inline">\(=\)</span>, growth equal specific value</td>
+<td>Average case</td>
+<td>Reflects lower and upper bound of the running time</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="the-task-at-hand" class="section level1">
+<h1>The task at hand …</h1>
+<p>So I wanted to compare a speed of some algorithms, say <span class="math inline">\(n*\log(n)\)</span>, <span class="math inline">\(\log(n)\)</span>, <span class="math inline">\(n^2\)</span> and so forth. I need a quick visual aid where I could plot some most common running times and quickly add more to compare how the common implementations perform against the algorithm I was working on.</p>
+<div id="functions" class="section level2">
+<h2>Functions</h2>
+<p>So I’ve defined a few functions that correspond to the frequently-used Big-O curves that can be found in majority of introductory literature on the subject with the intention of quickly producing visual base for the subject.</p>
+<pre class="r"><code>O_1       &lt;- function(n) {(rep(1,length(n)))}
+O_log_n   &lt;- function(n) {log(n)}
+O_n       &lt;- function(n) {n}
+O_n_log_n &lt;- function(n) {n * log(n)}
+O_n_n     &lt;- function(n) {n^2}
+O_2_to_n  &lt;- function(n) {2^n}
+O_fac     &lt;- function(n) {factorial(n)}</code></pre>
+</div>
+<div id="the-requirements" class="section level2">
+<h2>The “requirements”</h2>
+<p>After defining the above I wanted a quick way of plotting the data. The easiest approach would be to define the table where I could execute all of the functions. Let’s say for <span class="math inline">\(n = 10\)</span> we could do the following:</p>
+<pre class="r"><code>n &lt;- 10
+suppressPackageStartupMessages(library(&quot;tidyverse&quot;))
+tibble(.rows = n) %&gt;%
+    mutate(O_n = map_dbl(1:n, O_1),
+           O_log_n = map_dbl(1:n, O_log_n))</code></pre>
+<pre><code>## # A tibble: 10 × 2
+##      O_n O_log_n
+##    &lt;dbl&gt;   &lt;dbl&gt;
+##  1     1   0    
+##  2     1   0.693
+##  3     1   1.10 
+##  4     1   1.39 
+##  5     1   1.61 
+##  6     1   1.79 
+##  7     1   1.95 
+##  8     1   2.08 
+##  9     1   2.20 
+## 10     1   2.30</code></pre>
+<p>The problems with this approach is apparent. I didn’t want to type <code>O_this_and_that</code> x number of times to name columns, call functions and then be adding removing the functions I’ve already tested. I needed for R to:</p>
+<ul>
+<li>Automatically identify all of the relevant function</li>
+<li>Call each function on a sequence <code>1:n</code></li>
+<li>Pack everything in a neat table so I can play with it by plotting, etc..</li>
+</ul>
+</div>
+</div>
+<div id="solution" class="section level1">
+<h1>Solution</h1>
+<p>The actual solution can condensed further but I have broke it down for easier readability. First I’ve started with identifying the functions.</p>
+<pre class="r"><code>Fun_names &lt;- ls(pattern = &quot;O_*&quot;)
+Funs_O &lt;- mget(Fun_names) # Create a list of functions
+head(Funs_O, n = 2) # Preview</code></pre>
+<pre><code>## $O_1
+## function (n) 
+## {
+##     (rep(1, length(n)))
+## }
+## &lt;bytecode: 0x7f93bc23f0d0&gt;
+## 
+## $O_2_to_n
+## function (n) 
+## {
+##     2^n
+## }</code></pre>
+<p>Now I needed to call each of those functions and pack the results into a tibble or a data.frame. This is achieved by the code below.</p>
+<pre class="r"><code>map_df(Funs_O, ~ map_dbl(1:n, ~ .x(.x)))</code></pre>
+<pre><code>## # A tibble: 10 × 7
+##      O_1 O_2_to_n   O_fac O_log_n   O_n O_n_log_n O_n_n
+##    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+##  1     1        2       1   0         1      0        1
+##  2     1        4       2   0.693     2      1.39     4
+##  3     1        8       6   1.10      3      3.30     9
+##  4     1       16      24   1.39      4      5.55    16
+##  5     1       32     120   1.61      5      8.05    25
+##  6     1       64     720   1.79      6     10.8     36
+##  7     1      128    5040   1.95      7     13.6     49
+##  8     1      256   40320   2.08      8     16.6     64
+##  9     1      512  362880   2.20      9     19.8     81
+## 10     1     1024 3628800   2.30     10     23.0    100</code></pre>
+<p>I reckon it requires some explanation. <code>map_*</code> function are purrr’s take on R’s *apply family and map function on an element passed to the function. Starting from the inside the call <code>map_dbl(1:n, ~.x(.))</code> calls function <code>.x</code> on current element of the sequence, which is passed as <code>.</code> but another <code>.x</code> could also work!! The <code>map_df(O_funs, ....)</code> call is more cheeky as the list is actual collection of functions generated via <code>mget</code>. So instead of iterating over numbers of strings or data frames we are iterating over collection of closures. In that case our <code>.x</code> becomes a closure. Full solution for <span class="math inline">\(n = 1000\)</span> is provided below.</p>
+<pre class="r"><code>n &lt;- 1e3 # This is a bad habit of mine but while in R, I&#39;ve a strong preference for using 1e6 for a million, 1e2 for hundred and so forth
+dta_big_o &lt;- map_df(mget(Fun_names), ~ map_dbl(1:n, ~ .x(.x)))</code></pre>
+<div id="preview" class="section level4">
+<h4>Preview</h4>
+<p>For <span class="math inline">\(n = 1000\)</span> we obtain:</p>
+<table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+O_1
+</th>
+<th style="text-align:right;">
+O_2_to_n
+</th>
+<th style="text-align:right;">
+O_fac
+</th>
+<th style="text-align:right;">
+O_log_n
+</th>
+<th style="text-align:right;">
+O_n
+</th>
+<th style="text-align:right;">
+O_n_log_n
+</th>
+<th style="text-align:right;">
+O_n_n
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.0e+00
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4.0e+00
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.69
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1.4
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.0e+00
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1.10
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.6e+01
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+1.39
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+5.5
+</td>
+<td style="text-align:right;">
+16
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.2e+01
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+1.61
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+8.1
+</td>
+<td style="text-align:right;">
+25
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.4e+01
+</td>
+<td style="text-align:right;">
+720
+</td>
+<td style="text-align:right;">
+1.79
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+10.8
+</td>
+<td style="text-align:right;">
+36
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.3e+299
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+6.90
+</td>
+<td style="text-align:right;">
+995
+</td>
+<td style="text-align:right;">
+6868.2
+</td>
+<td style="text-align:right;">
+990025
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.7e+299
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+6.90
+</td>
+<td style="text-align:right;">
+996
+</td>
+<td style="text-align:right;">
+6876.1
+</td>
+<td style="text-align:right;">
+992016
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.3e+300
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+6.90
+</td>
+<td style="text-align:right;">
+997
+</td>
+<td style="text-align:right;">
+6884.0
+</td>
+<td style="text-align:right;">
+994009
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2.7e+300
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+6.91
+</td>
+<td style="text-align:right;">
+998
+</td>
+<td style="text-align:right;">
+6891.9
+</td>
+<td style="text-align:right;">
+996004
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5.4e+300
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+6.91
+</td>
+<td style="text-align:right;">
+999
+</td>
+<td style="text-align:right;">
+6899.9
+</td>
+<td style="text-align:right;">
+998001
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.1e+301
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+6.91
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:right;">
+6907.8
+</td>
+<td style="text-align:right;">
+1000000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="plotting" class="section level2">
+<h2>Plotting</h2>
+<p>Plotting functions actually becomes trivial with use of <code>dplyr</code> and <code>ggplot2</code>. As shown below, we can leverage the previous solution using <code>mget</code> to dynamically pull all of the refreshed functions and keep on re-generating the plot to get a view on the running time of the relevant algorithm. Here, I’m using <code>Fun_names</code> to avoid unnecessary verbosity but this could be replaced with the <code>ls</code> call.</p>
+<pre class="r"><code>map_df(mget(Fun_names), ~ map_dbl(1:n, ~ .x(.x))) %&gt;%
+	rownames_to_column(&quot;n_val&quot;) %&gt;%
+	mutate(n_val = as.integer(n_val)) %&gt;%
+	pivot_longer(!n_val, names_to = &quot;O_fun&quot;, values_to = &quot;n_t&quot;) %&gt;%
+	ggplot(aes(x = n_val, y = n_t, group = O_fun, colour = O_fun)) +
+	geom_line() +
+	scale_y_continuous(trans = &quot;log10&quot;) + 
+	theme_minimal()</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/create_plot-1.png" width="672" /></p>
+</div>
+</div>
+<div id="remarks" class="section level1">
+<h1>Remarks</h1>
+<p>In a production setting, we probably wouldn’t rely on <code>ls(pattern = ...)</code> and <code>mget</code> sourcing objects by name. Even with providing the <code>mode</code> argument for <code>mget</code> and limiting results to function there is a risk that our code could capture an undesired call that from one or another reason could appear in the environment where <code>ls</code> would happen to be executing search. Finally for quickly plotting trivial functions, like <span class="math inline">\(y=log(x)^2\)</span> can be easily achieved with use of dedicated software. Mac users will already have <a href="https://support.apple.com/en-gb/guide/grapher/gcalb3dec608/mac">Grapher</a> installed that meets that requirement. Personally, I appreciate use cases demonstrating R’s flexibility as <a href="https://adv-r.hadley.nz/functionals.html">functionals</a> and meta-programming are actual efficiency powerhouses.</p>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>MIT. (2021, December 9). Big O notation. Introduction to Computers and Programming. Retrieved December 26, 2021, from <a href="https://web.mit.edu/16.070/www/lecture/big_o.pdf">https://web.mit.edu/16.070/www/lecture/big_o.pdf</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>

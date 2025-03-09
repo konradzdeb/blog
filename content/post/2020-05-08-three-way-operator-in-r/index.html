@@ -1,0 +1,179 @@
+---
+title: Three-Way Operator in R
+author: Konrad
+date: '2020-05-08'
+slug: three-way-operator-in-r
+categories:
+  - dev
+tags:
+  - R
+---
+
+
+
+<p>Is there a merit for a three-way operator in R?</p>
+<div id="background" class="section level1">
+<h1>Background</h1>
+<p>In C++20 revision added “spaceship operator”, <a href="https://en.cppreference.com/w/cpp/language/operator_comparison#Three-way_comparison">which is defined as follows</a>:</p>
+<pre class="r"><code>(a &lt;=&gt; b) &lt; 0  # if lhs &lt; rhs
+(a &lt;=&gt; b) &gt; 0  # if lhs &gt; rhs
+(a &lt;=&gt; b) == 0 # if lhs and rhs are equal/equivalent.</code></pre>
+</div>
+<div id="r-implementation" class="section level1">
+<h1>R implementation</h1>
+<p>The behaviour can be achieved in R in multiple ways. A one straightforward approach would involve making use of the <code>ifelse</code> statement</p>
+<div id="ifelse-implementation" class="section level2">
+<h2><code>ifelse</code> implementation</h2>
+<p>Basic approach would involve comparing the two figures and respectively returning <code>-1</code> or <code>1</code> consistently with the definition above.</p>
+<pre class="r"><code>a &lt;- 1
+b &lt;- 2
+ifelse(a &lt; b, -1, 1)</code></pre>
+<pre><code>## [1] -1</code></pre>
+<p>The shortcoming of this approach is that adhering to <code>(a &lt;=&gt; b) == 0</code> condition would require extra <code>ifelse</code> statement.</p>
+<pre class="r"><code>a &lt;- 1
+b &lt;- 1
+ifelse(a &lt; b, -1, 1)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>The result above is wrong as consistently with the definition the operator should return zero. This can be achieved with the following solution.</p>
+<pre class="r"><code>a &lt;- 1
+b &lt;- 1
+ifelse(a == b, 0, ifelse(a &lt; b, -1, 1))</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>a &lt;- 1
+b &lt;- 2
+ifelse(a == b, 0, ifelse(a &lt; b, -1, 1))</code></pre>
+<pre><code>## [1] -1</code></pre>
+<pre class="r"><code>a &lt;- 2
+b &lt;- 1
+ifelse(a == b, 0, ifelse(a &lt; b, -1, 1))</code></pre>
+<pre><code>## [1] 1</code></pre>
+<div id="challenges" class="section level3">
+<h3>Challenges</h3>
+<p>There are few challenges pertaining to the implementation above. The one that is particularly stark pertains to type conversion. For <code>a</code> being <code>"a"</code> R returns <code>TRUE</code>.</p>
+<pre class="r"><code>a &lt;- &quot;a&quot;
+b &lt;- 1
+ifelse(a &gt; b, TRUE, FALSE)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>This is due to the implementation of comparison on atomic vectors. As stated in <code>?Comparison</code> documentation:</p>
+<blockquote>
+<p>If the two arguments are atomic vectors of different types, one is coerced to the type of the other, the (decreasing) order of precedence being character, complex, numeric, integer, logical and raw.</p>
+</blockquote>
+<p>This behaviour may be confusing, especially to those expecting to comparison operators to act as strict equality.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> Developers au fait with JavaScript may not be surprised by R’s behaviours as they will be familiar with <code>==</code> and <code>===</code> where former compares variables undertaking type conversation and latter checks type of the variable. In R <code>===</code> can be obtained with use of <code>?identical</code>.</p>
+<p>The other interesting challenge is concerned with vectorisation. For vectors of unequal sizes we get a warning but also an answer.</p>
+<pre class="r"><code>a &lt;- c(2,2,2)
+b &lt;- c(1,1)
+ifelse(a == b, 0, ifelse(a &lt; b, -1, 1))</code></pre>
+<pre><code>## Warning in a == b: longer object length is not a multiple of shorter object
+## length</code></pre>
+<pre><code>## Warning in a &lt; b: longer object length is not a multiple of shorter object
+## length</code></pre>
+<pre><code>## [1] 1 1 1</code></pre>
+<p>Finally, the syntax of our nested <code>ifelse</code> statement is not useful. We could wrap the whole thing in a simple function</p>
+<pre class="r"><code>three_way &lt;- function(a, b) {
+    ifelse(a == b, 0, ifelse(a &lt; b, -1, 1))
+}</code></pre>
+<p>Still this is not as useful as calling this operator in-line <code>lhs &lt;=&gt; rhs</code> in C++ fashion.</p>
+</div>
+</div>
+<div id="infix-implementation" class="section level2">
+<h2>Infix implementation</h2>
+<p>Fairly neat solution can be obtained with use of infix operator. Infix operators are common and frequently used in R. For instance</p>
+<pre class="r"><code>5 + 2</code></pre>
+<pre><code>## [1] 7</code></pre>
+<p>statement is equivalent to</p>
+<pre class="r"><code>`+`(5,2)</code></pre>
+<pre><code>## [1] 7</code></pre>
+<p>User-defined infix functions can be created by creating functions that start and end with <code>%</code>. Let’s assume that we want to achieve the following objectives:</p>
+<ul>
+<li>Control for types of compared vectors</li>
+<li>Control for size of compared vectors</li>
+<li>Have control over the outcome:
+<ul>
+<li>Staying strict with the provided C++ implementation</li>
+<li>Modifying this behaviour, by for instance, returning the bigger object</li>
+</ul></li>
+</ul>
+<p>This can be quickly achieved using the following implementation.</p>
+<pre class="r"><code>`%&lt;=&gt;%` &lt;- function(lhs, rhs) {
+
+    if (typeof(lhs) != typeof(rhs)) {
+        warning(&quot;Left and right hand operators are not of identical types.&quot;)
+    }
+
+    # Single comparison function
+    f_check &lt;- function(lhs, rhs) {
+        if (lhs &gt; rhs) {
+            lhs
+        } else if (lhs &lt; rhs) {
+            rhs
+        } else if (lhs == rhs) {
+            0
+        }
+    }
+
+    # Run on each element of vector
+    purrr::modify2(.x = lhs, .y = rhs, .f = f_check)
+}</code></pre>
+<p>In effect, the results obtained through the first set of <code>ifelse</code> statements can be easily achieved using <code>max</code>. The only - albeit very minor - advantage of the implementation is that it would be easily to modify it to behave in a manner consistent with the original implementation. Instead of returning <code>lhs</code> or <code>rhs</code> we would look to return <code>-1</code> and <code>1</code> as in the example below.</p>
+<pre class="r"><code>`%&lt;=&gt;%` &lt;- function(lhs, rhs) {
+
+    if (typeof(lhs) != typeof(rhs)) {
+        warning(&quot;Left and right hand operators are not of identical types.&quot;)
+    }
+
+    # Single comparison function
+    f_check &lt;- function(lhs, rhs) {
+        if (lhs &gt; rhs) {
+            1
+        } else if (lhs &lt; rhs) {
+            -1
+        } else if (lhs == rhs) {
+            0
+        }
+    }
+
+    # Run on each element of vector
+    purrr::modify2(.x = lhs, .y = rhs, .f = f_check)
+}</code></pre>
+<div id="vectorisation-and-type-checking" class="section level3">
+<h3>Vectorisation and type checking</h3>
+<p>I like <a href="https://purrr.tidyverse.org/reference/modify.html"><code>purrr::modify2</code></a> due to consistent error messages it gives. Let’s say that we mistakenly compare vectors that are of different lengths. This would result in a following error message.</p>
+<pre class="r"><code>`%&lt;=&gt;%` &lt;- function(lhs, rhs) {
+
+    if (typeof(lhs) != typeof(rhs)) {
+        warning(&quot;Left and right hand operators are not of identical types.&quot;)
+    }
+
+    # Single comparison function
+    f_check &lt;- function(lhs, rhs) {
+        if (lhs &gt; rhs) {
+            1
+        } else if (lhs &lt; rhs) {
+            -1
+        } else if (lhs == rhs) {
+            0
+        }
+    }
+
+    # Run on each element of a vector
+    purrr::modify2(.x = lhs, .y = rhs, .f = f_check)
+}
+
+a &lt;- c(1,2,3)
+b &lt;- c(1,2)
+a %&lt;=&gt;% b</code></pre>
+<pre><code>## Error in `map2()`:
+## ! Can&#39;t recycle `.x` (size 3) to match `.y` (size 2).</code></pre>
+</div>
+</div>
+</div>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
+<p>The need for the actual <code>%&lt;=&gt;%</code> is scant as <code>ifelse</code> and <code>max</code> efficiently fulfil that role. Nevertheless, creating spaceship operator in R is trivial and demonstrates flexibility of the language very well. I have a similar implementation in a package that I use to store <a href="https://github.com/konradzdeb/KEmisc/blob/master/R/threeway.R"><code>KEmisc</code></a> package that I use to store, trivial, handy functions.</p>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>Relevant <a href="https://stackoverflow.com/q/14932015/1655567">StackOverflow discussion</a> on the subject.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
