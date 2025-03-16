@@ -19,7 +19,38 @@ Dotfiles are configuration files on Unix-like systems that begin with a dot (.) 
 
 # Implementation
 
-In order to control .dotfiles across multiple locations we need to create a special version of the git repository. 
+In order to control .dotfiles across multiple locations we need to create a special version of the git repository which I'm going to alias to a convenient `config` command. As a consequence I will be able to run traditional git commads using `config` alias to manage versioning of configuration files. Mastering Emacs is something I always wanted to do is to version control my Emacs configuration as I progress through various changes. I would initially version control main Emacs configuration file `~/.emacs.d/init.el`:
+
+``` bash
+config switch -c configs/emacs_install
+config add ~/.emacs.d/init.el
+config commit -as -m "Initial Emacs config"
+```
+
+## The `config` command
+
+The config command is in effect and alias for a `git` command with defined `--work-tree` and `--git-dir` as shown. In order for this to work we need to complete a few steps:
+1. First create directory where to store the dot files in my case `mkdir -v $HOME/.dotfiles`
+2. As a next step we will create a bare git repository. Bare repository does not contain working tree (only contains the version contol data `.git`)
+   
+   ``` bash
+   git init --bare $HOME/.dotfiles/
+   ```
+3. Finally we want to enable `config` command; the command is simply aliased `git` command with `--work-tree` and `--git-dir` parameters and looks as follows:
+   
+   ``` bash
+   alias config='/usr/bin/git --git-dir=$HOME/.doftfiles/ --work-tree=$HOME'
+   ```
+   What happens here:
+   * The argument `--work-tree` tells git where the project files live
+   * The argument `--git-dir` specifies where we store the repository data
+4. There is one more snag, in the present configuration calling the `config` command would show a vast number of untracked files. We can solve that problem by using the following git configuration
+   
+   ``` bash
+    config config --local status.showUntrackedFiles no
+   ```
+
+If this solution is working for you, you can add the line with the `alias` command to your `~/.bashrc` (or other depenidng on the shell) to make it permanently available.
 
 # Practical example
 
@@ -67,12 +98,30 @@ tree ~/.config/nvim -P '*.lua' --prune
 ## 4 directories, 27 files
 ```
 
-## Adding R support
+## Practical Example: Adding R support
 
-I would like to enhance my NVim installation to support better working with R files. In general, I'm  looking to:
-* Have a convenient ability to run R code, focusing on running whole stcripts, or more frequently, selected parts of code I'm working on.
-* Consistent evaluation of the R code in one environment
+I would like to enhance my NVim installation to support better working with R files. In general, I'm  looking for ability to run selected fragments and full R code managing consistency of environment and facilitate other basic functions, such as code completion. Fortunately [R.nvim](https://github.com/R-nvim/R.nvim) plugin addresses those requeiriemnts.
+
+### Modyfying multiple files 
+
+Owing to the structure of my NVim configuration, in order to enable [R.nvim](https://github.com/R-nvim/R.nvim) support I would need to edit the following files:
+* `R.nvim` - in this file I will keep the key plugin configuration
+* `codecompletion.lua` - This file stores code completion configuration
+* `treesitter.lua` - Treesitter, parser generator tool, is required to enable some of the key [R.nvim](https://github.com/R-nvim/R.nvim) functionalities
+
+Depending on the actual setup I may need/want to modify `init.lua` or other files defining keymaps and so forth. Let's further consider a scenario where after implementing the necessary changes across multiple configuration files I come to realisation that I do not want to rely on NVim when working with R code and that I prefer to continue using RStudio. No problem with that, but then in order to reverse back the configuration I would need to restore multiple files to their previous states.
+
+Managing dotfiles configuration makes this challenge a breeze. When working on the initial configuration I would simply create a branch of my whole system conifguration using aliased git command:
 
 
 
+``` bash
+config switch -c configs/nvim-r-test
+```
+
+I would then work throuh the configuration changes, test NVim and play with any settings desired. Depending on what I decide to do I would commit files and merge to the master branch or abandon the work (possibly commiting changes to the branch) and switch to the master branch.
+
+# Alternatives
+
+A potential alternative could be to create a configuration only repositoiry using symlinks. This can be problematic as if the `core.symlinks` variable is not set to `true` git will treat symbolink links as small plain text files. This is covered in detail in this [StackOverflow discussion](https://stackoverflow.com/q/954560/1655567). Simrarly, trying to use hardlinks with git comes with another set of challenges. Git doesn't store inode number and makes it impossible to utilised hard links in repository without relying on thrid party tools, as discussed at lengths in [this StackOverflow answer](https://stackoverflow.com/a/3731139/1655567).
 
