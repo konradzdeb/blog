@@ -1,0 +1,15 @@
+---
+title: Plan 9 the Operating System you Never Heard Of
+author: Konrad Zdeb
+date: '2025-03-16'
+slug: plan9
+categories:
+  - fun
+  - history
+tags:
+  - OS
+---
+
+# Why even look into this?
+
+I came across excellen article by Thor Jensen covering [the strangest operating systems ever released](https://www.pcmag.com/news/the-strangest-operating-systems-ever-released), which was published at the PC Mag in 2020. 
