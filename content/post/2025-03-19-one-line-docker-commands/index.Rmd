@@ -1,0 +1,54 @@
+---
+title: One line docker commands
+author: Konrad Zdeb
+date: '2025-03-19'
+slug: one-line-docker
+categories: 
+    - efficiency
+    - how-to
+tags:
+    - python
+    - docker
+    - shell
+---
+```{r setup,  eval=TRUE, include=FALSE}
+# Wrap code chunks
+knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 80), tidy = TRUE, cache = TRUE)
+```
+
+Building robust data science development environment takes time and it's probably one of those processes that is never fully finished. If you like to squeeze 100% from your tools you will be keen to tweak, introduce efficiencies and add gadgets to make coding and development experience more productive, pleasant and enjoyable. Starting with basics, such as configuring your Python development space to efficiency handle different versions of the language and packages you may progress to expanding your text editors with plugins to facilitate linting, code suggest, conveinetly manipulate execution of unit tests and CI/CD workflow. The one thing that is constant is that set-up is constantaly evolving. I have recently switched from vin to nvim and re-created a lot of my previous vim and VimL based configuration in Lua. Before that I didn't have much need to write Lua code. 
+
+If you are experimenting and learning new things, you may be interested in convenient way of managing installation and removal of various system components. In general, I use Homebrew to manage the installation and removal of system componenets and that works surprisingly well. Howeber, I have also came across scenarios where installing compoenents through homebrew fills like unnecessary step. 
+
+# scenarios
+
+# Solution
+
+Examples provided below work on the same basis, the code and commands are executed within disposable Docker containers. The process of needing to install software on local machine is completely removed from the system
+
+# Examples 
+
+Let's say that I want to explore what's presently "on offer" across major data science languages with respect to handling and displaying CVS data. I will create a simple file which I'm going to dump in `/tmp/sample_data.csv` 
+
+```{bash sample_csv, echo=TRUE, eval=TRUE}
+printf "Name,DOB,Value\nAlice,1992-05-14,100\nBob,1988-09-22,200\nCharlie,1995-07-30,150\nDavid,1990-12-11,175\nEve,1985-03-05,300\n" > /tmp/sample_data.csv
+```
+
+## R
+
+In R's `tidyverse` ecosysstem offers very pleasnt way of previeing data. Let's say that you are not R user but would like to see how this works
+
+```{bash r_glimpse, eval=FALSE, echo=TRUE}
+docker run --rm r-base R -e "install.packages('dplyr', verbose=FALSE); dplyr::glimpse(mtcars)"
+```
+
+
+## Julia
+
+```{bash docker_julia, eval=TRUE, echo=TRUE}
+docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia -e 'import Pkg; Pkg.add("DataFrames"); Pkg.add("CSV"); using CSV, DataFrames; df = CSV.read("/data.csv", DataFrame); println(df)'
+```
+
+# Summary
+
+Docker is extremely efficient in working as a solution to run one line commands
