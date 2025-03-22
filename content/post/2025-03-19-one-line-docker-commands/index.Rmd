@@ -20,8 +20,6 @@ Building robust data science development environment takes time and it's probabl
 
 If you are experimenting and learning new things, you may be interested in convenient way of managing installation and removal of various system components. In general, I use Homebrew to manage the installation and removal of system componenets and that works surprisingly well. Howeber, I have also came across scenarios where installing components through homebrew fills like unnecessary step. 
 
-# scenarios
-
 # Solution
 
 Examples provided below work on the same basis, the code and commands are executed within disposable Docker containers. The process of needing to install software on local machine is completely removed from the system
@@ -54,7 +52,7 @@ for version in 2.7 3.5 3.6 3.7 3.8.0 3.9 3.10 3.11; do
 done
 ```
 
-## Other interesting cases
+## Other interesting uses
 
 In R's `tidyverse` ecosystem offers very pleasant way of previewing data. Let's say that you are not R user but would like to see how this works
 
@@ -74,7 +72,8 @@ Eve,1985-03-05,300\n" > /tmp/sample_data.csv
 ### Julia
 
 ```{bash docker_julia, eval=TRUE, echo=TRUE}
-docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia -e 'import Pkg; Pkg.add("DataFrames"); Pkg.add("CSV"); using CSV, DataFrames; df = CSV.read("/data.csv", DataFrame); println(df)'
+docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia \
+-e 'import Pkg; Pkg.add("DataFrames"); Pkg.add("CSV"); using CSV, DataFrames; df = CSV.read("/data.csv", DataFrame); println(df)'
 ```
 
 # Summary
