@@ -13,12 +13,12 @@ tags:
 ---
 ```{r setup,  eval=TRUE, include=FALSE}
 # Wrap code chunks
-knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 80), tidy = TRUE, cache = TRUE)
+knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 80), tidy = TRUE, cache = FALSE)
 ```
 
-Building robust data science development environment takes time and it's probably one of those processes that is never fully finished. If you like to squeeze 100% from your tools you will be keen to tweak, introduce efficiencies and add gadgets to make coding and development experience more productive, pleasant and enjoyable. Starting with basics, such as configuring your Python development space to efficiency handle different versions of the language and packages you may progress to expanding your text editors with plugins to facilitate linting, code suggest, conveinetly manipulate execution of unit tests and CI/CD workflow. The one thing that is constant is that set-up is constantaly evolving. I have recently switched from vin to nvim and re-created a lot of my previous vim and VimL based configuration in Lua. Before that I didn't have much need to write Lua code. 
+Building robust data science development environment takes time and it's probably one of those processes that is never fully finished. If you like to squeeze 100% from your tools you will be keen to tweak, introduce efficiencies and add gadgets to make coding and development experience more productive, pleasant and enjoyable. Starting with basics, such as configuring your Python development space to efficiency handle different versions of the language and packages you may progress to expanding your text editors with plugins to facilitate linting, code suggest, conveniently manipulate execution of unit tests and CI/CD workflow. The one thing that is constant is that set-up is constantly evolving. I have recently switched from vin to nvim and re-created a lot of my previous vim and VimL based configuration in Lua. Before that I didn't have much need to write Lua code. 
 
-If you are experimenting and learning new things, you may be interested in convenient way of managing installation and removal of various system components. In general, I use Homebrew to manage the installation and removal of system componenets and that works surprisingly well. Howeber, I have also came across scenarios where installing compoenents through homebrew fills like unnecessary step. 
+If you are experimenting and learning new things, you may be interested in convenient way of managing installation and removal of various system components. In general, I use Homebrew to manage the installation and removal of system componenets and that works surprisingly well. Howeber, I have also came across scenarios where installing components through homebrew fills like unnecessary step. 
 
 # scenarios
 
@@ -26,24 +26,52 @@ If you are experimenting and learning new things, you may be interested in conve
 
 Examples provided below work on the same basis, the code and commands are executed within disposable Docker containers. The process of needing to install software on local machine is completely removed from the system
 
-# Examples 
+# Example
 
-Let's say that I want to explore what's presently "on offer" across major data science languages with respect to handling and displaying CVS data. I will create a simple file which I'm going to dump in `/tmp/sample_data.csv` 
+Let's say that you have a simple Python script, that makes use fo the leverages the [AST](https://docs.python.org/3/library/ast.html#module-ast) module. The AST module stands for Abstract Syntax Tree and is usually used in scenarios where you may want to manipulate Python code programmatically. A common scenario may be working a linter or a solution that receives Python script or Python arguments. More advanced use case of AST could involve metaprogramming where we may be willing to generate Python code programmatically.
 
-```{bash sample_csv, echo=TRUE, eval=TRUE}
-printf "Name,DOB,Value\nAlice,1992-05-14,100\nBob,1988-09-22,200\nCharlie,1995-07-30,150\nDavid,1990-12-11,175\nEve,1985-03-05,300\n" > /tmp/sample_data.csv
+Let's say that script we are working with has the following structure. The script doesn't do much, in effect it checks if the value `42` is interpreted as `ast.Num`. When you are dealing with Python syntax programmatically, you may be willing to break down expressions and see how different elements are vbeing interpreted. 
+
+
+```{python sample_script, eval=TRUE, echo=TRUE}
+import ast
+node = ast.parse("x = 42")
+print(isinstance(node.body[0].value, ast.Num))
 ```
 
-## R
+```{bash store_script, echo=FALSE, eval=TRUE}
+echo 'import ast' > /tmp/check_ast.py
+echo 'node = ast.parse("x = 42")' >> /tmp/check_ast.py
+echo 'print(isinstance(node.body[0].value, ast.Num))' >> /tmp/check_ast.py
+```
 
-In R's `tidyverse` ecosysstem offers very pleasnt way of previeing data. Let's say that you are not R user but would like to see how this works
+I will store this script as `/tmp/check_ast.py`. Now to the key question. Let's say that you want to share your work quickly; a proper commons sense approach would be to define minimum requirements where you script is expected to work. What if for whatever reason you are not in position to require and users to confirm to minimum requirements, think of legacy system, or you want for you boss to have a look at something and you want minimum friction possible. Will this work in Python version x?
+
+```{bash iterate_python, eval=TRUE, echo=TRUE}
+for version in 2.7 3.5 3.6 3.7 3.8.0 3.9 3.10 3.11; do
+    echo "Python ${version}:"
+    docker run --rm -v /tmp/check_ast.py:/check_ast.py python:$version python /check_ast.py
+done
+```
+
+## Other interesting cases
+
+In R's `tidyverse` ecosystem offers very pleasant way of previewing data. Let's say that you are not R user but would like to see how this works
 
 ```{bash r_glimpse, eval=FALSE, echo=TRUE}
 docker run --rm r-base R -e "install.packages('dplyr', verbose=FALSE); dplyr::glimpse(mtcars)"
 ```
 
+```{bash sample_csv, echo=TRUE, eval=TRUE}
+printf "Name,DOB,Value\n
+Alice,1992-05-14,100\n
+Bob,1988-09-22,200\n
+Charlie,1995-07-30,150\n
+David,1990-12-11,175\n
+Eve,1985-03-05,300\n" > /tmp/sample_data.csv
+```
 
-## Julia
+### Julia
 
 ```{bash docker_julia, eval=TRUE, echo=TRUE}
 docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia -e 'import Pkg; Pkg.add("DataFrames"); Pkg.add("CSV"); using CSV, DataFrames; df = CSV.read("/data.csv", DataFrame); println(df)'

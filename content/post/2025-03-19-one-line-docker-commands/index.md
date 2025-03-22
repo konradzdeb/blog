@@ -13,9 +13,9 @@ tags:
 ---
 
 
-Building robust data science development environment takes time and it's probably one of those processes that is never fully finished. If you like to squeeze 100% from your tools you will be keen to tweak, introduce efficiencies and add gadgets to make coding and development experience more productive, pleasant and enjoyable. Starting with basics, such as configuring your Python development space to efficiency handle different versions of the language and packages you may progress to expanding your text editors with plugins to facilitate linting, code suggest, conveinetly manipulate execution of unit tests and CI/CD workflow. The one thing that is constant is that set-up is constantaly evolving. I have recently switched from vin to nvim and re-created a lot of my previous vim and VimL based configuration in Lua. Before that I didn't have much need to write Lua code. 
+Building robust data science development environment takes time and it's probably one of those processes that is never fully finished. If you like to squeeze 100% from your tools you will be keen to tweak, introduce efficiencies and add gadgets to make coding and development experience more productive, pleasant and enjoyable. Starting with basics, such as configuring your Python development space to efficiency handle different versions of the language and packages you may progress to expanding your text editors with plugins to facilitate linting, code suggest, conveniently manipulate execution of unit tests and CI/CD workflow. The one thing that is constant is that set-up is constantly evolving. I have recently switched from vin to nvim and re-created a lot of my previous vim and VimL based configuration in Lua. Before that I didn't have much need to write Lua code. 
 
-If you are experimenting and learning new things, you may be interested in convenient way of managing installation and removal of various system components. In general, I use Homebrew to manage the installation and removal of system componenets and that works surprisingly well. Howeber, I have also came across scenarios where installing compoenents through homebrew fills like unnecessary step. 
+If you are experimenting and learning new things, you may be interested in convenient way of managing installation and removal of various system components. In general, I use Homebrew to manage the installation and removal of system componenets and that works surprisingly well. Howeber, I have also came across scenarios where installing components through homebrew fills like unnecessary step. 
 
 # scenarios
 
@@ -23,18 +23,58 @@ If you are experimenting and learning new things, you may be interested in conve
 
 Examples provided below work on the same basis, the code and commands are executed within disposable Docker containers. The process of needing to install software on local machine is completely removed from the system
 
-# Examples 
+# Example
 
-Let's say that I want to explore what's presently "on offer" across major data science languages with respect to handling and displaying CVS data. I will create a simple file which I'm going to dump in `/tmp/sample_data.csv` 
+Let's say that you have a simple Python script, that makes use fo the leverages the [AST](https://docs.python.org/3/library/ast.html#module-ast) module. The AST module stands for Abstract Syntax Tree and is usually used in scenarios where you may want to manipulate Python code programmatically. A common scenario may be working a linter or a solution that receives Python script or Python arguments. More advanced use case of AST could involve metaprogramming where we may be willing to generate Python code programmatically.
+
+Let's say that script we are working with has the following structure. The script doesn't do much, in effect it checks if the value `42` is interpreted as `ast.Num`. When you are dealing with Python syntax programmatically, you may be willing to break down expressions and see how different elements are vbeing interpreted. 
+
+
+
+``` python
+import ast
+node = ast.parse("x = 42")
+print(isinstance(node.body[0].value, ast.Num))
+```
+
+```
+## True
+```
+
+
+
+I will store this script as `/tmp/check_ast.py`. Now to the key question. Let's say that you want to share your work quickly; a proper commons sense approach would be to define minimum requirements where you script is expected to work. What if for whatever reason you are not in position to require and users to confirm to minimum requirements, think of legacy system, or you want for you boss to have a look at something and you want minimum friction possible. Will this work in Python version x?
 
 
 ``` bash
-printf "Name,DOB,Value\nAlice,1992-05-14,100\nBob,1988-09-22,200\nCharlie,1995-07-30,150\nDavid,1990-12-11,175\nEve,1985-03-05,300\n" > /tmp/sample_data.csv
+for version in 2.7 3.5 3.6 3.7 3.8.0 3.9 3.10 3.11; do
+    echo "Python ${version}:"
+    docker run --rm -v /tmp/check_ast.py:/check_ast.py python:$version python /check_ast.py
+done
 ```
 
-## R
+```
+## Python 2.7:
+## True
+## Python 3.5:
+## True
+## Python 3.6:
+## True
+## Python 3.7:
+## True
+## Python 3.8.0:
+## True
+## Python 3.9:
+## True
+## Python 3.10:
+## True
+## Python 3.11:
+## True
+```
 
-In R's `tidyverse` ecosysstem offers very pleasnt way of previeing data. Let's say that you are not R user but would like to see how this works
+## Other interesting cases
+
+In R's `tidyverse` ecosystem offers very pleasant way of previewing data. Let's say that you are not R user but would like to see how this works
 
 
 ``` bash
@@ -42,7 +82,16 @@ docker run --rm r-base R -e "install.packages('dplyr', verbose=FALSE); dplyr::gl
 ```
 
 
-## Julia
+``` bash
+printf "Name,DOB,Value\n
+Alice,1992-05-14,100\n
+Bob,1988-09-22,200\n
+Charlie,1995-07-30,150\n
+David,1990-12-11,175\n
+Eve,1985-03-05,300\n" > /tmp/sample_data.csv
+```
+
+### Julia
 
 
 ``` bash
@@ -53,28 +102,28 @@ docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia -e 'import Pkg; Pk
 ##   Installing known registries into `~/.julia`
 ##     Updating registry at `~/.julia/registries/General.toml`
 ##    Resolving package versions...
+##    Installed DataAPI ───────────────────── v1.16.0
+##    Installed Crayons ───────────────────── v4.1.1
 ##    Installed SentinelArrays ────────────── v1.4.8
 ##    Installed PooledArrays ──────────────── v1.4.3
-##    Installed Crayons ───────────────────── v4.1.1
-##    Installed DataAPI ───────────────────── v1.16.0
-##    Installed TableTraits ───────────────── v1.0.1
 ##    Installed Tables ────────────────────── v1.12.0
+##    Installed TableTraits ───────────────── v1.0.1
 ##    Installed Preferences ───────────────── v1.4.3
 ##    Installed PrettyTables ──────────────── v2.4.0
-##    Installed LaTeXStrings ──────────────── v1.4.0
+##    Installed DataValueInterfaces ───────── v1.0.0
 ##    Installed IteratorInterfaceExtensions ─ v1.0.0
 ##    Installed InvertedIndices ───────────── v1.3.1
-##    Installed InlineStrings ─────────────── v1.4.3
 ##    Installed OrderedCollections ────────── v1.8.0
-##    Installed DataValueInterfaces ───────── v1.0.0
+##    Installed LaTeXStrings ──────────────── v1.4.0
+##    Installed InlineStrings ─────────────── v1.4.3
 ##    Installed PrecompileTools ───────────── v1.2.1
 ##    Installed DataFrames ────────────────── v1.7.0
-##    Installed Missings ──────────────────── v1.2.0
 ##    Installed Reexport ──────────────────── v1.2.2
-##    Installed StringManipulation ────────── v0.4.1
+##    Installed Missings ──────────────────── v1.2.0
 ##    Installed Compat ────────────────────── v4.16.0
-##    Installed DataStructures ────────────── v0.18.22
+##    Installed StringManipulation ────────── v0.4.1
 ##    Installed SortingAlgorithms ─────────── v1.2.1
+##    Installed DataStructures ────────────── v0.18.22
 ##     Updating `~/.julia/environments/v1.10/Project.toml`
 ##   [a93c6f00] + DataFrames v1.7.0
 ##     Updating `~/.julia/environments/v1.10/Manifest.toml`
@@ -123,11 +172,11 @@ docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia -e 'import Pkg; Pk
 ##   [8e850b90] + libblastrampoline_jll v5.8.0+1
 ## Precompiling project...
 ##   ✓ IteratorInterfaceExtensions
-##   ✓ DataValueInterfaces
 ##   ✓ Reexport
 ##   ✓ LaTeXStrings
-##   ✓ DataAPI
+##   ✓ DataValueInterfaces
 ##   ✓ InvertedIndices
+##   ✓ DataAPI
 ##   ✓ CompilerSupportLibraries_jll
 ##   ✓ Compat
 ##   ✓ OrderedCollections
@@ -138,8 +187,8 @@ docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia -e 'import Pkg; Pk
 ##   ✓ Missings
 ##   ✓ PooledArrays
 ##   ✓ Compat → CompatLinearAlgebraExt
-##   ✓ PrecompileTools
 ##   ✓ Crayons
+##   ✓ PrecompileTools
 ##   ✓ SentinelArrays
 ##   ✓ Tables
 ##   ✓ DataStructures
@@ -147,14 +196,14 @@ docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia -e 'import Pkg; Pk
 ##   ✓ SortingAlgorithms
 ##   ✓ PrettyTables
 ##   ✓ DataFrames
-##   25 dependencies successfully precompiled in 41 seconds. 2 already precompiled.
+##   25 dependencies successfully precompiled in 42 seconds. 2 already precompiled.
 ##    Resolving package versions...
-##    Installed WorkerUtilities ──── v1.6.1
-##    Installed Parsers ──────────── v2.8.1
-##    Installed WeakRefStrings ───── v1.4.2
-##    Installed FilePathsBase ────── v0.9.24
 ##    Installed CodecZlib ────────── v0.7.8
+##    Installed Parsers ──────────── v2.8.1
 ##    Installed TranscodingStreams ─ v0.11.3
+##    Installed WeakRefStrings ───── v1.4.2
+##    Installed WorkerUtilities ──── v1.6.1
+##    Installed FilePathsBase ────── v0.9.24
 ##    Installed CSV ──────────────── v0.10.15
 ##     Updating `~/.julia/environments/v1.10/Project.toml`
 ##   [336ed68f] + CSV v0.10.15
