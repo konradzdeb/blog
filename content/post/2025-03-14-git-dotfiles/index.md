@@ -89,6 +89,7 @@ tree ~/.config/nvim -P '*.lua' --prune
 ##         ├── code-runner.lua
 ##         ├── codecompletion.lua
 ##         ├── conform.lua
+##         ├── dial.lua
 ##         ├── gruvbox.lua
 ##         ├── kanagawa.lua
 ##         ├── lsp.lua
@@ -108,7 +109,7 @@ tree ~/.config/nvim -P '*.lua' --prune
 ##         ├── treesitter.lua
 ##         └── wilder.lua
 ## 
-## 4 directories, 27 files
+## 4 directories, 28 files
 ```
 
 ## Practical Example: Adding R support

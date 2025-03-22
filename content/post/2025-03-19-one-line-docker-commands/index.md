@@ -13,41 +13,42 @@ tags:
 ---
 
 
-Building robust data science development environment takes time and it's probably one of those processes that is never fully finished. If you like to squeeze 100% from your tools you will be keen to tweak, introduce efficiencies and add gadgets to make coding and development experience more productive, pleasant and enjoyable. Starting with basics, such as configuring your Python development space to efficiency handle different versions of the language and packages you may progress to expanding your text editors with plugins to facilitate linting, code suggest, conveniently manipulate execution of unit tests and CI/CD workflow. The one thing that is constant is that set-up is constantly evolving. I have recently switched from vin to nvim and re-created a lot of my previous vim and VimL based configuration in Lua. Before that I didn't have much need to write Lua code. 
+Setting up a robust data science development environment takes time, and it's a process that’s rarely ever finished. If you’re the type who likes to get the most out of your tools, you’ll likely enjoy tweaking, optimising, and layering your workspace with productivity enhancements. That might mean refining your Python setup to easily manage multiple language versions and dependencies, or expanding your text editor with plugins for linting, code suggestions, unit test execution, and CI/CD integration.
 
-If you are experimenting and learning new things, you may be interested in convenient way of managing installation and removal of various system components. In general, I use Homebrew to manage the installation and removal of system componenets and that works surprisingly well. Howeber, I have also came across scenarios where installing components through homebrew fills like unnecessary step. 
+The only constant is that your environment is always evolving. I recently moved from `vim` to `nvim` and rewrote much of my VimL-based configuration in Lua—something I’d never touched before. If you’re experimenting, learning, and building in parallel, having a clean way to isolate and test changes becomes invaluable.
 
-# scenarios
+## Managing tools without installing them
 
-# Solution
+In most cases, I use Homebrew to manage system components on my machine, and it works well. But there are situations where installing something locally feels excessive—especially if I only need it temporarily.
+
+## Solution
 
 Examples provided below work on the same basis, the code and commands are executed within disposable Docker containers. The process of needing to install software on local machine is completely removed from the system
 
-# Example
+## Example: Python AST across versions
 
-Let's say that you have a simple Python script, that makes use fo the leverages the [AST](https://docs.python.org/3/library/ast.html#module-ast) module. The AST module stands for Abstract Syntax Tree and is usually used in scenarios where you may want to manipulate Python code programmatically. A common scenario may be working a linter or a solution that receives Python script or Python arguments. More advanced use case of AST could involve metaprogramming where we may be willing to generate Python code programmatically.
+Suppose you’re working with a simple Python script using the `ast` module, which allows you to parse and analyse Python code as an abstract syntax tree. This is commonly used in tools like linters or code formatters, but also in more advanced metaprogramming scenarios.
 
-Let's say that script we are working with has the following structure. The script doesn't do much, in effect it checks if the value `42` is interpreted as `ast.Num`. When you are dealing with Python syntax programmatically, you may be willing to break down expressions and see how different elements are vbeing interpreted. 
+Here’s a minimal script that parses the assignment `x = 42` and checks whether the literal `42` is represented using `ast.Num`.
 
+Intuitively, we might expect this to return `True`—after all, `42` is a number, and `ast.Num` seems appropriate. But that's not always the case.
+
+Now we run it across various Python versions using Docker.
 
 
 ``` python
 import ast
-node = ast.parse("x = 42")
-print(isinstance(node.body[0].value, ast.Num))
-```
-
-```
-## True
+print(type(ast.parse("x = 42").body[0].value) is ast.Num)
 ```
 
 
 
-I will store this script as `/tmp/check_ast.py`. Now to the key question. Let's say that you want to share your work quickly; a proper commons sense approach would be to define minimum requirements where you script is expected to work. What if for whatever reason you are not in position to require and users to confirm to minimum requirements, think of legacy system, or you want for you boss to have a look at something and you want minimum friction possible. Will this work in Python version x?
+
+I will store this script as `/tmp/check_ast.py`. Using the docker one liner, I will execute the script in multiple version of Python.
 
 
 ``` bash
-for version in 2.7 3.5 3.6 3.7 3.8.0 3.9 3.10 3.11; do
+for version in 2.7 3.5 3.6 3.7 3.8 3.9 3.10 3.11 3.12 3.13; do
     echo "Python ${version}:"
     docker run --rm -v /tmp/check_ast.py:/check_ast.py python:$version python /check_ast.py
 done
@@ -62,24 +63,49 @@ done
 ## True
 ## Python 3.7:
 ## True
-## Python 3.8.0:
-## True
+## Python 3.8:
+## False
 ## Python 3.9:
-## True
+## False
 ## Python 3.10:
-## True
+## False
 ## Python 3.11:
-## True
+## False
+## Python 3.12:
+## False
+## /check_ast.py:2: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+##   print(type(ast.parse("x = 42").body[0].value) is ast.Num)
+## Python 3.13:
+## False
+## /check_ast.py:2: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+##   print(type(ast.parse("x = 42").body[0].value) is ast.Num)
 ```
 
-## Other interesting cases
+You’ll notice the results vary. Some versions return `True`, others return `False`. This reflects the evolution of the `ast` module. Although `ast.Constant` was introduced in Python 3.8 to unify literals like numbers, strings, and constants under one node type, `ast.Num`, `ast.Str`, and related nodes were not immediately retired. In fact, `ast.parse()` continued to return `ast.Num` in Python 3.8, 3.9, and even 3.10.0, to preserve compatibility.
 
-In R's `tidyverse` ecosystem offers very pleasant way of previewing data. Let's say that you are not R user but would like to see how this works
+As a result, `isinstance(..., ast.Num)` still returned `True` in those versions. The complete shift to `ast.Constant` occurred in Python 3.11, where `ast.parse()` finally stopped emitting the older nodes. This is a good example of how language-level changes may be rolled out gradually, and why it’s useful to test behaviour directly—rather than rely on changelog summaries alone.
+
+
+## Other interesting uses
+
+For quick evaluation it is possible to direcltly jump into ipython console. I find this partilculary useful if I want to check running some code interactively in a specific version of Python.
 
 
 ``` bash
-docker run --rm r-base R -e "install.packages('dplyr', verbose=FALSE); dplyr::glimpse(mtcars)"
+docker run -it --rm python:3.8 bash -c "pip install ipython && ipython"
 ```
+
+The other trick that I find useful in those scenarios is to install packages while in Python interactive session by calling `subprocess`, this can be easily achieved via running `subprocess` command pointing to `pip` as shown below:
+
+
+``` python
+import subprocess
+import sys
+subprocess.run([sys.executable, "-m", "pip", "install", "pandas"], check=True)
+import pandas as pd
+print(pd.__version__)
+```
+One line docker commands can be also usefully used to handle external data. I was recently hearing alot about how pleasant is to work with Julia. Let's say I would like to condduct a simple test and see how efficient is Julia in handling CSV files and berforming basic operations. Using the file created below.
 
 
 ``` bash
@@ -91,39 +117,40 @@ David,1990-12-11,175\n
 Eve,1985-03-05,300\n" > /tmp/sample_data.csv
 ```
 
-### Julia
+I would be able to simply load it and analyse the outputs.
 
 
 ``` bash
-docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia -e 'import Pkg; Pkg.add("DataFrames"); Pkg.add("CSV"); using CSV, DataFrames; df = CSV.read("/data.csv", DataFrame); println(df)'
+docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia \
+-e 'import Pkg; Pkg.add("DataFrames"); Pkg.add("CSV"); using CSV, DataFrames; df = CSV.read("/data.csv", DataFrame); println(df)'
 ```
 
 ```
 ##   Installing known registries into `~/.julia`
 ##     Updating registry at `~/.julia/registries/General.toml`
 ##    Resolving package versions...
-##    Installed DataAPI ───────────────────── v1.16.0
 ##    Installed Crayons ───────────────────── v4.1.1
-##    Installed SentinelArrays ────────────── v1.4.8
 ##    Installed PooledArrays ──────────────── v1.4.3
-##    Installed Tables ────────────────────── v1.12.0
+##    Installed SentinelArrays ────────────── v1.4.8
 ##    Installed TableTraits ───────────────── v1.0.1
+##    Installed Tables ────────────────────── v1.12.0
+##    Installed DataAPI ───────────────────── v1.16.0
 ##    Installed Preferences ───────────────── v1.4.3
 ##    Installed PrettyTables ──────────────── v2.4.0
 ##    Installed DataValueInterfaces ───────── v1.0.0
 ##    Installed IteratorInterfaceExtensions ─ v1.0.0
 ##    Installed InvertedIndices ───────────── v1.3.1
-##    Installed OrderedCollections ────────── v1.8.0
 ##    Installed LaTeXStrings ──────────────── v1.4.0
 ##    Installed InlineStrings ─────────────── v1.4.3
+##    Installed OrderedCollections ────────── v1.8.0
 ##    Installed PrecompileTools ───────────── v1.2.1
 ##    Installed DataFrames ────────────────── v1.7.0
 ##    Installed Reexport ──────────────────── v1.2.2
 ##    Installed Missings ──────────────────── v1.2.0
 ##    Installed Compat ────────────────────── v4.16.0
 ##    Installed StringManipulation ────────── v0.4.1
-##    Installed SortingAlgorithms ─────────── v1.2.1
 ##    Installed DataStructures ────────────── v0.18.22
+##    Installed SortingAlgorithms ─────────── v1.2.1
 ##     Updating `~/.julia/environments/v1.10/Project.toml`
 ##   [a93c6f00] + DataFrames v1.7.0
 ##     Updating `~/.julia/environments/v1.10/Manifest.toml`
@@ -172,11 +199,11 @@ docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia -e 'import Pkg; Pk
 ##   [8e850b90] + libblastrampoline_jll v5.8.0+1
 ## Precompiling project...
 ##   ✓ IteratorInterfaceExtensions
-##   ✓ Reexport
-##   ✓ LaTeXStrings
 ##   ✓ DataValueInterfaces
-##   ✓ InvertedIndices
+##   ✓ Reexport
 ##   ✓ DataAPI
+##   ✓ LaTeXStrings
+##   ✓ InvertedIndices
 ##   ✓ CompilerSupportLibraries_jll
 ##   ✓ Compat
 ##   ✓ OrderedCollections
@@ -196,13 +223,13 @@ docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia -e 'import Pkg; Pk
 ##   ✓ SortingAlgorithms
 ##   ✓ PrettyTables
 ##   ✓ DataFrames
-##   25 dependencies successfully precompiled in 42 seconds. 2 already precompiled.
+##   25 dependencies successfully precompiled in 43 seconds. 2 already precompiled.
 ##    Resolving package versions...
-##    Installed CodecZlib ────────── v0.7.8
+##    Installed WorkerUtilities ──── v1.6.1
 ##    Installed Parsers ──────────── v2.8.1
 ##    Installed TranscodingStreams ─ v0.11.3
+##    Installed CodecZlib ────────── v0.7.8
 ##    Installed WeakRefStrings ───── v1.4.2
-##    Installed WorkerUtilities ──── v1.6.1
 ##    Installed FilePathsBase ────── v0.9.24
 ##    Installed CSV ──────────────── v0.10.15
 ##     Updating `~/.julia/environments/v1.10/Project.toml`
@@ -241,4 +268,4 @@ docker run --rm -v /tmp/sample_data.csv:/data.csv julia julia -e 'import Pkg; Pk
 
 # Summary
 
-Docker is extremely efficient in working as a solution to run one line commands
+One-line Docker commands are a lightweight, repeatable, and isolated way to test and explore code across environments—without cluttering your system. They’re particularly useful when comparing behaviour across language versions or running quick experiments in tools you don’t use daily.
