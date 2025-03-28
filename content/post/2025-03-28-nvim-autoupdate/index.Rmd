@@ -1,0 +1,62 @@
+---
+title: Automatically Refreshing NVim plugins
+author: Konrad Zdeb
+date: '2025-03-28'
+slug: nvim-autoupdate
+categories:
+  - how-to
+  - dev
+tags:
+  - lua
+  - vim
+  - nvim
+---
+
+One major benefits of using modern text editors like NVim/vim or Emacs is extensive support for rich plugin ecosystem. After using Vim for years I have switched to NVim and I have been particularly impresses by NVim's plugin ecosystem. I have found, [Lazy](https://github.com/folke/lazy.nvim) a plugin manager available for NVim > 0.8, particularly pleasant to use. Ability to automatically discover new plugin and manage basic plugin operations through convenient interface and commands was something that [Lazy](https://github.com/folke/lazy.nvim) does particularly well.
+
+![Lazy Plugin in Actions](images/lazy_image.png)
+
+## Plugin Refresh
+
+As my plugin ecosystem grew, Lazy would frequently return a message about certain plugins requiring update. After a while, whenever starting NVim I would progress to update the plugins. Naturally, I wanted to automated this process. Fortunately Lacy permits for [execution of custom commands](https://www.lazyvim.org/configuration/general). Autocommands are loadaed on `VeryLazy` event but Lazy's extensive configuraton facilitates adding and removing autcommands using multiple triggers. 
+
+Knowing that, the solution was simple, I need to trigger Lazy update process to desired events. NVim events are comprehensively [documented](https://neovim.io/doc/user/autocmd.html) but someone called [dtr2300](https://gist.github.com/dtr2300) provided very useful [gist](https://gist.github.com/dtr2300/2f867c2b6c051e946ef23f92bd9d1180) summarising key events. Following the guidelines I've triggered plugin update action to scenario where to NVim's `FocusLost` event. In this scenario NVim would check and install plugin updates when I switch to another application. I find this particularly convenient. 
+
+```{lua nvim_autoupdate, echo=TRUE, eval=FALSE}
+
+local function augroup(name)
+  return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
+end
+
+vim.api.nvim_create_autocmd("FocusLost", {
+  group = augroup("autoupdate"),
+  callback = function()
+    if require("lazy.status").has_updates() then
+      vim.notify("🔄 Updating plugins...", vim.log.levels.INFO)
+      require("lazy").update({
+        show = false,
+        -- This callback runs after update is done
+        concurrency = nil,
+        lockfile = nil,
+        wait = true,
+        plugins = nil,
+        pin = nil,
+        exclude = nil,
+        callback = function(updated)
+          if updated and #updated > 0 then
+            vim.notify("✅ Lazy updated " .. #updated .. " plugin(s).", 
+                vim.log.levels.INFO)
+          else
+            vim.notify("✅ Lazy check complete. No plugins updated.", 
+                vim.log.levels.INFO)
+          end
+        end,
+      })
+    end
+  end,
+})
+```
+
+The configuration lives in `$XDG_CONFIG_HOME/nvim/lua/config/autocmds.lua` [^1]. Depe
+
+[^1]: If unset the `$XDG_CONFIG_HOME` points to `$HOME/.config`.
