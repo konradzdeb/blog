@@ -80,15 +80,16 @@ tree ~/.config/nvim -P '*.lua' --prune
 ## ├── init.lua
 ## └── lua
 ##     ├── config
+##     │   ├── autocmds.lua
 ##     │   └── lazy.lua
 ##     └── plugins
-##         ├── R.lua
 ##         ├── autolist.lua
 ##         ├── autopairs.lua
 ##         ├── autosession.lua
 ##         ├── code-runner.lua
 ##         ├── codecompletion.lua
 ##         ├── conform.lua
+##         ├── dial.lua
 ##         ├── gruvbox.lua
 ##         ├── kanagawa.lua
 ##         ├── lsp.lua
@@ -100,6 +101,7 @@ tree ~/.config/nvim -P '*.lua' --prune
 ##         ├── nvim-ts-autotag.lua
 ##         ├── nvimlint.lua
 ##         ├── orgmode.lua
+##         ├── R.lua
 ##         ├── snippets.lua
 ##         ├── startup.lua
 ##         ├── telescope-undo.lua
@@ -108,7 +110,7 @@ tree ~/.config/nvim -P '*.lua' --prune
 ##         ├── treesitter.lua
 ##         └── wilder.lua
 ## 
-## 4 directories, 27 files
+## 4 directories, 29 files
 ```
 
 ## Practical Example: Adding R support
