@@ -12,18 +12,25 @@ tags:
   - nvim
 ---
 
-One major benefits of using modern text editors like NVim/vim or Emacs is extensive support for rich plugin ecosystem. After using Vim for years I have switched to NVim and I have been particularly impresses by NVim's plugin ecosystem. I have found, [Lazy](https://github.com/folke/lazy.nvim) a plugin manager available for NVim > 0.8, particularly pleasant to use. Ability to automatically discover new plugin and manage basic plugin operations through convenient interface and commands was something that [Lazy](https://github.com/folke/lazy.nvim) does particularly well.
+
+
+One of the key benefits of modern editors like NVim, Vim, or Emacs is the rich plugin ecosystem. After years with Vim, I switched to NVim and was immediately impressed by its plugin landscape. The [Lazy](https://github.com/folke/lazy.nvim) plugin manager—available for NVim > 0.8—quickly became my favourite. [Lazy](https://github.com/folke/lazy.nvim) simplifies plugin discovery and management. It offers an intuitive interface and powerful commands that make it easy to add, remove, or update plugins.
 
 ![Lazy Plugin in Actions](images/lazy_image.png)
 
-## Plugin Refresh
+## Auto-Updating Plugins
 
-As my plugin ecosystem grew, Lazy would frequently return a message about certain plugins requiring update. After a while, whenever starting NVim I would progress to update the plugins. Naturally, I wanted to automated this process. Fortunately Lacy permits for [execution of custom commands](https://www.lazyvim.org/configuration/general). Autocommands are loadaed on `VeryLazy` event but Lazy's extensive configuraton facilitates adding and removing autcommands using multiple triggers. 
 
-Knowing that, the solution was simple, I need to trigger Lazy update process to desired events. NVim events are comprehensively [documented](https://neovim.io/doc/user/autocmd.html) but someone called [dtr2300](https://gist.github.com/dtr2300) provided very useful [gist](https://gist.github.com/dtr2300/2f867c2b6c051e946ef23f92bd9d1180) summarising key events. Following the guidelines I've triggered plugin update action to scenario where to NVim's `FocusLost` event. In this scenario NVim would check and install plugin updates when I switch to another application. I find this particularly convenient. 
+As I added more plugins, Lazy frequently prompted me to update them. I found myself running updates manually almost every session. Naturally, I wanted to automate this.
+
+Lazy supports [execution of custom commands](https://www.lazyvim.org/configuration/general). Its configuration allows binding actions to various events. One useful event is VeryLazy, but more generally, NVim's autocommand system provides a robust mechanism for triggering code on specific actions. Inspired by a [gist by dtr2300](https://gist.github.com/dtr2300/2f867c2b6c051e946ef23f92bd9d1180), I chose to trigger plugin updates on the [`FocusLost` event](https://neovim.io/doc/user/autocmd.html). This means NVim will automatically check for updates whenever I switch to another window—an ideal, non-disruptive moment.
+
+Here's the Lua code I use:
 
 
 ``` lua
+
+-- File: $XDG_CONFIG_HOME/nvim/lua/config/autocmds.lua
 
 local function augroup(name)
   return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
@@ -57,6 +64,8 @@ vim.api.nvim_create_autocmd("FocusLost", {
   end,
 })
 ```
+
+Note that some plugins may require a manual reload after updating. Lazy.nvim now supports an experimental `:Lazy reload plugin_name` command, but this is not automatically triggered after updates. Reloading works best with plugins that implement a proper deactivate function or are explicitly marked as safe to reload. For others, re-running config functions can cause issues, so use this feature cautiously and check each plugin’s documentation or behavior before relying on it.
 
 The configuration lives in `$XDG_CONFIG_HOME/nvim/lua/config/autocmds.lua` [^1]. Depe
 
