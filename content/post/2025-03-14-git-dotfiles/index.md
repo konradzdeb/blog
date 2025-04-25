@@ -83,7 +83,6 @@ tree ~/.config/nvim -P '*.lua' --prune
 ##     │   ├── autocmds.lua
 ##     │   └── lazy.lua
 ##     └── plugins
-##         ├── R.lua
 ##         ├── autolist.lua
 ##         ├── autopairs.lua
 ##         ├── autosession.lua
@@ -102,6 +101,7 @@ tree ~/.config/nvim -P '*.lua' --prune
 ##         ├── nvim-ts-autotag.lua
 ##         ├── nvimlint.lua
 ##         ├── orgmode.lua
+##         ├── R.lua
 ##         ├── snippets.lua
 ##         ├── startup.lua
 ##         ├── telescope-undo.lua
@@ -119,7 +119,7 @@ Suppose I want to add R support to Neovim using the [R.nvim](https://github.com/
 This plugin enables running R code directly from Neovim, managing code completion, and improving workflows.
 
 
-### Modyfying multiple files 
+### Modifying multiple files 
 
 Owing to the structure of my NVim configuration, in order to enable [R.nvim](https://github.com/R-nvim/R.nvim) support I would need to edit the following files:
 * `R.nvim` - in this file I will keep the key plugin configuration
