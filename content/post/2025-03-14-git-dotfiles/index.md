@@ -40,7 +40,7 @@ config commit -as -m "Initial Emacs config"
 
 The config command is in effect and alias for a `git` command with defined `--work-tree` and `--git-dir` as shown. In order for this to work we need to complete a few steps:
 1. Create directory where to store the dot files in my case `mkdir -v $HOME/.dotfiles`
-2. As a next step we will create a bare git repository. Bare repository does not contain working tree (only contains the version contol data that is the `.git` folder)
+2. As a next step we will create a bare git repository. Bare repository does not contain working tree (only contains the version control data that is the `.git` folder)
    
    ``` bash
    git init --bare $HOME/.dotfiles/
@@ -59,14 +59,14 @@ The config command is in effect and alias for a `git` command with defined `--wo
     config config --local status.showUntrackedFiles no
    ```
 
-If this solution is working for you, you can add the line with the `alias` command to your `~/.bashrc` (or other depenidng on the shell) to make it permanently available.
+If this solution is working for you, you can add the line with the `alias` command to your `~/.bashrc` (or other depending on the shell) to make it permanently available.
 
 # Practical example
 
 Git-based version control for dotfiles allows easy tracking and experimentation with configurations.
 Git’s branches simplify testing complex setups without risking the main configuration.
 
-Consider my Neovim (nvim) setup.
+Consider my Neovim (NVim) setup.
 It’s structured into multiple Lua configuration files managed by the Lazy plugin.
 The current structure looks like this:
 
@@ -80,9 +80,9 @@ tree ~/.config/nvim -P '*.lua' --prune
 ## ├── init.lua
 ## └── lua
 ##     ├── config
+##     │   ├── autocmds.lua
 ##     │   └── lazy.lua
 ##     └── plugins
-##         ├── R.lua
 ##         ├── autolist.lua
 ##         ├── autopairs.lua
 ##         ├── autosession.lua
@@ -101,6 +101,7 @@ tree ~/.config/nvim -P '*.lua' --prune
 ##         ├── nvim-ts-autotag.lua
 ##         ├── nvimlint.lua
 ##         ├── orgmode.lua
+##         ├── R.lua
 ##         ├── snippets.lua
 ##         ├── startup.lua
 ##         ├── telescope-undo.lua
@@ -109,7 +110,7 @@ tree ~/.config/nvim -P '*.lua' --prune
 ##         ├── treesitter.lua
 ##         └── wilder.lua
 ## 
-## 4 directories, 28 files
+## 4 directories, 29 files
 ```
 
 ## Practical Example: Adding R support
@@ -118,7 +119,7 @@ Suppose I want to add R support to Neovim using the [R.nvim](https://github.com/
 This plugin enables running R code directly from Neovim, managing code completion, and improving workflows.
 
 
-### Modyfying multiple files 
+### Modifying multiple files 
 
 Owing to the structure of my NVim configuration, in order to enable [R.nvim](https://github.com/R-nvim/R.nvim) support I would need to edit the following files:
 * `R.nvim` - in this file I will keep the key plugin configuration
@@ -144,7 +145,7 @@ Before starting the new setup, I create a separate branch using my aliased Git c
 config switch -c configs/nvim-r-test
 ```
 
-I would then work throuh the configuration changes, test NVim and play with any settings desired. Depending on what I decide to do I would commit files and merge to the master branch or abandon the work (possibly commiting changes to the branch) and switch to the master branch.
+I would then work through the configuration changes, test NVim and play with any settings desired. Depending on what I decide to do I would commit files and merge to the master branch or abandon the work (possibly committing changes to the branch) and switch to the master branch.
 
 # Alternatives
 
