@@ -28,16 +28,19 @@ writeLines(code_lines, "temp_fetched_code.py")
 code_block <- paste0("```r\n", paste(code_lines, collapse = "\n"), "\n```")
 knitr::asis_output(code_block)
 ```
-```{r set_python_env}
 
+```{r set_python_env}
+reticulate::virtualenv_create(
+    envname = "swiftml",
+    packages = c("scikit-learn", "numpy"),
+    force = TRUE
+)
+reticulate::use_virtualenv("swiftml", required = TRUE)
 ```
 
 ```{python run_python_code, echo=FALSE}
-reticulate::virtualenv_create(
-    envname = "swiftml",
-    packages = c("sklearn", "numpy"),
-    force = TRUE
-)
-# reticulate::use_virtualenv("swift-ml-art", required = TRUE)
-# exec(open("temp_fetched_code.py").read())
+ # exec(open("temp_fetched_code.py").read())
+ with open('filename.txt', 'r') as file:
+    content = file.read()
+    print(content)
 ```
