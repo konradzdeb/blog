@@ -1,5 +1,5 @@
 ---
-title: Using Python Model in Swift
+title: Using Python Models in DIY Mobile Applications
 author: Konrad Zdeb
 date: '2025-05-02'
 slug: python-modesl-app
@@ -15,6 +15,29 @@ Arrival of CoreML Framework in June 2017 open up an exciting possibility of prod
 1. Leveragining Apple's Create ML App or Create ML framework (for programmatic model creation)
 2. Leveraging `coremltools` Python package and preparing model elsewhere to be imported into the production
 
-Create ML App offers fairly limited interface for model development tasks
 
 # Python's Model
+
+For the purpose of demonstration we will create basic modelling solution in Python 
+
+```{r include_github_code, echo=FALSE}
+# Raw GitHub file URL (make sure it's the *raw* version)
+url <- "https://raw.githubusercontent.com/konradzdeb/SwiftPythonML/refs/heads/master/PythonMLModel/model_train.py"
+code_lines <- readLines(url)
+writeLines(code_lines, "temp_fetched_code.py")
+code_block <- paste0("```r\n", paste(code_lines, collapse = "\n"), "\n```")
+knitr::asis_output(code_block)
+```
+```{r set_python_env}
+
+```
+
+```{python run_python_code, echo=FALSE}
+reticulate::virtualenv_create(
+    envname = "swiftml",
+    packages = c("sklearn", "numpy"),
+    force = TRUE
+)
+# reticulate::use_virtualenv("swift-ml-art", required = TRUE)
+# exec(open("temp_fetched_code.py").read())
+```
