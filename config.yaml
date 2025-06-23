@@ -1,6 +1,7 @@
 theme: "hugo-PaperMod"
 baseURL: https://thefinalartefact.blog/
-paginate: 5
+pagination:
+  paginate: 5
 languageCode: en-gb
 title: The Final Artefact
 ignoreFiles:
