@@ -1,27 +1,57 @@
-"""Example model training solution."""
+"""Train a classifier on Fashion-MNIST and print performance summary."""
 
-from sklearn.datasets import load_iris
+import joblib
+
+import numpy as np
+
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from yellowbrick.classifier import ClassificationReport
+from torch.utils.data import Dataset
+from torchvision import datasets, transforms
 
-# Load data
-iris = load_iris()
-X, y = iris.data, iris.target
-
-# Load data
-X, y = load_iris(return_X_y=True)
-
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+# Load Fashion-MNIST
+transform = transforms.ToTensor()
+train_set = datasets.FashionMNIST(
+    root="./data", train=True, download=True, transform=transform,
+)
+test_set = datasets.FashionMNIST(
+    root="./data", train=False, download=True, transform=transform,
 )
 
-# Train model
-model = RandomForestClassifier(random_state=42)
+
+def dataset_to_numpy(dataset: Dataset) -> tuple[np.ndarray, np.ndarray]:
+    """Convert dataset to numpy arrays.
+
+    Args:
+        dataset (Dataset): The dataset to convert.
+
+    Returns:
+        tuple: A tuple containing the features and labels as numpy arrays.
+
+    """
+    x = dataset.data.numpy().reshape(len(dataset), -1)
+    y = dataset.targets.numpy()
+    return x, y
+
+
+X_train_full, y_train_full = dataset_to_numpy(train_set)
+X_test, y_test = dataset_to_numpy(test_set)
+
+# Train/val split
+X_train, X_val, y_train, y_val = train_test_split(
+    X_train_full, y_train_full, test_size=0.2, random_state=42, stratify=y_train_full
+)
+
+# Train classifier
+model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
 model.fit(X_train, y_train)
 
-# Visualise model results
-viz = ClassificationReport(model, support=True, classes=iris.target_names)
-viz.score(X_test, y_test)
-viz.show()
+# Predict and evaluate
+y_pred = model.predict(X_val)
+
+print(f"Model Accuracy: {accuracy_score(y_val, y_pred):.3f}")
+
+# Export model
+joblib.dump(model, "fashion_mnist_rf_model.joblib")
+print("Model exported to: fashion_mnist_rf_model.joblib")

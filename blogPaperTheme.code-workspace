@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../Swift-Xcode/SwiftPythonML/PythonMLModel"
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"asis",
+			"coremltools",
+			"envname",
+			"knitr",
+			"konradzdeb",
+			"mlmodel",
+			"MNIST",
+			"numpy",
+			"pred",
+			"scikit",
+			"swiftml",
+			"torchvision",
+			"virtualenv"
+		]
+	}
+}

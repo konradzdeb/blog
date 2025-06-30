@@ -2,7 +2,7 @@
 title: Using Python ML Models in DIY Mobile Applications
 author: Konrad Zdeb
 date: '2025-05-02'
-slug: python-modesl-app
+slug: python-models-ape
 categories:
   - how-to
 tags:
@@ -11,50 +11,104 @@ tags:
   - Python
 ---
 
-Arrival of CoreML Framework in June 2017 open up an exciting possibility of productionings models on Apple devices. This is particulary attractive in the context of deploying ML-reliant applications on mobile devices, offering access to a significant market. In order to introduce a ML solution into a Swift-based sofwtare product `.mlmodel` file would need to be produced. The two common mechanisms facilitating that process are:
-1. Leveragining Apple's Create ML App or Create ML framework (for programmatic model creation)
+
+
+Arrival of CoreML Framework in June 2017 open up an exciting possibility of productionings models on Apple devices. This is particularly attractive in the context of deploying ML-reliant applications on mobile devices, offering access to a significant market. In order to introduce a ML solution into a Swift-based software product `.mlmodel` file would need to be produced. The two common mechanisms facilitating that process are:
+1. Leveraging Apple's Create ML App or Create ML framework (for programmatic model creation)
 2. Leveraging `coremltools` Python package and preparing model elsewhere to be imported into the production
 
 
 # Python's Model
 
-For the purpose of demonstration we will create basic modelling solution in Python 
+For the purpose of demonstration we will create basic modelling solution in Python. 
 
-```r
-"""Example model training solution."""
 
-from sklearn.datasets import load_iris
+``` python
+import numpy as np
+
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from yellowbrick.classifier import ClassificationReport
+from torch.utils.data import Dataset
+from torchvision import datasets, transforms
 
-# Load data
-iris = load_iris()
-X, y = iris.data, iris.target
+import coremltools as ct    
 
-# Load data
-X, y = load_iris(return_X_y=True)
-
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+# Load Fashion-MNIST
+transform = transforms.ToTensor()
+train_set = datasets.FashionMNIST(
+    root="./data", train=True, download=True, transform=transform,
+)
+test_set = datasets.FashionMNIST(
+    root="./data", train=False, download=True, transform=transform,
 )
 
-# Train model
-model = RandomForestClassifier(random_state=42)
-model.fit(X_train, y_train)
 
-# Visualise model results
-viz = ClassificationReport(model, support=True, classes=iris.target_names)
-viz.score(X_test, y_test)
-viz.show()
+def dataset_to_numpy(dataset: Dataset) -> tuple[np.ndarray, np.ndarray]:
+    """Convert dataset to numpy arrays.
+
+    Args:
+        dataset (Dataset): The dataset to convert.
+
+    Returns:
+        tuple: A tuple containing the features and labels as numpy arrays.
+
+    """
+    x = dataset.data.numpy().reshape(len(dataset), -1)
+    y = dataset.targets.numpy()
+    return x, y
+
+
+X_train_full, y_train_full = dataset_to_numpy(train_set)
+X_test, y_test = dataset_to_numpy(test_set)
+
+# Train/val split
+X_train, X_val, y_train, y_val = train_test_split(
+    X_train_full, y_train_full, test_size=0.2, random_state=42, 
+    stratify=y_train_full)
+
+# Train classifier
+model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+model.fit(X_train, y_train)
+```
+Following execution of that code we get an unsophisticated model performing classification on the MNIST dataset. 
+| Label | Precision | Recall | F1-score | Support |
+|-------|-----------|--------|----------|---------|
+| 0 | 0.833 | 0.870 | 0.851 | 1200 |
+| 1 | 0.993 | 0.969 | 0.981 | 1200 |
+| 2 | 0.773 | 0.807 | 0.790 | 1200 |
+| 3 | 0.880 | 0.908 | 0.894 | 1200 |
+| 4 | 0.772 | 0.820 | 0.795 | 1200 |
+| 5 | 0.965 | 0.963 | 0.964 | 1200 |
+| 6 | 0.751 | 0.624 | 0.682 | 1200 |
+| 7 | 0.939 | 0.940 | 0.940 | 1200 |
+| 8 | 0.964 | 0.975 | 0.969 | 1200 |
+| 9 | 0.949 | 0.948 | 0.949 | 1200 |
+| macro avg | 0.882 | 0.883 | 0.881 | 12000 |
+| weighted avg | 0.882 | 0.883 | 0.881 | 12000 |
+
+The key challenge would be brining the model into the  Swift and incorporating the modelling solution in the iOS application. We will export model to the `.mlpackage` format using avilable converters. The conversion is achievable using the Following
+
+
+``` python
+# Define example input shape (784 features for flattened 28x28 images)
+input_features = [(f"pixel_{i}",
+                   ct.models.datatypes.Double()) for i in range(28 * 28)]
+output_feature = "classLabel"
+
+# Convert to Core ML
+coreml_model = ct.converters.sklearn.convert(model, input_features, output_feature)
 ```
 
+The point that desrves most attention relates to how the `input_features` list is being created. This object is critical when converting scikit-learn model to Cofre ML format using `coremltools`. The object defines the structure and type of the data that Core ML model will accept when running in our iOS application. In this case, we are defining a list of input features where each feature corresponds to a pixel in the flattened 28x28 image (Fashion-MNIST images). Each pixel is represented as a double-precision floating-point number. These correspond to the flattened 28×28 grayscale image pixels in the Fashion-MNIST dataset.
 
-Following execution of that code we get an unsophisticated model.
-
-/Users/konrad/.virtualenvs/swiftml/lib/python3.13/site-packages/yellowbrick/classifier/base.py:232: YellowbrickWarning: could not determine class_counts_ from previously fitted classifier
-  warnings.warn(
-<img src="{{< blogdown/postref >}}index_files/figure-html/run_python_code-1.png" width="672" />
-
-The key challenge would be brining the model into the 
+Why this is important?
+When you convert a scikit-learn model to Core ML, the input features must match the expected input shape of the model. If the input features are not defined correctly, the conversion will fail or the resulting Core ML model will not work as intended in your iOS application. In practice, the Core ML model will be dealing with object of this structure:
+```swift
+let inputArray: [String: Double] = [
+    "pixel_0": 0.0,
+    "pixel_1": 0.172,
+    ...
+    "pixel_783": 0.94
+]
+```
