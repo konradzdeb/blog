@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../Swift-Xcode/SwiftPythonML/PythonMLModel"
+		},
+		{
+			"path": "../../Swift-Xcode/SwiftPythonML/MyMLApp"
 		}
 	],
 	"settings": {
