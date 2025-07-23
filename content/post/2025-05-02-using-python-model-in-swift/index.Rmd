@@ -2,7 +2,7 @@
 title: Bring your Python ML model to your iOS App in Three Minutes
 author: Konrad Zdeb
 date: '2025-05-02'
-slug: python-models-ape
+slug: python-models-app
 categories:
   - how-to
 tags:
