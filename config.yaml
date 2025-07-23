@@ -1,5 +1,7 @@
 theme: "hugo-PaperMod"
 baseURL: https://thefinalartefact.blog/
+permalinks:
+  post: "/post/:slug/"
 pagination:
   paginate: 5
 languageCode: en-gb
