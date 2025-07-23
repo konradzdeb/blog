@@ -1,0 +1,134 @@
+---
+title: Version Control your Dotfiles
+author: Konrad Zdeb
+date: '2025-03-14'
+slug: git-dotfiles
+categories:
+  - fun
+  - how-to
+tags:
+  - git
+  - dotfiles
+---
+
+
+
+<div class="float">
+<img src="images/imageGitStatus.png" alt="Using git to version control dotfiles" />
+<div class="figcaption">Using git to version control dotfiles</div>
+</div>
+<div id="what-are-.dotfiles" class="section level1">
+<h1>What are .dotfiles?</h1>
+<p>Dotfiles are hidden configuration files on Unix-like systems.<br />
+Their filenames start with a dot (<code>.</code>), making them hidden by default.<br />
+They store preferences and settings for programs like shells, text editors, and version control systems.</p>
+<p>Many modern Linux applications follow the XDG Base Directory Specification.<br />
+This guideline recommends placing user-specific configuration files in <code>~/.config</code> (or <code>$XDG_CONFIG_HOME</code>).<br />
+Using this standard reduces clutter in home directories and simplifies managing configurations across systems.</p>
+</div>
+<div id="implementation" class="section level1">
+<h1>Implementation</h1>
+<p>To version control dotfiles with Git, we create a special repository setup.<br />
+We’ll alias this setup to a convenient <code>config</code> command, making it easy to run regular Git operations on our configurations.</p>
+<p>For example, version controlling my Emacs configuration (<code>~/.emacs.d/init.el</code>) looks like this:</p>
+<pre class="bash"><code>config switch -c configs/emacs_install
+config add ~/.emacs.d/init.el
+config commit -as -m &quot;Initial Emacs config&quot;</code></pre>
+<div id="the-config-command" class="section level2">
+<h2>The <code>config</code> command</h2>
+<p>The config command is in effect and alias for a <code>git</code> command with defined <code>--work-tree</code> and <code>--git-dir</code> as shown. In order for this to work we need to complete a few steps:
+1. Create directory where to store the dot files in my case <code>mkdir -v $HOME/.dotfiles</code>
+2. As a next step we will create a bare git repository. Bare repository does not contain working tree (only contains the version control data that is the <code>.git</code> folder)</p>
+<pre class="bash"><code>git init --bare $HOME/.dotfiles/</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li><p>Finally we want to enable <code>config</code> command; the command is simply aliased <code>git</code> command with <code>--work-tree</code> and <code>--git-dir</code> parameters and looks as follows:</p>
+<pre class="bash"><code>alias config=&#39;/usr/bin/git --git-dir=$HOME/.doftfiles/ --work-tree=$HOME&#39;</code></pre>
+<p>What happens here:</p>
+<ul>
+<li>The argument <code>--work-tree</code> points to where the actual files reside</li>
+<li>The argument <code>--git-dir</code> specifies where we store the repository data</li>
+</ul></li>
+<li><p>There is one more snag, in the present configuration calling the <code>config</code> command would show a vast number of untracked files. We can solve that problem by using the following git configuration</p>
+<pre class="bash"><code> config config --local status.showUntrackedFiles no</code></pre></li>
+</ol>
+<p>If this solution is working for you, you can add the line with the <code>alias</code> command to your <code>~/.bashrc</code> (or other depending on the shell) to make it permanently available.</p>
+</div>
+</div>
+<div id="practical-example" class="section level1">
+<h1>Practical example</h1>
+<p>Git-based version control for dotfiles allows easy tracking and experimentation with configurations.
+Git’s branches simplify testing complex setups without risking the main configuration.</p>
+<p>Consider my Neovim (NVim) setup.
+It’s structured into multiple Lua configuration files managed by the Lazy plugin.
+The current structure looks like this:</p>
+<pre class="bash"><code>tree ~/.config/nvim -P &#39;*.lua&#39; --prune</code></pre>
+<pre><code>## /Users/konrad/.config/nvim
+## ├── init.lua
+## └── lua
+##     ├── config
+##     │   ├── autocmds.lua
+##     │   └── lazy.lua
+##     └── plugins
+##         ├── autolist.lua
+##         ├── autopairs.lua
+##         ├── autosession.lua
+##         ├── code-runner.lua
+##         ├── codecompletion.lua
+##         ├── conform.lua
+##         ├── dial.lua
+##         ├── gruvbox.lua
+##         ├── kanagawa.lua
+##         ├── lsp.lua
+##         ├── lualine.lua
+##         ├── mason.lua
+##         ├── neogen.lua
+##         ├── neogit.lua
+##         ├── neotree.lua
+##         ├── nvim-ts-autotag.lua
+##         ├── nvimlint.lua
+##         ├── orgmode.lua
+##         ├── R.lua
+##         ├── snippets.lua
+##         ├── startup.lua
+##         ├── telescope-undo.lua
+##         ├── telescope.lua
+##         ├── templates.lua
+##         ├── treesitter.lua
+##         └── wilder.lua
+## 
+## 4 directories, 29 files</code></pre>
+<div id="practical-example-adding-r-support" class="section level2">
+<h2>Practical Example: Adding R support</h2>
+<p>Suppose I want to add R support to Neovim using the <a href="https://github.com/R-nvim/R.nvim">R.nvim</a> plugin.<br />
+This plugin enables running R code directly from Neovim, managing code completion, and improving workflows.</p>
+<div id="modifying-multiple-files" class="section level3">
+<h3>Modifying multiple files</h3>
+<p>Owing to the structure of my NVim configuration, in order to enable <a href="https://github.com/R-nvim/R.nvim">R.nvim</a> support I would need to edit the following files:
+* <code>R.nvim</code> - in this file I will keep the key plugin configuration
+* <code>codecompletion.lua</code> - This file stores code completion configuration
+* <code>treesitter.lua</code> - Treesitter, parser generator tool, is required to enable some of the key <a href="https://github.com/R-nvim/R.nvim">R.nvim</a> functionalities</p>
+</div>
+<div id="modifying-multiple-files-1" class="section level3">
+<h3>Modifying multiple files</h3>
+<p>To implement <a href="https://github.com/R-nvim/R.nvim">R.nvim</a>, several files need updates:</p>
+<ul>
+<li><code>R.nvim</code>: core plugin settings</li>
+<li><code>codecompletion.lua</code>: code completion integration</li>
+<li><code>treesitter.lua</code>: required parser configurations for R</li>
+</ul>
+<p>Additionally, adjustments might be needed in <code>init.lua</code> or keymap definitions.<br />
+If I later change my mind and prefer RStudio, reversing these changes manually could be cumbersome.</p>
+<p>However, managing dotfiles with Git makes reverting simple.<br />
+Before starting the new setup, I create a separate branch using my aliased Git command:</p>
+<pre class="bash"><code>config switch -c configs/nvim-r-test</code></pre>
+<p>I would then work through the configuration changes, test NVim and play with any settings desired. Depending on what I decide to do I would commit files and merge to the master branch or abandon the work (possibly committing changes to the branch) and switch to the master branch.</p>
+</div>
+</div>
+</div>
+<div id="alternatives" class="section level1">
+<h1>Alternatives</h1>
+<p>Another approach uses symbolic links (<code>symlinks</code>) to a configuration-only repository.<br />
+However, Git treats symlinks as regular text files unless <code>core.symlinks</code> is explicitly enabled, as explained in <a href="https://stackoverflow.com/q/954560/1655567">this StackOverflow discussion</a>.</p>
+<p>Using hard links is similarly problematic since Git does not store inode numbers.<br />
+Implementing hard links within Git requires third-party tools and has significant limitations, discussed in <a href="https://stackoverflow.com/a/3731139/1655567">this StackOverflow answer</a>.</p>
+</div>

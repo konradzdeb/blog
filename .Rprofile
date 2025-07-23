@@ -10,6 +10,7 @@ if (file.exists("~/.RProfile")) {
 # Now set options to customize the behaviour of blogdown for this project. Below
 # are a few sample options; for more options, see
 # https://bookdown.org/yihui/blogdown/global-options.html
+
 options(
   # to automatically serve the site on RStudio startup, set this option to TRUE
   blogdown.serve_site.startup = FALSE,
@@ -21,4 +22,4 @@ options(
 )
 
 # fix Hugo version
-options(blogdown.hugo.version = "0.128.2")
+options(blogdown.hugo.version = "0.148.1")
