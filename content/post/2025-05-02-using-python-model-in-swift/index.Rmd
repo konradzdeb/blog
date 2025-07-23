@@ -1,5 +1,5 @@
 ---
-title: Bring your Python ML model to your iOS App in Three Minutes
+title: Bring your Python ML Model to iOS App in under Three Minutes
 author: Konrad Zdeb
 date: '2025-07-24'
 slug: python-models-app
