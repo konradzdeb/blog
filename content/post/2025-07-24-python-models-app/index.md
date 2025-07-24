@@ -1,20 +1,21 @@
 ---
-title: Bring your Python ML model to your iOS App in Three Minutes
+title: Bring your Python ML Model to iOS App in under Three Minutes
 author: Konrad Zdeb
-date: '2025-05-02'
-slug: python-models-ape
+date: '2025-07-24'
+slug: python-models-app
 categories:
   - how-to
 tags:
-  - swift
+  - Swift
   - ML
   - Python
 ---
 
 
 
-<img src="images/phonedemo.gif" width="40%" />
 
+
+![Phone Model Demo](images/phonedemo.gif)
 
 Integrating Python-based machine learning models into iOS applications can be challenging, particularly when converting models into a Swift-compatible format. This example will demonstrate a simple image classification task using the Fashion-MNIST dataset and CoreML conversion tools. The goal is to illustrate the effort required to deploy small-to-medium complexity ML models within iOS applications. The demonstration is based on a Convolutional Neural Network (CNN) built with PyTorch, but the concepts apply broadly to other Python-based models as well.
 
@@ -289,6 +290,6 @@ struct ImagePreprocessor {
 # Final Considerations
 I've used a recent version of PyTorch to leverage Metal Performance Shaders (MPS)—Apple’s framework enabling GPU acceleration on Apple Silicon and Intel Macs. Although my chosen PyTorch version wasn't officially tested with Core ML Tools, it functioned without issue. However, for robustness, ensure compatibility between PyTorch and Core ML library versions.
 
-If your use case involves image classification, consider exploring Apple’s Vision Foundation Models. These models are optimized for on-device performance and simplify common image classification tasks significantly.
+If your use case involves image classification, consider exploring Apple’s Vision Foundation Models. These models are optimized for on-device performance and simplify common image classification tasks significantly. Alternatively, if sticking with PyTorch is important, consider using **PyTorch Mobile**. PyTorch Mobile lets you run PyTorch models natively on-device, offering enhanced control with minimal translation between training and inference environments.
 
-Alternatively, if sticking with PyTorch is important, consider using **PyTorch Mobile**. PyTorch Mobile lets you run PyTorch models natively on-device, offering enhanced control with minimal translation between training and inference environments.
+The entire project, including training scripts, conversion logic, and Swift application code, is available through the GitHub repository: [https://github.com/konradzdeb/SwiftPythonML](https://github.com/konradzdeb/SwiftPythonML).
