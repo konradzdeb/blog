@@ -9,6 +9,15 @@ tags:
   - python
 ---
 
+```{r setup, include=FALSE}
+library(reticulate)
+if (!virtualenv_exists("blogpost-env")) {
+  virtualenv_create("blogpost-env")
+  virtualenv_install("blogpost-env", packages = c("numpy"))
+}
+use_virtualenv("blogpost-env", required = TRUE)
+```
+
 # Problem 
 
 Solving challenges on [project Euler](https://projecteuler.net)  or [HackerRank](https://www.hackerrank.com/) is a good past time. For folks working in the wider analaytical / data science field, places like project Euler provide an excellent opportunity to work with academic programming concepts that do not frequently appear in real-life. I was looking at common problem:
