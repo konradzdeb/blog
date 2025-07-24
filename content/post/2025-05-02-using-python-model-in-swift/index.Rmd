@@ -19,7 +19,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, out.width="40%", echo=FALSE}
+
+```{r, out.width="40%", echo=FALSE, fig.align='center'}
 knitr::include_graphics("images/phonedemo.gif")
 ```
 
@@ -88,4 +89,4 @@ If your use case involves image classification, consider exploring Apple’s Vis
 
 Alternatively, if sticking with PyTorch is important, consider using **PyTorch Mobile**. PyTorch Mobile lets you run PyTorch models natively on-device, offering enhanced control with minimal translation between training and inference environments.
 
-Full code, models, and app implementation are available in the repository: [SwiftPythonML](https://github.com/konradzdeb/SwiftPythonML).
+The entire project, including training scripts, conversion logic, and Swift application code, is available through the GitHub repository: [https://github.com/konradzdeb/SwiftPythonML](https://github.com/konradzdeb/SwiftPythonML).
