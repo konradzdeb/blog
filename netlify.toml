@@ -1,14 +1,15 @@
 [build]
-command = "hugo -F -b $DEPLOY_PRIME_URL"
+command = "hugo --gc --minify --baseURL=https://thefinalartefact.blog"
 publish = "public"
 [build.environment]
 HUGO_VERSION = "0.148.1"
 
 [context]
 [context.branch-deploy]
-command = "hugo -F -b $DEPLOY_PRIME_URL"
+command = "hugo --gc --minify"
 [context.deploy-preview]
-command = "hugo -F -b $DEPLOY_PRIME_URL"
+command = "hugo --gc --minify"
 [context.production]
+command = "hugo --gc --minify --baseURL=https://thefinalartefact.blog"
 [context.production.environment]
 HUGO_ENV = "production"
