@@ -47,9 +47,31 @@ golem::create_golem(path = "nomisReports")
 
 Running package with default options gave us the following folder structure:
 
-```{r folder_structure, eval=TRUE, echo=FALSE, comment=""}
-setwd("~/Dev/RProjects/nomisReports/")
-fs::dir_tree()
+```{r folder_structure, eval=FALSE, echo=TRUE, results='asis'}
+.
+├── DESCRIPTION
+├── dev
+│   ├── 01_start.R
+│   ├── 02_dev.R
+│   ├── 03_deploy.R
+│   └── run_dev.R
+├── inst
+│   ├── app
+│   │   └── www
+│   │       └── favicon.ico
+│   └── golem-config.yml
+├── man
+│   └── run_app.Rd
+├── NAMESPACE
+├── nomisReports.Rproj
+├── R
+│   ├── app_config.R
+│   ├── app_server.R
+│   ├── app_ui.R
+│   └── run_app.R
+└── sessionInfoLog
+
+7 directories, 15 files
 ```
 
 The structure corresponds to what we would expect to find in a traditional package development. Thee are number of files specific to golem, which are explained later.

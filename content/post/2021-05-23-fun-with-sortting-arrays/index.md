@@ -9,6 +9,8 @@ tags:
   - python
 ---
 
+
+
 # Problem 
 
 Solving challenges on [project Euler](https://projecteuler.net)  or [HackerRank](https://www.hackerrank.com/) is a good past time. For folks working in the wider analaytical / data science field, places like project Euler provide an excellent opportunity to work with academic programming concepts that do not frequently appear in real-life. I was looking at common problem:

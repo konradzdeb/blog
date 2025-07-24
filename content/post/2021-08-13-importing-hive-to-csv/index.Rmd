@@ -12,6 +12,13 @@ tags:
   - R
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  cache = TRUE,
+  cache.path = file.path(tempdir(), "knitr-cache/")
+)
+```
+
 # Background
 
 Handling Hive/CSV interaction is a common reality of many analytical and data environments. The question on exporting data from Hive to CSV and other formats is frequently raised on online forums with answers frequently suggesting making use of [`sed`](https://en.wikipedia.org/wiki/Sed) that combined with nifty regular expressions pipes Hive output into a flat CSV files as an exporting solution. Import of large amounts of data is best handled by suitable tools like [Apache Flume](https://flume.apache.org). That is fine for simpler tables but may prove problematic for tables with a large amount of unstructured text. Frequently analysts and data scientists are faced with a challenge with storing data Hive on a irregular semi-regular basis. For instance, a job may produce new forecasting scenarios that we may want to make available through a Hive tables. 
