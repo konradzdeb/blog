@@ -75,4 +75,9 @@ EXPOSE 4321
 # Enable citeproc support
 RUN echo 'options(rmarkdown.pandoc.args = c("--citeproc"))' >> /usr/local/lib/R/etc/Rprofile.site
 
+# Facilitate new post creation
+RUN Rscript -e "install.packages('argparse')"
+COPY new_post.R /usr/local/bin/new_post.R
+RUN chmod +x /usr/local/bin/new_post.R
+
 CMD ["R"]

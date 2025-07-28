@@ -223,7 +223,7 @@ class ModelViewModel: ObservableObject {
 } 
 ```
 
-## Image Preoprocessing
+## Image Pre-processing
 The Swift `ImagePreprocessor` struct provides a static method to convert a `UIImage` into a 28×28 grayscale-formatted `CVPixelBuffer`. The method resizes the image, converts it to grayscale, and produces a pixel buffer ready for inference with Core ML.
 
 ```swift

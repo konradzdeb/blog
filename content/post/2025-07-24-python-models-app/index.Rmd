@@ -18,7 +18,22 @@ knitr::opts_chunk$set(
   warning = FALSE
 )
 ```
+```{r repo_download, eval=TRUE, echo=FALSE}
+# Define parameters
+zip_url <- "https://github.com/konradzdeb/SwiftPythonML/archive/refs/heads/master.zip"
+zip_path <- tempfile(fileext = ".zip")
+extract_dir <- tempfile("swiftpythonml_")
+dir.create(extract_dir)
 
+# Download the ZIP archive
+download.file(zip_url, zip_path, mode = "wb")
+
+# Unzip the archive into the temp directory
+unzip(zip_path, exdir = extract_dir)
+
+# Set base_dir to the PythonMLModel subdirectory
+base_dir <- file.path(extract_dir, "SwiftPythonML-master", "PythonMLModel")
+```
 
 
 ![Phone Model Demo](images/phonedemo.gif)
@@ -30,7 +45,6 @@ Integrating Python-based machine learning models into iOS applications can be ch
 For demonstration purposes, we'll create a basic machine learning model in Python. To classify images, I'll build a simple Convolutional Neural Network (CNN) using PyTorch. The model will be trained on the Fashion-MNIST dataset, comprising 70,000 grayscale images of fashion items in 10 categories. We'll begin by sourcing a standard set of Python packages required for model development.
 
 ```{r show_python_model_trainig, echo=FALSE, results='asis'}
-base_dir <- "../../../../../Swift-Xcode/SwiftPythonML/PythonMLModel"
 code <- readLines(file.path(base_dir, "model_prep.py"))
 cat("```python\n", paste(trimws(code[1:13]), collapse = "\n"), "\n```")
 ```
@@ -66,16 +80,15 @@ cat("```python\n", paste(code[83:length(code)], collapse = "\n"), "\n```")
 First, we need to import the model into our Xcode project by dragging and dropping the `.mlpackage` file into the Xcode project navigator. After importing, the model becomes available as a Swift class sharing its `.mlpackage` file name—`FashionMNISTClassifier` in this example. Inference is performed using the straightforward `predict` method, with most heavy lifting managed by the `FashionMNISTClassifierInput` class.
 
 ```{r show_swift_model_import, echo=FALSE, results='asis'}
-xcode_base_dir <- "../../../../../Swift-Xcode/SwiftPythonML/MyMLApp"
+xcode_base_dir <- file.path(base_dir, "..", "MyMLApp")
 code_swift <- readLines(file.path(xcode_base_dir, "MyMLApp/ModelViewModel.swift")) # nolint: line_length_linter.
 cat("```swift\n", paste(code_swift[5:length(code_swift)], collapse = "\n"), "\n```") # nolint: line_length_linter.
 ```
 
-## Image Preoprocessing
+## Image Pre-processing
 The Swift `ImagePreprocessor` struct provides a static method to convert a `UIImage` into a 28×28 grayscale-formatted `CVPixelBuffer`. The method resizes the image, converts it to grayscale, and produces a pixel buffer ready for inference with Core ML.
 
 ```{r show_swift_preprocess, echo=FALSE, results='asis'}
-xcode_base_dir <- "../../../../../Swift-Xcode/SwiftPythonML/MyMLApp"
 code_swift <- readLines(file.path(xcode_base_dir, "MyMLApp/ImagePreprocessor.swift")) # nolint: line_length_linter.
 cat("```swift\n", paste(code_swift[5:length(code_swift)], collapse = "\n"), "\n```") # nolint: line_length_linter.
 ```
