@@ -28,5 +28,6 @@ blogdown::new_post(
   slug       = args$slug,
   ext        = args$ext,
   subdir     = args$subdir,
-  open       = args$open
+  open       = args$open,
+  bundle     = TRUE
 )
