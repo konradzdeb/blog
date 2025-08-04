@@ -60,6 +60,8 @@ RUN Rscript -e "install.packages('rstudioapi')"
 RUN Rscript -e "install.packages('httpuv')"
 RUN Rscript -e "install.packages('DBI')"
 RUN Rscript -e "install.packages('glue')"
+RUN Rscript -e "install.packages('kableExtra')"
+RUN Rscript -e "install.packages('magick')"
 # Finally install blogdown
 RUN Rscript -e "install.packages('blogdown'); stopifnot(requireNamespace('blogdown', quietly = TRUE))"
 
