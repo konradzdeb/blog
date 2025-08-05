@@ -18,7 +18,7 @@ models as well.
 For demonstration purposes, we’ll create a basic machine learning model
 in Python. To classify images, I’ll build a simple Convolutional Neural
 Network (CNN) using PyTorch. The model will be trained on the
-Fashion-MNIST dataset, comprising 70,000 grayscale images of fashion
+Fashion-MNIST dataset, comprising 70,000 greyscale images of fashion
 items in 10 categories. We’ll begin by sourcing a standard set of Python
 packages required for model development.
 
@@ -34,10 +34,10 @@ packages required for model development.
     from sklearn.metrics import classification_report
     from torchvision import datasets, transforms
 
-     
 
-The model represents a fairly unsophisticated approach to handle imaghe
-classification task. Naturally, in a producting setting you will want to
+
+The model represents a fairly unsophisticated approach to handle image
+classification task. Naturally, in a production setting you will want to
 utilise more sophisticated solution, handling complex data and scenarios
 where you could be dealing with distorted images data (low lighting,
 different angles, etc.). The provided CNN implementation is fairly basic
@@ -108,7 +108,7 @@ and cross-entropy loss function.
             all_preds.extend(preds)
             all_labels.extend(labels.numpy())
     print(classification_report(all_labels, all_preds,
-                                target_names=FASHION_LABELS)) 
+                                target_names=FASHION_LABELS))
 
 ## Additional Testing
 
@@ -160,7 +160,7 @@ several publicly available images.
         if results:
             print("\n\nModel Prediction Results:\n")
             print(tabulate(results, headers=["Filename", "Expected",
-                                             "Predicted", "Match"])) 
+                                             "Predicted", "Match"]))
 
 ## Converting to Core ML
 
@@ -175,7 +175,7 @@ Proper definition of these objects is crucial when converting models
 example, the input features are defined as
 `input_features = [("image", ct.models.datatypes.Array(1, 28, 28))]`.
 This configuration means the Core ML model expects a single-channel
-(grayscale) image of size 28x28 as input, matching the Fashion-MNIST
+(greyscale) image of size 28x28 as input, matching the Fashion-MNIST
 images. This alignment ensures correct image processing within your iOS
 application.
 
@@ -187,13 +187,13 @@ function correctly in your app.
     mlmodel = ct.convert(
         traced,
         inputs=[ct.ImageType(name="image",
-                             shape=(1, 1, 28, 28), 
+                             shape=(1, 1, 28, 28),
                              scale=1/255.0,
                              color_layout=ct.colorlayout.GRAYSCALE)],
         classifier_config=classifier_config
     )
     mlmodel.save("FashionMNISTClassifier.mlpackage")
-    print("Exported CoreML model to FashionMNISTClassifier.mlpackage") 
+    print("Exported CoreML model to FashionMNISTClassifier.mlpackage")
 
 # Use in Swift
 
@@ -239,7 +239,7 @@ most heavy lifting managed by the `FashionMNISTClassifierInput` class.
 
             predictedLabel = result.classLabel
         }
-    } 
+    }
 
 ## Image Pre-processing
 
@@ -260,13 +260,13 @@ ready for inference with Core ML.
                             size: CGSize = CGSize(width: 28, height: 28)) -> CVPixelBuffer? {
             let width = Int(size.width)
             let height = Int(size.height)
-            
+
             var pixelBuffer: CVPixelBuffer?
             let attrs = [
                 kCVPixelBufferCGImageCompatibilityKey: true,
                 kCVPixelBufferCGBitmapContextCompatibilityKey: true
             ] as CFDictionary
-            
+
             let status = CVPixelBufferCreate(
                 kCFAllocatorDefault,
                 width,
@@ -275,11 +275,11 @@ ready for inference with Core ML.
                 attrs,
                 &pixelBuffer
             )
-            
+
             guard status == kCVReturnSuccess, let buffer = pixelBuffer else {
                 return nil
             }
-            
+
             CVPixelBufferLockBaseAddress(buffer, .readOnly)
             guard let context = CGContext(
                 data: CVPixelBufferGetBaseAddress(buffer),
@@ -293,19 +293,19 @@ ready for inference with Core ML.
                 CVPixelBufferUnlockBaseAddress(buffer, .readOnly)
                 return nil
             }
-            
+
             guard let cgImage = image.cgImage else {
                 CVPixelBufferUnlockBaseAddress(buffer, .readOnly)
                 return nil
             }
-            
+
             context.draw(cgImage, in: CGRect(x: 0, y: 0,
                          width: width, height: height))
             CVPixelBufferUnlockBaseAddress(buffer, .readOnly)
-            
+
             return buffer
         }
-    } 
+    }
 
 # Final Considerations
 

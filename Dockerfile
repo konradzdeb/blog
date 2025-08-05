@@ -27,10 +27,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zlib1g-dev \
     wget \
     openjdk-11-jdk \
+    libmagick++-dev \
+    libmagickwand-dev \
+    libmagickcore-dev \
+    imagemagick \
     && rm -rf /var/lib/apt/lists/*
 
 # Use all cores when building packages
 ENV MAKEFLAGS="-j$(nproc)"
+
+# Install Quarto
+RUN wget -q https://quarto.org/download/latest/quarto-linux-amd64.deb && \
+    dpkg -i quarto-linux-amd64.deb && \
+    rm quarto-linux-amd64.deb
+
+# Optional: confirm
+RUN quarto --version
 
 # Verify pandoc installation
 RUN pandoc --version
@@ -62,8 +74,7 @@ RUN Rscript -e "install.packages('DBI')"
 RUN Rscript -e "install.packages('glue')"
 RUN Rscript -e "install.packages('kableExtra')"
 RUN Rscript -e "install.packages('magick')"
-# Finally install blogdown
-RUN Rscript -e "install.packages('blogdown'); stopifnot(requireNamespace('blogdown', quietly = TRUE))"
+RUN Rscript -e "install.packages('quarto')"
 
 # Install spark and sparklyr
 RUN Rscript -e "install.packages('sparklyr'); sparklyr::spark_install(version = '3.5.6')"
