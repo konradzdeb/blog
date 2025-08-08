@@ -31,7 +31,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libmagickwand-dev \
     libmagickcore-dev \
     imagemagick \
-    && rm -rf /var/lib/apt/lists/*
+    libqpdf-dev \
+    libpoppler-cpp-dev
+
+# Clean installed packages from apt cache
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Use all cores when building packages
 ENV MAKEFLAGS="-j$(nproc)"
@@ -61,23 +66,31 @@ RUN wget -qO- https://github.com/gohugoio/hugo/releases/download/v0.148.1/hugo_e
 RUN echo 'options(repos = c(RSPM = "https://packagemanager.posit.co/cran/latest"))' >> /usr/local/lib/R/etc/Rprofile.site
 
 # Install R packages one per layer by increasing dependency complexity
-RUN Rscript -e "install.packages('miniUI')"
-RUN Rscript -e "install.packages('knitr')"
-RUN Rscript -e "install.packages('servr')"
-RUN Rscript -e "install.packages('rmarkdown')"
-RUN Rscript -e "install.packages('bookdown')"
-RUN Rscript -e "install.packages('tufte')"
-RUN Rscript -e "install.packages('reticulate')"
-RUN Rscript -e "install.packages('rstudioapi')"
-RUN Rscript -e "install.packages('httpuv')"
-RUN Rscript -e "install.packages('DBI')"
-RUN Rscript -e "install.packages('glue')"
-RUN Rscript -e "install.packages('kableExtra')"
-RUN Rscript -e "install.packages('magick')"
-RUN Rscript -e "install.packages('quarto')"
+# Install R packages
+RUN Rscript -e "install.packages(c( \
+    'argparse', \
+    'bookdown', \
+    'DBI', \
+    'glue', \
+    'httpuv', \
+    'kableExtra', \
+    'knitr', \
+    'magick', \
+    'miniUI', \
+    'pdftools', \
+    'quarto', \
+    'reticulate', \
+    'rmarkdown', \
+    'rstudioapi', \
+    'servr', \
+    'sparklyr', \
+    'tufte'))"
 
-# Install spark and sparklyr
-RUN Rscript -e "install.packages('sparklyr'); sparklyr::spark_install(version = '3.5.6')"
+# Check problematic packages
+RUN Rscript -e "stopifnot('pdftools' %in% rownames(installed.packages()))"
+
+# Install spark
+RUN Rscript -e "sparklyr::spark_install(version = '3.5.6')"
 
 # Create working directory
 WORKDIR /site
@@ -92,5 +105,13 @@ RUN echo 'options(rmarkdown.pandoc.args = c("--citeproc"))' >> /usr/local/lib/R/
 RUN Rscript -e "install.packages('argparse')"
 COPY new_post.R /usr/local/bin/new_post.R
 RUN chmod +x /usr/local/bin/new_post.R
+
+# Script to rebuild blog
+COPY blog_build.R /usr/local/bin/blog_build.R
+RUN chmod +x /usr/local/bin/blog_build.R
+
+# Script to preview blog
+COPY blog_preview.R /usr/local/bin/blog_preview.R
+RUN chmod +x /usr/local/bin/blog_preview.R
 
 CMD ["R"]
