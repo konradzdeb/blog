@@ -1,7 +1,13 @@
 # syntax=docker/dockerfile:1.4
 
+# Use official Spark image as base
+FROM --platform=linux/amd64 apache/spark:3.5.6 as spark
+
 # Stage 2: Final build environment
 FROM --platform=linux/amd64 rocker/tidyverse
+
+# Copy Spark from official image
+COPY --from=spark /opt/spark /opt/spark
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -27,10 +33,32 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zlib1g-dev \
     wget \
     openjdk-11-jdk \
-    && rm -rf /var/lib/apt/lists/*
+    libmagick++-dev \
+    libmagickwand-dev \
+    libmagickcore-dev \
+    imagemagick \
+    libqpdf-dev \
+    libpoppler-cpp-dev
+
+# Set Spark and Java environment variables
+ENV SPARK_HOME=/opt/spark
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH="${SPARK_HOME}/bin:${JAVA_HOME}/bin:$PATH"
+
+# Clean installed packages from apt cache
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Use all cores when building packages
 ENV MAKEFLAGS="-j$(nproc)"
+
+# Install Quarto
+RUN wget -q https://quarto.org/download/latest/quarto-linux-amd64.deb && \
+    dpkg -i quarto-linux-amd64.deb && \
+    rm quarto-linux-amd64.deb
+
+# Optional: confirm
+RUN quarto --version
 
 # Verify pandoc installation
 RUN pandoc --version
@@ -49,22 +77,34 @@ RUN wget -qO- https://github.com/gohugoio/hugo/releases/download/v0.148.1/hugo_e
 RUN echo 'options(repos = c(RSPM = "https://packagemanager.posit.co/cran/latest"))' >> /usr/local/lib/R/etc/Rprofile.site
 
 # Install R packages one per layer by increasing dependency complexity
-RUN Rscript -e "install.packages('miniUI')"
-RUN Rscript -e "install.packages('knitr')"
-RUN Rscript -e "install.packages('servr')"
-RUN Rscript -e "install.packages('rmarkdown')"
-RUN Rscript -e "install.packages('bookdown')"
-RUN Rscript -e "install.packages('tufte')"
-RUN Rscript -e "install.packages('reticulate')"
-RUN Rscript -e "install.packages('rstudioapi')"
-RUN Rscript -e "install.packages('httpuv')"
-RUN Rscript -e "install.packages('DBI')"
-RUN Rscript -e "install.packages('glue')"
-# Finally install blogdown
-RUN Rscript -e "install.packages('blogdown'); stopifnot(requireNamespace('blogdown', quietly = TRUE))"
+# Install R packages
+RUN Rscript -e "install.packages(c( \
+    'argparse', \
+    'bookdown', \
+    'DBI', \
+    'glue', \
+    'httpuv', \
+    'kableExtra', \
+    'knitr', \
+    'magick', \
+    'miniUI', \
+    'pdftools', \
+    'quarto', \
+    'reticulate', \
+    'rmarkdown', \
+    'rstudioapi', \
+    'servr', \
+    'sparklyr', \
+    'tufte'))"
 
-# Install spark and sparklyr
-RUN Rscript -e "install.packages('sparklyr'); sparklyr::spark_install(version = '3.5.6')"
+# Check problematic packages
+RUN Rscript -e "stopifnot('pdftools' %in% rownames(installed.packages()))"
+
+# Tell Sparklyr to use the installed Spark
+ENV SPARK_HOME=/opt/spark
+
+# Add permissions fix
+RUN chmod -R 755 /opt/spark
 
 # Create working directory
 WORKDIR /site
@@ -79,5 +119,13 @@ RUN echo 'options(rmarkdown.pandoc.args = c("--citeproc"))' >> /usr/local/lib/R/
 RUN Rscript -e "install.packages('argparse')"
 COPY new_post.R /usr/local/bin/new_post.R
 RUN chmod +x /usr/local/bin/new_post.R
+
+# Script to rebuild blog
+COPY blog_build.R /usr/local/bin/blog_build.R
+RUN chmod +x /usr/local/bin/blog_build.R
+
+# Script to preview blog
+COPY blog_preview.R /usr/local/bin/blog_preview.R
+RUN chmod +x /usr/local/bin/blog_preview.R
 
 CMD ["R"]

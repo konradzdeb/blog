@@ -1,28 +1,35 @@
----
-title: Installing Hortonworks Sanbox on Mac with Docker
-author: Konrad
-date: '2019-02-23'
-slug: installing-hortonworks-sanbox-deployment-hdp-on-docker-mac
-draft: false
-categories:
-  - how-to
-tags:
-  - docker
-  - bash
----
+# Installing Hortonworks Sanbox on Mac with Docker
+Konrad
+2019-02-23
 
 # Background
 
-The post covers installation of Hortonworks Sandbox (HD) on Mac using Docker. In software development, *sandbox* describes a testing environment that can be used to isolate untested code changes from a production code. Hortonworks Sandbox provides such an environment with the Hortonworks Data Platform installed. Hortonworks Data Platform is an open source framework facilitating distributed storage and processing large volumes of data.
+The post covers installation of Hortonworks Sandbox (HD) on Mac using
+Docker. In software development, *sandbox* describes a testing
+environment that can be used to isolate untested code changes from a
+production code. Hortonworks Sandbox provides such an environment with
+the Hortonworks Data Platform installed. Hortonworks Data Platform is an
+open source framework facilitating distributed storage and processing
+large volumes of data.
 
-Deploying system for distributed processing *within* a single computer may seem like a counter-intuitive idea but it's actually a very common practice. Most frequent use cases involve various learning / professional development activities where one may be interested in learning new technology or simply exploring available interfaces. Other frequent use case pertains to various demos, where there may be a need to demonstrate product capabilities and accessing proper, production environment could be cumbersome.
+Deploying system for distributed processing *within* a single computer
+may seem like a counter-intuitive idea but it’s actually a very common
+practice. Most frequent use cases involve various learning /
+professional development activities where one may be interested in
+learning new technology or simply exploring available interfaces. Other
+frequent use case pertains to various demos, where there may be a need
+to demonstrate product capabilities and accessing proper, production
+environment could be cumbersome.
 
 ## Installation
 
 ### Docker
 
-Docker, which is now used by millions of developers, is and open platform for developing, shipping and running applications. More technically, Docker uses OS-level virtualisation to deliver software packages called containers. Before installing docker let's check for the existing installation.
-
+Docker, which is now used by millions of developers, is and open
+platform for developing, shipping and running applications. More
+technically, Docker uses OS-level virtualisation to deliver software
+packages called containers. Before installing docker let’s check for the
+existing installation.
 
 ``` r
 which -a docker
@@ -31,15 +38,17 @@ docker -v
 # Docker version 20.10.2, build 2291f61
 ```
 
-Assuming that the line above did not produce results we can install docker with use of Homebrew. To install Homebrew:
-
+Assuming that the line above did not produce results we can install
+docker with use of Homebrew. To install Homebrew:
 
 ``` r
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-We can the progress with installing docker. The command will install 'cask' version of the Docker. In Homebrew lingo, 'casks' are applications with Graphical User Interfaces. It is possible to install Docker without GUI by running `brew install docker`.
-
+We can the progress with installing docker. The command will install
+‘cask’ version of the Docker. In Homebrew lingo, ‘casks’ are
+applications with Graphical User Interfaces. It is possible to install
+Docker without GUI by running `brew install docker`.
 
 ``` r
 brew install --cask docker
@@ -47,5 +56,5 @@ brew install --cask docker
 
 ### HDP
 
-The HDP can be installed with the provided scrip. The script can be downloaded from 
-
+The HDP can be installed with the provided scrip. The script can be
+downloaded from

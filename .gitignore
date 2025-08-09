@@ -24,3 +24,9 @@ spark-warehouse/
 # Ignore temporary files that usually have ~ appended at the end
 *.*~
 .python-version
+
+# Ignore some .dat files
+*.dat
+
+# Ignore metastore folder
+metastore_db/

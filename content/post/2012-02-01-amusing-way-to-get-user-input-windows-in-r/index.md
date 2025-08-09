@@ -1,17 +1,16 @@
----
-title: Amusing way to get user input windows in R
-author: Konrad
-date: '2012-02-01'
-slug: amusing-way-to-get-user-input-windows-in-r
-categories:
-  - how-to
-tags:
-  - R
-  - gui
----
+# Amusing way to get user input windows in R
+Konrad
+2012-02-01
 
-In an unlikely scenario that beautiful <a href="http://shiny.rstudio.com/" target="_blank" rel="noopener">Shiny </a>apps do not meet your analytical requirements and developing a full-blown user interface. in [RGtk2](http://www.ggobi.org/rgtk2/) may seem to be a little too much, there is a third, often overlooked solution, - package [svDialogs](https://cran.r-project.org/web/packages/svDialogs/index.html) by Philippe Grosjean. The package in a convenient way enables user to create various interface gadgets. For example the code:
-
+In an unlikely scenario that beautiful
+<a href="http://shiny.rstudio.com/" target="_blank" rel="noopener">Shiny
+</a>apps do not meet your analytical requirements and developing a
+full-blown user interface. in [RGtk2](http://www.ggobi.org/rgtk2/) may
+seem to be a little too much, there is a third, often overlooked
+solution, - package
+[svDialogs](https://cran.r-project.org/web/packages/svDialogs/index.html)
+by Philippe Grosjean. The package in a convenient way enables user to
+create various interface gadgets. For example the code:
 
 ``` r
 require(svDialogs)
@@ -22,10 +21,10 @@ user_figure <- svDialogs::dlg_input()
 
 would result in the following window being presented to the user:
 
-![Sample user input](/post/2015-12-01-amusing-way-to-get-user-input-windows-in-r_files/untitled.png)
+![Sample user
+input](./post/2015-12-01-amusing-way-to-get-user-input-windows-in-r_files/untitled.png)
 
 In this case the code will return the following object:
-
 
 ``` r
 str(user_figure)
@@ -40,4 +39,6 @@ user_figure
 # [1] "100"
 ```
 
-<em>The post was inspired by <a href="http://stackoverflow.com/a/33934374/1655567" target="_blank" rel="noopener">an amusing discussion</a> on SO.</em>
+<em>The post was inspired by
+<a href="http://stackoverflow.com/a/33934374/1655567" target="_blank" rel="noopener">an
+amusing discussion</a> on SO.</em>
