@@ -12,10 +12,12 @@ alias blog_build_image='DOCKER_BUILDKIT=1 docker build \
 
 # Build the blog content
 alias blog_build='docker run --rm -it \
-  --platform=$BLOG_PLATFORM \
-  -v "$BLOG_DIR":/site \
-  -w /site \
-  $BLOG_CONTAINER Rscript /usr/local/bin/blog_build.R || echo "Error: Failed to build blog"'
+    --platform=$BLOG_PLATFORM \
+    -v "$BLOG_DIR":/site \
+    -w /site \
+    -e FULL_BUILD \
+    $BLOG_CONTAINER Rscript /usr/local/bin/blog_build.R || echo "Error: Failed to build blog"'
+  
 
 # Start local preview server
 alias blog_preview='docker run --rm -it \

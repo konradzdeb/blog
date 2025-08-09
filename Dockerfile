@@ -1,7 +1,13 @@
 # syntax=docker/dockerfile:1.4
 
+# Use official Spark image as base
+FROM --platform=linux/amd64 apache/spark:3.5.6 as spark
+
 # Stage 2: Final build environment
 FROM --platform=linux/amd64 rocker/tidyverse
+
+# Copy Spark from official image
+COPY --from=spark /opt/spark /opt/spark
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -33,6 +39,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     imagemagick \
     libqpdf-dev \
     libpoppler-cpp-dev
+
+# Set Spark and Java environment variables
+ENV SPARK_HOME=/opt/spark
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH="${SPARK_HOME}/bin:${JAVA_HOME}/bin:$PATH"
 
 # Clean installed packages from apt cache
 RUN apt-get clean && \
@@ -89,8 +100,11 @@ RUN Rscript -e "install.packages(c( \
 # Check problematic packages
 RUN Rscript -e "stopifnot('pdftools' %in% rownames(installed.packages()))"
 
-# Install spark
-RUN Rscript -e "sparklyr::spark_install(version = '3.5.6')"
+# Tell Sparklyr to use the installed Spark
+ENV SPARK_HOME=/opt/spark
+
+# Add permissions fix
+RUN chmod -R 755 /opt/spark
 
 # Create working directory
 WORKDIR /site
