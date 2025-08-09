@@ -25,6 +25,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
     python3-venv \
+    python3-dev \
+    python3-numpy \
+    libpython3.11 \
     tar \
     texlive-bibtex-extra \
     texlive-fonts-recommended \
@@ -63,11 +66,8 @@ RUN quarto --version
 # Verify pandoc installation
 RUN pandoc --version
 
-# Install virtualenv for reticulate
-RUN python3 -m venv /opt/blogpost-env && \
-    /opt/blogpost-env/bin/pip install --upgrade pip && \
-    /opt/blogpost-env/bin/pip install numpy
-ENV RETICULATE_PYTHON=/opt/blogpost-env/bin/python
+# Reticulate configuration
+ENV RETICULATE_PYTHON=/usr/bin/python3
 
 # Install Hugo v0.148.1 (Extended)
 RUN wget -qO- https://github.com/gohugoio/hugo/releases/download/v0.148.1/hugo_extended_0.148.1_Linux-64bit.tar.gz \

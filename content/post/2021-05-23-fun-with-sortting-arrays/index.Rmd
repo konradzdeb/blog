@@ -10,14 +10,9 @@ tags:
 ---
 
 ```{r setup, include=FALSE}
-Sys.setenv(RETICULATE_PYTHON = "/opt/blogpost-env/bin/python")
-venv_python <- Sys.getenv("RETICULATE_PYTHON")
+stopifnot(file.exists(Sys.getenv("RETICULATE_PYTHON")))
 library(reticulate)
-if (!virtualenv_exists("blogpost-env")) {
-  virtualenv_create("blogpost-env", python = venv_python)
-  virtualenv_install("blogpost-env", packages = c("numpy"))
-}
-use_virtualenv("blogpost-env", required = TRUE)
+use_python(Sys.getenv("RETICULATE_PYTHON"), required = TRUE)
 ```
 
 # Problem 

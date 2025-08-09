@@ -102,14 +102,14 @@ head(sample_data)
 ```
 
     # A tibble: 6 × 6
-      val_a val_b val_c update_year update_month update_day
-      <dbl> <dbl> <chr>       <dbl>        <dbl>      <int>
-    1 0.318 0.244 j            2010            1          1
-    2 0.915 0.740 t            2010            1          1
-    3 0.868 0.233 i            2010            1          2
-    4 0.206 0.822 p            2010            1          2
-    5 0.965 0.822 v            2010            1          3
-    6 0.681 0.691 t            2010            1          3
+      val_a  val_b val_c update_year update_month update_day
+      <dbl>  <dbl> <chr>       <dbl>        <dbl>      <int>
+    1 0.346 0.905  i            2010            1          1
+    2 0.976 0.826  k            2010            1          1
+    3 0.905 0.821  s            2010            1          2
+    4 0.395 0.666  k            2010            1          2
+    5 0.662 0.0847 g            2010            1          3
+    6 0.319 0.895  d            2010            1          3
 
 Following the successful creation of the dummy data we are in position
 to easily leverage the desired data structure. Using the
@@ -298,15 +298,6 @@ DBI::dbSendQuery(sc, "
     FROM spark_sample_data")
 ```
 
-    <DBISparkResult>
-      SQL  
-        INSERT INTO TABLE blog.sample_partitioned_table
-        PARTITION (part_year, part_month, part_day)
-        SELECT val_a, val_b, val_c, update_year, update_month, update_day
-        FROM spark_sample_data
-      ROWS Fetched: 0 [complete]
-           Changed: 0
-
 ### Results
 
 Following the operation above we can now explore the populated storage
@@ -321,7 +312,7 @@ tbl_perm <- tbl(sc, "blog.sample_partitioned_table")
 sdf_num_partitions(tbl_perm)
 ```
 
-    [1] 59
+    [1] 0
 
 ``` r
 glimpse(tbl_perm)
@@ -330,12 +321,12 @@ glimpse(tbl_perm)
     Rows: ??
     Columns: 6
     Database: spark_connection
-    $ value_column_a <dbl> 0.28983361, 0.11118179, 0.58122498, 0.29996967, 0.68852…
-    $ value_column_b <dbl> 0.26433064, 0.23232922, 0.95280237, 0.79809874, 0.39989…
-    $ value_column_c <chr> "i", "m", "u", "r", "z", "c", "z", "w", "n", "p", "c", …
-    $ part_year      <int> 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
-    $ part_month     <int> 1, 1, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1…
-    $ part_day       <int> 20, 20, 13, 13, 21, 21, 16, 16, 8, 8, 14, 14, 4, 4, 26,…
+    $ value_column_a <dbl> 
+    $ value_column_b <dbl> 
+    $ value_column_c <chr> 
+    $ part_year      <int> 
+    $ part_month     <int> 
+    $ part_day       <int> 
 
 # Summary
 
