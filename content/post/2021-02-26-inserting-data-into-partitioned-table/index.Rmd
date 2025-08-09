@@ -187,7 +187,7 @@ What happens in the process is as follows:
 
 **Note:** The previous chunk demonstrates how to insert partitioned data by iterating through table elements and executing individual insert statements for each partition. While this approach is convenient for illustrating how to programmatically construct and execute partitioned inserts in R, it is not efficient for large datasets or production use, as it results in many separate database operations and can be very slow. Therefore, in the following chunk, I use a single bulk insert statement to efficiently populate all partitions at once. The iterative example is retained here for educational purposes, as it clearly shows how to loop through table elements and dynamically build SQL statements in R.
 
-```{r bulk_insert, eval=TRUE, message=FALSE}
+```{r bulk_insert, eval=TRUE}
 DBI::dbSendQuery(sc, "
     INSERT INTO TABLE blog.sample_partitioned_table
     PARTITION (part_year, part_month, part_day)
