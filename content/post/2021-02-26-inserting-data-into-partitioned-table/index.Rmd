@@ -103,7 +103,25 @@ Following the successful creation of the dummy data we are in position to easily
 
 ```{r connect_spark}
 suppressPackageStartupMessages(library(sparklyr))
+Sys.getenv("SPARK_HOME")
+dir.exists(Sys.getenv("SPARK_HOME"))
 sc <- spark_connect(master = "local")
+```
+
+```{r hive_settings, message=FALSE}
+# Ensure Hive catalog and dynamic partitioning are enabled for this session
+suppressPackageStartupMessages(library(DBI))
+# Turn on dynamic partitions and allow fully dynamic inserts
+DBI::dbSendQuery(sc, "SET hive.exec.dynamic.partition=true")
+DBI::dbSendQuery(sc, "SET hive.exec.dynamic.partition.mode=nonstrict")
+
+# Raise limits to avoid small demo failing due to caps
+DBI::dbSendQuery(sc, "SET hive.exec.max.dynamic.partitions=2000")
+DBI::dbSendQuery(sc, "SET hive.exec.max.dynamic.partitions.pernode=2000")
+
+# Sanity-check: print back the effective values
+DBI::dbGetQuery(sc, "SET hive.exec.dynamic.partition.mode")
+DBI::dbGetQuery(sc, "SET spark.sql.catalogImplementation")
 ```
 For the purpose of the article I've also executed the provided-above HiveQL via Spark to ensure accessibility to data structures that would be structurally equivalent, ensuring smooth execution of the example code. Naturally, in a production setting, we would seldom look to create new Hive schema from an R script layer. Similarly, core tables storing results would be usually established outside regular production processes.
 
@@ -115,7 +133,7 @@ unlink(file.path(getwd(), "spark-warehouse/*"), recursive = TRUE, force = TRUE)
 ```
 
 ```{r create_spark_data}
-res_DBI_data <- DBI::dbSendQuery(sc, "CREATE DATABASE blog COMMENT 'Blog article samples,                                           can be deleted.'")
+res_DBI_data <- DBI::dbSendQuery(sc, "CREATE DATABASE blog COMMENT 'Blog article samples, can be deleted.'")
 res_DBI_tble <- DBI::dbSendQuery(sc, "CREATE TABLE blog.sample_partitioned_table (
 		value_column_a FLOAT 	COMMENT 'Column will hold 4-byte number', 
 		value_column_b DOUBLE 	COMMENT '8-byte double precision', 
@@ -141,7 +159,7 @@ tbl_sprk <- copy_to(sc, sample_data, "spark_sample_data")
 
 In Spark our RDD is visible as `spark_sample_data` we will be looking to use that table in order to insert our partition elements into permanent storage.
 
-```{r iterate_and_insert}
+```{r iterate_and_insert, eval=FALSE}
 suppressPackageStartupMessages(library(DBI))
 suppressPackageStartupMessages(library(glue))
 res_pmap <- pmap(
@@ -166,6 +184,16 @@ What happens in the process is as follows:
 2. I'm interested in iterating over each column simultaneously and `pmap` function is excellent for that. Using `~` notation offered in `pmap` I will be looking to refer to first object as `..1` to the second as `..2` and so on.
 3. Glue package is used to insert strings with partitions identifier into the respective partition names.
 4. `SELECT` runs on *spark RDD* and also uses partition identifiers to get only subset of the data we are interested in and insert that subset into the desired partition.
+
+**Note:** The previous chunk demonstrates how to insert partitioned data by iterating through table elements and executing individual insert statements for each partition. While this approach is convenient for illustrating how to programmatically construct and execute partitioned inserts in R, it is not efficient for large datasets or production use, as it results in many separate database operations and can be very slow. Therefore, in the following chunk, I use a single bulk insert statement to efficiently populate all partitions at once. The iterative example is retained here for educational purposes, as it clearly shows how to loop through table elements and dynamically build SQL statements in R.
+
+```{r bulk_insert, eval=TRUE, message=FALSE}
+DBI::dbSendQuery(sc, "
+    INSERT INTO TABLE blog.sample_partitioned_table
+    PARTITION (part_year, part_month, part_day)
+    SELECT val_a, val_b, val_c, update_year, update_month, update_day
+    FROM spark_sample_data")
+```
 
 ### Results
 

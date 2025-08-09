@@ -1,3 +1,7 @@
+# Poor Man’s Robust Shiny App Deployment
+Konrad
+2020-07-23
+
 # Not so uncommon problem…
 
 [RStudio Connect](https://rstudio.com/products/connect/) and more modest
@@ -53,13 +57,11 @@ part of each R package.
 > specifies who can use it (the license) and whom to contact (you!) if
 > there are any problems.
 
-<footer>
 — Hadley Wickham
-</footer>
 
 R ecosystem offers a number of sophisticated alternatives to managing
 dependencies that may be more suitable for a collaborative project
-progressed in an organisational and/or corporate environment[1] As we
+progressed in an organisational and/or corporate environment[^1] As we
 are looking at a solution that would be usable from a perspective of an
 advanced analyst it is safe to make an assumption that wise use of
 `DESCRIPTION` file will suffice. Same goes for testing and documentation
@@ -87,7 +89,7 @@ of R packages that focus on embedding Shiny applications.
 Authors of [`golem`](https://github.com/ThinkR-open/golem) did an
 excellent job in creating robust in package documentation and providing
 vignettes on development, deployment and configuration as well as a
-comprehensive book[2]. In order to understand how
+comprehensive book[^2]. In order to understand how
 [`golem`](https://github.com/ThinkR-open/golem) works it’s necessary to
 recognise that Shiny Application is in effect a collection of ordinary R
 functions, some of which will be concerned with translating R code into
@@ -100,7 +102,7 @@ Hadley Wickham.
 The article makes an assumption that our Shiny Application is to serve
 as a wrapper for an existing modelling or analytical solution. In that
 case we would consider that we are working with a set of scripts akin to
-Drake pipeline[3] In practice, this would imply that we have a set of
+Drake pipeline[^3] In practice, this would imply that we have a set of
 functions that we are ready to package into a production ready solution.
 Usually we would have a set of functions that we may use to query
 corporate databases via [`DBI`](https://github.com/r-dbi/DBI) or similar
@@ -111,11 +113,8 @@ final product usually would be in a form of a report and/or
 presentation. In practice, our quarterly report updating cycle likely
 will look to the one illustrated below.
 
-<figure>
 <img src="images/bi_analytical_flow.png" width="400" height="200"
 alt="Analytical BI/Modelling Flow" />
-<figcaption aria-hidden="true">Analytical BI/Modelling Flow</figcaption>
-</figure>
 
 In practical terms, yellow boxes usually imply communication with
 consumers of the report and seeking clarification on usefulness of the
@@ -128,14 +127,14 @@ Embedding Shiny application on that layer gives us another possibility
 of further automating the process of report delivery and re-running
 analysis.
 
-[1] Useful list is mentioned in [this
-discusion](https://stackoverflow.com/q/43018752/1655567) at Stack
-Overflow.
+[^1]: Useful list is mentioned in [this
+    discusion](https://stackoverflow.com/q/43018752/1655567) at Stack
+    Overflow.
 
-[2] Fay, C, Rochette, S, Guyader, V, Girard C 2020, *Engineering
-Production-Grade Shiny Apps*
-[https://engineering-shiny.org/](https://engineering-shiny.org/index.html)
+[^2]: Fay, C, Rochette, S, Guyader, V, Girard C 2020, *Engineering
+    Production-Grade Shiny Apps*
+    [https://engineering-shiny.org/](https://engineering-shiny.org/index.html)
 
-[3] Drake is a R package facilitating development of reproducible
-research projects, more information can be found on the official [GitHub
-page](https://github.com/ropensci/drake).
+[^3]: Drake is a R package facilitating development of reproducible
+    research projects, more information can be found on the official
+    [GitHub page](https://github.com/ropensci/drake).

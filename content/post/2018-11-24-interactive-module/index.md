@@ -1,3 +1,7 @@
+# Interactivly Loading Shiny Modules
+Konrad
+2018-11-24
+
 # TL;DR
 
 If you want to see the implemented solution, please refer to: GitHub
@@ -44,12 +48,14 @@ function definitions for server and user interface. Recently both of
 those are saved as in one file as in examples provided with Shiny
 package. To see available examples run:
 
-    list.files(
-        path = system.file("examples", package = "shiny"),
-        pattern = glob2rx("*.R"),
-        recursive = TRUE,
-        full.names = TRUE
-    )
+``` r
+list.files(
+    path = system.file("examples", package = "shiny"),
+    pattern = glob2rx("*.R"),
+    recursive = TRUE,
+    full.names = TRUE
+)
+```
 
 Now this won’t fly. Best case scenario we will end-up with [sphagetti
 code](https://craftofcoding.wordpress.com/2013/10/07/what-is-spaghetti-code/)

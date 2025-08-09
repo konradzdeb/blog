@@ -1,3 +1,7 @@
+# Poor Man’s Robust Shiny App Deployment (Part II)
+Konrad
+2021-02-12
+
 # Introduction
 
 This article draws on the past post concerned with utilisation of
@@ -20,7 +24,7 @@ of the Labour Market Statistics disseminated through the
   access to this project and don’t be concerned with missing files,
   outdated unavailable documentation and questions on how to produce
   updated reports. We want self-encompassing entity that takes of care
-  of its technical requirements and user-interaction[1]
+  of its technical requirements and user-interaction[^1]
 
 - *Better reproducibility* - Easier way to re-run reports on custom
   parameters
@@ -45,35 +49,39 @@ to capitalise on the robust R package architecture, we will look to
 leverage available supporting packages. As a first step, we will
 construct a new Shiny/R package infrastructure using `golem`.
 
-    golem::create_golem(path = "nomisReports")
+``` r
+golem::create_golem(path = "nomisReports")
+```
 
 Running package with default options gave us the following folder
 structure:
 
-    .
-    ├── DESCRIPTION
-    ├── dev
-    │   ├── 01_start.R
-    │   ├── 02_dev.R
-    │   ├── 03_deploy.R
-    │   └── run_dev.R
-    ├── inst
-    │   ├── app
-    │   │   └── www
-    │   │       └── favicon.ico
-    │   └── golem-config.yml
-    ├── man
-    │   └── run_app.Rd
-    ├── NAMESPACE
-    ├── nomisReports.Rproj
-    ├── R
-    │   ├── app_config.R
-    │   ├── app_server.R
-    │   ├── app_ui.R
-    │   └── run_app.R
-    └── sessionInfoLog
+``` r
+.
+├── DESCRIPTION
+├── dev
+│   ├── 01_start.R
+│   ├── 02_dev.R
+│   ├── 03_deploy.R
+│   └── run_dev.R
+├── inst
+│   ├── app
+│   │   └── www
+│   │       └── favicon.ico
+│   └── golem-config.yml
+├── man
+│   └── run_app.Rd
+├── NAMESPACE
+├── nomisReports.Rproj
+├── R
+│   ├── app_config.R
+│   ├── app_server.R
+│   ├── app_ui.R
+│   └── run_app.R
+└── sessionInfoLog
 
-    7 directories, 15 files
+7 directories, 15 files
+```
 
 The structure corresponds to what we would expect to find in a
 traditional package development. Thee are number of files specific to
@@ -88,9 +96,9 @@ development scaffolding, such as [`usethis`](https://usethis.r-lib.org)
 package that offers a variety of commands facilitating adding package
 elements.
 
-[1] Good parallel can be drawn between this approach and manuals
-available with life-saving equipment. Equipment delivers technical
-capacity and manual ensures operational capacity. In case of an
-inexperienced user one is not useful without the other. We want to
-ensure that user with minimum required capacity can use the tools
-correctly.
+[^1]: Good parallel can be drawn between this approach and manuals
+    available with life-saving equipment. Equipment delivers technical
+    capacity and manual ensures operational capacity. In case of an
+    inexperienced user one is not useful without the other. We want to
+    ensure that user with minimum required capacity can use the tools
+    correctly.

@@ -1,3 +1,7 @@
+# Managing rows in the ggplot legend
+Konrad
+2015-03-28
+
 After developing the Shiny App sourcing live labour market data from
 NOMIS. I wanted to accommodate a convenient way of managing rows in the
 legend. In particular, I wanted to account for the situation where
@@ -7,25 +11,21 @@ guessing the number of elements in the legend is relatively simple as it
 will correspond to the number of unique geographies passed via the
 subset command.
 
-    g <- guide_legend(title = "Geography", title.position = 'top',
-    nrow = (if(length(unique(dta.chrt$GEOGRAPHY_NAME)) > 5) 2
-    else 1),
-    title.theme = element_text(size = 14, face = 'bold', angle = 360))
+``` r
+g <- guide_legend(title = "Geography", title.position = 'top',
+nrow = (if(length(unique(dta.chrt$GEOGRAPHY_NAME)) > 5) 2
+else 1),
+title.theme = element_text(size = 14, face = 'bold', angle = 360))
+```
 
 For a small number of values we can conveniently get a small legend with
 one row:
 
-<figure>
-<img src="images/screen-shot-2015-03-28-at-10-32-52.png"
-alt="Small legend with one row" />
-<figcaption aria-hidden="true">Small legend with one row</figcaption>
-</figure>
+![Small legend with one
+row](images/screen-shot-2015-03-28-at-10-32-52.png)
 
 whereas legend with a vast number of geographies is conveniently
 resized:
 
-<figure>
-<img src="images/screen-shot-2015-03-28-at-10-33-09.png"
-alt="Bigger legend with two rows" />
-<figcaption aria-hidden="true">Bigger legend with two rows</figcaption>
-</figure>
+![Bigger legend with two
+rows](images/screen-shot-2015-03-28-at-10-33-09.png)

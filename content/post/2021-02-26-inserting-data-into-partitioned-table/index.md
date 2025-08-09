@@ -1,3 +1,7 @@
+# Inserting Data into Partitioned Table
+Konrad Zdeb
+2021-02-26
+
 # Rationale
 
 Maintaining partitioned Hive tables is a frequent practice in a
@@ -15,22 +19,24 @@ the syntax below. In order to keep the development tidy, I’m creating a
 separate database on Hive which I will use for the purpose of creating
 tables for this article.
 
-    -- Initially test database is created to keep the development tidy
-    CREATE DATABASE blog COMMENT 'Blog article samples, can be deleted.';
-    -- Example table is created
-    CREATE TABLE blog.sample_partitioned_table (
-            value_column_a FLOAT    COMMENT 'Column will hold 4-byte number', 
-            value_column_b DOUBLE   COMMENT '8-byte double precision', 
-            value_column_c CHAR(1)  COMMENT 'Fixed length varchar') 
-        COMMENT 'Sample partitioned table stored as text file' 
-        PARTITIONED BY (
-            part_year SMALLINT  COMMENT 'Data load year, partition', 
-            part_month TINYINT  COMMENT 'Data load month, partition',
-            part_day TINYINT    COMMENT 'Data load day, partition')
-        ROW FORMAT DELIMITED
-        FIELDS TERMINATED BY '\t'
-        LINES TERMINATED BY '\n'
-        STORED AS TEXTFILE;
+``` sql
+-- Initially test database is created to keep the development tidy
+CREATE DATABASE blog COMMENT 'Blog article samples, can be deleted.';
+-- Example table is created
+CREATE TABLE blog.sample_partitioned_table (
+        value_column_a FLOAT    COMMENT 'Column will hold 4-byte number', 
+        value_column_b DOUBLE   COMMENT '8-byte double precision', 
+        value_column_c CHAR(1)  COMMENT 'Fixed length varchar') 
+    COMMENT 'Sample partitioned table stored as text file' 
+    PARTITIONED BY (
+        part_year SMALLINT  COMMENT 'Data load year, partition', 
+        part_month TINYINT  COMMENT 'Data load month, partition',
+        part_day TINYINT    COMMENT 'Data load day, partition')
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\n'
+    STORED AS TEXTFILE;
+```
 
 The code snippet above achieves the following:
 
@@ -70,44 +76,117 @@ data generated for specific day, in business that structure would be
 frequently used to develop views on periodical business activity. For
 the purpose of example, I’m generating some sample data in R.
 
-    suppressPackageStartupMessages(library(tidyverse))
-    suppressPackageStartupMessages(library(lubridate))
-    # Generating two months of data
-    dates <- seq.Date(
-        from = as.Date("01-01-2010", format = "%d-%m-%Y"),
-        to = as.Date("28-02-2010", format = "%d-%m-%Y"),
-        by = "day"
-    )
-    # Each data will contain two rows of values corresponding to the column types
-    # that were previously defined in Hive
-    sample_data <- map_dfr(.x = dates, ~ tibble(val_a = runif(2),
-                                                val_b = runif(2),
-                                                val_c = sample(letters, 2),
-                                                update_year = year(.x),
-                                                update_month = month(.x),
-                                                update_day = day(.x)))
+``` r
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lubridate))
+# Generating two months of data
+dates <- seq.Date(
+    from = as.Date("01-01-2010", format = "%d-%m-%Y"),
+    to = as.Date("28-02-2010", format = "%d-%m-%Y"),
+    by = "day"
+)
+# Each data will contain two rows of values corresponding to the column types
+# that were previously defined in Hive
+sample_data <- map_dfr(.x = dates, ~ tibble(val_a = runif(2),
+                                            val_b = runif(2),
+                                            val_c = sample(letters, 2),
+                                            update_year = year(.x),
+                                            update_month = month(.x),
+                                            update_day = day(.x)))
+```
 
 The created data looks as follows:
 
-    head(sample_data)
+``` r
+head(sample_data)
+```
 
-    ## # A tibble: 6 × 6
-    ##    val_a   val_b val_c update_year update_month update_day
-    ##    <dbl>   <dbl> <chr>       <dbl>        <dbl>      <int>
-    ## 1 0.222  0.00772 y            2010            1          1
-    ## 2 0.817  0.388   b            2010            1          1
-    ## 3 0.225  0.367   x            2010            1          2
-    ## 4 0.0439 0.738   w            2010            1          2
-    ## 5 0.0439 0.855   q            2010            1          3
-    ## 6 0.834  0.793   k            2010            1          3
+    # A tibble: 6 × 6
+      val_a val_b val_c update_year update_month update_day
+      <dbl> <dbl> <chr>       <dbl>        <dbl>      <int>
+    1 0.318 0.244 j            2010            1          1
+    2 0.915 0.740 t            2010            1          1
+    3 0.868 0.233 i            2010            1          2
+    4 0.206 0.822 p            2010            1          2
+    5 0.965 0.822 v            2010            1          3
+    6 0.681 0.691 t            2010            1          3
 
 Following the successful creation of the dummy data we are in position
 to easily leverage the desired data structure. Using the
 [`sparklyr`](https://spark.rstudio.com) package I’m creating a local
 connection.
 
-    suppressPackageStartupMessages(library(sparklyr))
-    sc <- spark_connect(master = "local")
+``` r
+suppressPackageStartupMessages(library(sparklyr))
+Sys.getenv("SPARK_HOME")
+```
+
+    [1] "/opt/spark"
+
+``` r
+dir.exists(Sys.getenv("SPARK_HOME"))
+```
+
+    [1] TRUE
+
+``` r
+sc <- spark_connect(master = "local")
+```
+
+``` r
+# Ensure Hive catalog and dynamic partitioning are enabled for this session
+suppressPackageStartupMessages(library(DBI))
+# Turn on dynamic partitions and allow fully dynamic inserts
+DBI::dbSendQuery(sc, "SET hive.exec.dynamic.partition=true")
+```
+
+    <DBISparkResult>
+      SQL  SET hive.exec.dynamic.partition=true
+      ROWS Fetched: 1 [complete]
+           Changed: 1
+
+``` r
+DBI::dbSendQuery(sc, "SET hive.exec.dynamic.partition.mode=nonstrict")
+```
+
+    <DBISparkResult>
+      SQL  SET hive.exec.dynamic.partition.mode=nonstrict
+      ROWS Fetched: 1 [complete]
+           Changed: 1
+
+``` r
+# Raise limits to avoid small demo failing due to caps
+DBI::dbSendQuery(sc, "SET hive.exec.max.dynamic.partitions=2000")
+```
+
+    <DBISparkResult>
+      SQL  SET hive.exec.max.dynamic.partitions=2000
+      ROWS Fetched: 1 [complete]
+           Changed: 1
+
+``` r
+DBI::dbSendQuery(sc, "SET hive.exec.max.dynamic.partitions.pernode=2000")
+```
+
+    <DBISparkResult>
+      SQL  SET hive.exec.max.dynamic.partitions.pernode=2000
+      ROWS Fetched: 1 [complete]
+           Changed: 1
+
+``` r
+# Sanity-check: print back the effective values
+DBI::dbGetQuery(sc, "SET hive.exec.dynamic.partition.mode")
+```
+
+                                   key     value
+    1 hive.exec.dynamic.partition.mode nonstrict
+
+``` r
+DBI::dbGetQuery(sc, "SET spark.sql.catalogImplementation")
+```
+
+                                  key value
+    1 spark.sql.catalogImplementation  hive
 
 For the purpose of the article I’ve also executed the provided-above
 HiveQL via Spark to ensure accessibility to data structures that would
@@ -117,30 +196,32 @@ new Hive schema from an R script layer. Similarly, core tables storing
 results would be usually established outside regular production
 processes.
 
-    ## <DBISparkResult>
-    ##   SQL  DROP TABLE IF EXISTS blog.sample_partitioned_table
-    ##   ROWS Fetched: 0 [complete]
-    ##        Changed: 0
+    <DBISparkResult>
+      SQL  DROP TABLE IF EXISTS blog.sample_partitioned_table
+      ROWS Fetched: 0 [complete]
+           Changed: 0
 
-    ## <DBISparkResult>
-    ##   SQL  DROP DATABASE IF EXISTS blog
-    ##   ROWS Fetched: 0 [complete]
-    ##        Changed: 0
+    <DBISparkResult>
+      SQL  DROP DATABASE IF EXISTS blog
+      ROWS Fetched: 0 [complete]
+           Changed: 0
 
-    res_DBI_data <- DBI::dbSendQuery(sc, "CREATE DATABASE blog COMMENT 'Blog article samples,                                           can be deleted.'")
-    res_DBI_tble <- DBI::dbSendQuery(sc, "CREATE TABLE blog.sample_partitioned_table (
-            value_column_a FLOAT    COMMENT 'Column will hold 4-byte number', 
-            value_column_b DOUBLE   COMMENT '8-byte double precision', 
-            value_column_c CHAR(1)  COMMENT 'Fixed length varchar') 
-        COMMENT 'Sample partitioned table stored as text file' 
-        PARTITIONED BY (
-            part_year SMALLINT  COMMENT 'Data load year, partition', 
-            part_month TINYINT  COMMENT 'Data load month, partition',
-            part_day TINYINT    COMMENT 'Data load day, partition')
-        ROW FORMAT DELIMITED
-        FIELDS TERMINATED BY '\t'
-        LINES TERMINATED BY '\n'
-        STORED AS TEXTFILE")
+``` r
+res_DBI_data <- DBI::dbSendQuery(sc, "CREATE DATABASE blog COMMENT 'Blog article samples, can be deleted.'")
+res_DBI_tble <- DBI::dbSendQuery(sc, "CREATE TABLE blog.sample_partitioned_table (
+        value_column_a FLOAT    COMMENT 'Column will hold 4-byte number', 
+        value_column_b DOUBLE   COMMENT '8-byte double precision', 
+        value_column_c CHAR(1)  COMMENT 'Fixed length varchar') 
+    COMMENT 'Sample partitioned table stored as text file' 
+    PARTITIONED BY (
+        part_year SMALLINT  COMMENT 'Data load year, partition', 
+        part_month TINYINT  COMMENT 'Data load month, partition',
+        part_day TINYINT    COMMENT 'Data load day, partition')
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\n'
+    STORED AS TEXTFILE")
+```
 
 ### Insert mechanism
 
@@ -152,25 +233,29 @@ proposed method can be easily modified and applied across other object
 structures, like lists. As a first step we will be looking to copy the
 existing sample data into Spark.
 
-    tbl_sprk <- copy_to(sc, sample_data, "spark_sample_data")
+``` r
+tbl_sprk <- copy_to(sc, sample_data, "spark_sample_data")
+```
 
 In Spark our RDD is visible as `spark_sample_data` we will be looking to
 use that table in order to insert our partition elements into permanent
 storage.
 
-    suppressPackageStartupMessages(library(DBI))
-    suppressPackageStartupMessages(library(glue))
-    res_pmap <- pmap(
-        .l = select(sample_data, update_year, update_month, update_day),
-        .f = ~ DBI::dbSendQuery(sc, glue("INSERT INTO TABLE blog.sample_partitioned_table
-                                         PARTITION (part_year={..1},
-                                                    part_month={..2},
-                                                    part_day={..3})
-                                         SELECT val_a, val_b, val_c
-                            FROM spark_sample_data
-                                            WHERE update_year={..1} AND
-                                            update_month={..2} AND
-                                            update_day={..3}")))
+``` r
+suppressPackageStartupMessages(library(DBI))
+suppressPackageStartupMessages(library(glue))
+res_pmap <- pmap(
+    .l = select(sample_data, update_year, update_month, update_day),
+    .f = ~ DBI::dbSendQuery(sc, glue("INSERT INTO TABLE blog.sample_partitioned_table
+                                     PARTITION (part_year={..1},
+                                                part_month={..2},
+                                                part_day={..3})
+                                     SELECT val_a, val_b, val_c
+                        FROM spark_sample_data
+                                        WHERE update_year={..1} AND
+                                        update_month={..2} AND
+                                        update_day={..3}")))
+```
 
 Let’s unpack the code below. Our key goals are: \* Our aim is to
 populate *partitions* in our permanent Hive table
@@ -194,6 +279,34 @@ identifier into the respective partition names. 4. `SELECT` runs on
 the data we are interested in and insert that subset into the desired
 partition.
 
+**Note:** The previous chunk demonstrates how to insert partitioned data
+by iterating through table elements and executing individual insert
+statements for each partition. While this approach is convenient for
+illustrating how to programmatically construct and execute partitioned
+inserts in R, it is not efficient for large datasets or production use,
+as it results in many separate database operations and can be very slow.
+Therefore, in the following chunk, I use a single bulk insert statement
+to efficiently populate all partitions at once. The iterative example is
+retained here for educational purposes, as it clearly shows how to loop
+through table elements and dynamically build SQL statements in R.
+
+``` r
+DBI::dbSendQuery(sc, "
+    INSERT INTO TABLE blog.sample_partitioned_table
+    PARTITION (part_year, part_month, part_day)
+    SELECT val_a, val_b, val_c, update_year, update_month, update_day
+    FROM spark_sample_data")
+```
+
+    <DBISparkResult>
+      SQL  
+        INSERT INTO TABLE blog.sample_partitioned_table
+        PARTITION (part_year, part_month, part_day)
+        SELECT val_a, val_b, val_c, update_year, update_month, update_day
+        FROM spark_sample_data
+      ROWS Fetched: 0 [complete]
+           Changed: 0
+
 ### Results
 
 Following the operation above we can now explore the populated storage
@@ -203,27 +316,31 @@ to get a number of existing partitions. Tibble’s
 [`glimpse`](https://tibble.tidyverse.org/reference/glimpse.html) can be
 used against the Spark data to get the preview of the created table.
 
-    tbl_perm <- tbl(sc, "blog.sample_partitioned_table")
-    sdf_num_partitions(tbl_perm)
+``` r
+tbl_perm <- tbl(sc, "blog.sample_partitioned_table")
+sdf_num_partitions(tbl_perm)
+```
 
-    ## [1] 118
+    [1] 59
 
-    glimpse(tbl_perm)
+``` r
+glimpse(tbl_perm)
+```
 
-    ## Rows: ??
-    ## Columns: 6
-    ## Database: spark_connection
-    ## $ value_column_a <dbl> 0.26110536, 0.34033322, 0.26110536, 0.34033322, 0.84827…
-    ## $ value_column_b <dbl> 0.03777343, 0.79840476, 0.03777343, 0.79840476, 0.72197…
-    ## $ value_column_c <chr> "r", "g", "r", "g", "x", "l", "x", "l", "p", "m", "p", …
-    ## $ part_year      <int> 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
-    ## $ part_month     <int> 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2…
-    ## $ part_day       <int> 6, 6, 6, 6, 11, 11, 11, 11, 5, 5, 5, 5, 11, 11, 11, 11,…
+    Rows: ??
+    Columns: 6
+    Database: spark_connection
+    $ value_column_a <dbl> 0.28983361, 0.11118179, 0.58122498, 0.29996967, 0.68852…
+    $ value_column_b <dbl> 0.26433064, 0.23232922, 0.95280237, 0.79809874, 0.39989…
+    $ value_column_c <chr> "i", "m", "u", "r", "z", "c", "z", "w", "n", "p", "c", …
+    $ part_year      <int> 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
+    $ part_month     <int> 1, 1, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1…
+    $ part_day       <int> 20, 20, 13, 13, 21, 21, 16, 16, 8, 8, 14, 14, 4, 4, 26,…
 
 # Summary
 
 Convenient and flexible functions facilitating string manipulations
-available in R make metaprogramming[1] in R easy. Generating and
+available in R make metaprogramming[^1] in R easy. Generating and
 manipulating Hive statements as strings may not be the most efficient
 strategy in the light of the API’s offered via `sparklyr` or `dbplyr`.
 Neverthless is possible to spot instances where R code makes those
@@ -231,13 +348,22 @@ coding challenges partiuclary easy to solution and also to maintain.
 
 # References
 
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
+
+<div id="ref-costa2019" class="csl-entry">
+
 Costa, Eduarda, Carlos Costa, and Maribel Yasmina Santos. 2019.
 “Evaluating Partitioning and Bucketing Strategies for Hive‐based Big
 Data Warehousing Systems.” *Journal of Big Data* 6 (34): 1–38.
 <https://doi.org/10.1186/s40537-019-0196-1>.
 
-[1] Metaprogramming is a programming paradigm that treats other
-programming programs as data. In business, a BI setting metaprogramming
-is frequently used to generate efficiencies in routine data handling
-tasks, such as automating generation of SQL statements for importing
-data.
+</div>
+
+</div>
+
+[^1]: Metaprogramming is a programming paradigm that treats other
+    programming programs as data. In business, a BI setting
+    metaprogramming is frequently used to generate efficiencies in
+    routine data handling tasks, such as automating generation of SQL
+    statements for importing data.

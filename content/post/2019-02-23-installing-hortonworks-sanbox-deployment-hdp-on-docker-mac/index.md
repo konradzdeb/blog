@@ -1,3 +1,7 @@
+# Installing Hortonworks Sanbox on Mac with Docker
+Konrad
+2019-02-23
+
 # Background
 
 The post covers installation of Hortonworks Sandbox (HD) on Mac using
@@ -27,22 +31,28 @@ technically, Docker uses OS-level virtualisation to deliver software
 packages called containers. Before installing docker let’s check for the
 existing installation.
 
-    which -a docker
-    # /usr/local/bin/docker
-    docker -v
-    # Docker version 20.10.2, build 2291f61
+``` r
+which -a docker
+# /usr/local/bin/docker
+docker -v
+# Docker version 20.10.2, build 2291f61
+```
 
 Assuming that the line above did not produce results we can install
 docker with use of Homebrew. To install Homebrew:
 
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+``` r
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
 
 We can the progress with installing docker. The command will install
 ‘cask’ version of the Docker. In Homebrew lingo, ‘casks’ are
 applications with Graphical User Interfaces. It is possible to install
 Docker without GUI by running `brew install docker`.
 
-    brew install --cask docker
+``` r
+brew install --cask docker
+```
 
 ### HDP
 

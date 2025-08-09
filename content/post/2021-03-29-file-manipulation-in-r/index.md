@@ -1,3 +1,7 @@
+# Using R for File Manipulation
+Konrad Zdeb
+2021-03-29
+
 # Challenge
 
 File manipulation is a frequent task unavoidable in almost every IT
@@ -28,7 +32,7 @@ offers somehow wide definition:
   a team for pure ETL tasks is usually given in the context of R
   language being utilised to greater or lesser degree to facilitate data
   modelling, analytical or statistical work. R wasn’t designed to
-  replace ETL[1] processes; nevertheless, as every other well-developed
+  replace ETL[^1] processes; nevertheless, as every other well-developed
   programming language R offers a set of robust tools for accomplishing
   file manipulation, analysis and creation. In particular, R package
   ecosystem offers a layer that provides a clean, **unified,** interface
@@ -51,15 +55,15 @@ offers somehow wide definition:
   answer](https://stackoverflow.com/a/32109191/1655567), which suggests
   this answer:
 
-<!-- -->
+``` coffee
+@echo off
+setlocal EnableExtensions
 
-    @echo off
-    setlocal EnableExtensions
-
-    rem get unique file name 
-    :uniqLoop
-    set "uniqueFileName=%tmp%\bat~%RANDOM%.tmp"
-    if exist "%uniqueFileName%" goto :uniqLoop
+rem get unique file name 
+:uniqLoop
+set "uniqueFileName=%tmp%\bat~%RANDOM%.tmp"
+if exist "%uniqueFileName%" goto :uniqLoop
+```
 
 The point is that exercises like that incur additional maintenance cost.
 Whereas `tempfile` is straightforward, well documented and understood by
@@ -70,7 +74,7 @@ implementation, which will make our project easier to maintain.
   exceptionally well with Docker. This is conducive to reducing future
   maintainability costs and enhancing portability. Decent article
   covering technicalities of using Docker with R was provided by Colin
-  Fay.[2]
+  Fay.[^2]
 
 - R has rich ecosystem offering API connectivity. Thanks to
   [Plumber](https://www.rplumber.io) R users can, with relatively little
@@ -104,9 +108,9 @@ implementation, which will make our project easier to maintain.
 - Achieving fine-grained control over common operations may be more
   difficult in R. Let’s consider `rsync`. The Internet is full of
   examples on how to achieve properly defined goals using `rsync`, it is
-  also possible to find Python implementation of the algorithm[3]. At
+  also possible to find Python implementation of the algorithm[^3]. At
   the time of writing this article, the attempts to bring `rsync`
-  functionality relied on command line tool.[4]
+  functionality relied on command line tool.[^4]
 
 - Multi-threading, the thinking around multi-threading and asynchronous
   computation in R oscillates around finding more efficient ways to
@@ -116,64 +120,25 @@ implementation, which will make our project easier to maintain.
   to run processes in the background or perform asynchronous I/O
   operations; those solutions are applicable to more complex process.
   Achieving parallel `rsync` execution can be easily achieved using
-  `xargs`, as found on Stack Overflow[5]:
+  `xargs`, as found on Stack Overflow[^5]:
 
-<!-- -->
-
-    ls /srv/mail | xargs -n1 -P4 -I% rsync -Pa % myserver.com:/srv/mail/
+``` bash
+ls /srv/mail | xargs -n1 -P4 -I% rsync -Pa % myserver.com:/srv/mail/
+```
 
 ## Packages worth looking at
 
 When discussing efficiencies derivable from R in the context of file
 manipulation it’s worth to mention a suitable packages as available
 
-<table>
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 75%" />
-</colgroup>
-<thead>
-<tr>
-<th style="text-align: left;">Package</th>
-<th style="text-align: left;">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><a
-href="https://github.com/r-lib/fs">fs</a></td>
-<td style="text-align: left;">Cross-platform, uniform interface for file
-manipulation</td>
-</tr>
-<tr>
-<td style="text-align: left;"><a
-href="https://github.com/r-lib/processx">processx</a></td>
-<td style="text-align: left;">Executing and controlling system
-processes</td>
-</tr>
-<tr>
-<td style="text-align: left;"><a
-href="https://github.com/r-lib/zip">zip</a></td>
-<td style="text-align: left;">Cross-platform zip compression in R</td>
-</tr>
-<tr>
-<td style="text-align: left;"><a
-href="https://github.com/INWTlab/rsync">rsync</a></td>
-<td style="text-align: left;">R wrapper around rsync</td>
-</tr>
-<tr>
-<td style="text-align: left;"><a
-href="https://github.com/stenevang/sftp/">sftp</a></td>
-<td style="text-align: left;">SFTP for R</td>
-</tr>
-<tr>
-<td style="text-align: left;"><a
-href="https://ropengov.github.io/eurostat/">eurostat</a>, <a
-href="https://github.com/gshs-ornl/wbstats">wbstats</a></td>
-<td style="text-align: left;">For accessing publicly available data</td>
-</tr>
-</tbody>
-</table>
+| Package | Description |
+|:---|:---|
+| [fs](https://github.com/r-lib/fs) | Cross-platform, uniform interface for file manipulation |
+| [processx](https://github.com/r-lib/processx) | Executing and controlling system processes |
+| [zip](https://github.com/r-lib/zip) | Cross-platform zip compression in R |
+| [rsync](https://github.com/INWTlab/rsync) | R wrapper around rsync |
+| [sftp](https://github.com/stenevang/sftp/) | SFTP for R |
+| [eurostat](https://ropengov.github.io/eurostat/), [wbstats](https://github.com/gshs-ornl/wbstats) | For accessing publicly available data |
 
 # Conclusion
 
@@ -200,20 +165,21 @@ on external tools to deliver data into R and outwith R.
 
 # References
 
-<https://techterms.com/definition/programming_language>
+https://techterms.com/definition/programming_language
 
-[1] Export Transform Load
+[^1]: Export Transform Load
 
-[2] Colin Fay; [*An Introduction to Docker for R
-Users*](https://colinfay.me/docker-r-reproducibility/).
+[^2]: Colin Fay; [*An Introduction to Docker for R
+    Users*](https://colinfay.me/docker-r-reproducibility/).
 
-[3] An interesting implementation was offered by Tyler Cipriani in [his
-blog](https://tylercipriani.com/blog/2017/07/09/the-rsync-algorithm-in-python/).
+[^3]: An interesting implementation was offered by Tyler Cipriani in
+    [his
+    blog](https://tylercipriani.com/blog/2017/07/09/the-rsync-algorithm-in-python/).
 
-[4] R package providing a convenient wrapper around `rsync` is available
-through the GitHub repo:
-[INWTlab/rsync](https://github.com/INWTlab/rsync).
+[^4]: R package providing a convenient wrapper around `rsync` is
+    available through the GitHub repo:
+    [INWTlab/rsync](https://github.com/INWTlab/rsync).
 
-[5] The answer the question on *Speed up rsync with
-Simultaneous/Concurrent File Transfers?* available
-[here](https://stackoverflow.com/a/25532027/1655567).
+[^5]: The answer the question on *Speed up rsync with
+    Simultaneous/Concurrent File Transfers?* available
+    [here](https://stackoverflow.com/a/25532027/1655567).
