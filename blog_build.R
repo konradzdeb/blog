@@ -23,5 +23,12 @@ for (f in rmd_files) {
   }
 }
 
+# Also render root index.Rmd if it exists
+root_index <- "index.Rmd"
+if (file.exists(root_index)) {
+  message("▶ Rendering root ", root_index)
+  quarto::quarto_render(root_index, output_format = "gfm", execute = TRUE)
+}
+
 message("▶ Building site with Hugo...")
 system("hugo -D --cleanDestinationDir")
