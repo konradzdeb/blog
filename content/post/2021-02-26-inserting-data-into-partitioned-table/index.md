@@ -102,14 +102,14 @@ head(sample_data)
 ```
 
     # A tibble: 6 × 6
-      val_a  val_b val_c update_year update_month update_day
-      <dbl>  <dbl> <chr>       <dbl>        <dbl>      <int>
-    1 0.346 0.905  i            2010            1          1
-    2 0.976 0.826  k            2010            1          1
-    3 0.905 0.821  s            2010            1          2
-    4 0.395 0.666  k            2010            1          2
-    5 0.662 0.0847 g            2010            1          3
-    6 0.319 0.895  d            2010            1          3
+       val_a  val_b val_c update_year update_month update_day
+       <dbl>  <dbl> <chr>       <dbl>        <dbl>      <int>
+    1 0.950  0.922  b            2010            1          1
+    2 0.469  0.707  s            2010            1          1
+    3 0.176  0.0431 n            2010            1          2
+    4 0.582  0.125  f            2010            1          2
+    5 0.0561 0.558  g            2010            1          3
+    6 0.791  0.172  z            2010            1          3
 
 Following the successful creation of the dummy data we are in position
 to easily leverage the desired data structure. Using the

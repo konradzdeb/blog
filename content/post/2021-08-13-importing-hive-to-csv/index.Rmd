@@ -144,7 +144,7 @@ We can assume a more rigours approach reflecting the prefence that, in all likel
 - With expection of the three letter currency code, the column name should be in lowercase. Hive is case-insesitive but pedentically, I would prefer for the column to be named `price_GBP` instead of `price_gbp`. As this is matter of preference we may make this operation optional
 - We would like for the column to remove common three letter words; for instance `price_item` is sufficiently clear and we don't need `price_for_an_item`. Pedentically, we may be even temepted to reverse common words so the order reads more natural, `item_price` reads better than `price_item` (although, there is no loss in meaning.)
 
-```{r column_rename_function, code=xfun::read_utf8("../../../../HiveQLgenerator/R/clean-column-names.R"), echo=TRUE}
+```{r column_rename_function, code=xfun::read_utf8("clean-column-names.R"), echo=TRUE}
 ```
 
 # Conclusion

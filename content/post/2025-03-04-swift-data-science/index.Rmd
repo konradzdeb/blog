@@ -15,25 +15,12 @@ tags:
 # Wrap code chunks
 knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 80), tidy = TRUE)
 
-# Define Swift as engine
 knitr::knit_engines$set(swift = function(options) {
-  # Get all Swift chunks
-  swift_chunk_names <- knitr::all_labels(engine == "swift")
-  # Preceding chunks
-  prior_chunk_names <- swift_chunk_names[seq_len(Position( \(x) x == knitr::opts_current$get("label"), swift_chunk_names ))]
-  # All Swift code
-  collected_swift_code <- Reduce( \(x, y) { c(x, knitr::knit_code$get(y)) }, prior_chunk_names, init = "")
-  # Filter Swift code
-  # Identify print statement lines
-  print_lines <- grep("^print", collected_swift_code)
-  # Keep only the last print statement
-  if (length(print_lines) > 1) {
-      filtered_swift_code <- collected_swift_code[-print_lines[-length(print_lines)]] # Remove all but the last print
-  } else {
-    filtered_swift_code <- collected_swift_code # Keep everything as is
-  }
-  # Run the collected Swift code
-  out <- system2(command = "swift", args = "repl", input = filtered_swift_code, stdout = TRUE, stderr = TRUE)
+  # Write code to a temporary file
+  tf <- tempfile(fileext = ".swift")
+  writeLines(options$code, tf)
+  # Run Swift as a script
+  out <- system2("swift", tf, stdout = TRUE, stderr = TRUE)
   knitr::engine_output(options, options$code, out)
 })
 ```

@@ -1,3 +1,7 @@
+# On Sorting Arrays…or why it’s good to read the actual assignment
+Konrad Zdeb
+2021-05-23
+
 # Problem
 
 Solving challenges on [project Euler](https://projecteuler.net) or
@@ -33,18 +37,20 @@ My initial solution simply involved re-starting array sort and counting
 each approach. As arrays are consisting of unordered consecutive
 integers ∈ \[1, 2, 3, …, n\], the easiest solution
 
-    def minimumSwaps(arr):
-        # Add zero to avoid the need of shifting the index so all the loops
-        # are working fine
-        arr.insert(0, 0)
-        num_sorts = 0
-        while arr != sorted(arr):
-            for idx, val in enumerate(arr):
-                if idx != val:
-                    arr[idx], arr[val] = arr[val], arr[idx]
-                    num_sorts += 1
-                    break
-        return num_sorts
+``` python
+def minimumSwaps(arr):
+    # Add zero to avoid the need of shifting the index so all the loops
+    # are working fine
+    arr.insert(0, 0)
+    num_sorts = 0
+    while arr != sorted(arr):
+        for idx, val in enumerate(arr):
+            if idx != val:
+                arr[idx], arr[val] = arr[val], arr[idx]
+                num_sorts += 1
+                break
+    return num_sorts
+```
 
 The solution returns the correct results but times out for 6 cases that
 consists of bigger arrays.
@@ -58,19 +64,21 @@ for quick wins. The sorting operation in `while arr != sorted(arr)`
 could be optimised by storing sorted object (as each array has only one
 sorted order that meets the criteria).
 
-    def minimumSwaps(arr):
-        # Add zero to avoid the need of shifting the index so all the loops
-        # are working fine
-        arr.insert(0, 0)
-        num_sorts = 0
-        array_sorted = sorted(arr) # First optimisation
-        while arr != array_sorted:
-            for idx, val in enumerate(arr):
-                if idx != val:
-                    arr[idx], arr[val] = arr[val], arr[idx]
-                    num_sorts += 1
-                    break
-        return num_sorts
+``` python
+def minimumSwaps(arr):
+    # Add zero to avoid the need of shifting the index so all the loops
+    # are working fine
+    arr.insert(0, 0)
+    num_sorts = 0
+    array_sorted = sorted(arr) # First optimisation
+    while arr != array_sorted:
+        for idx, val in enumerate(arr):
+            if idx != val:
+                arr[idx], arr[val] = arr[val], arr[idx]
+                num_sorts += 1
+                break
+    return num_sorts
+```
 
 The line `array_sorted = sorted(arr)` makes the solution time out only
 once.
@@ -90,23 +98,25 @@ with a number of moves equal to half of the array lengths. In those
 cases, the computation and array swapping is unnecessary. This is
 implemented in the example below.
 
-    def minimumSwaps(arr):
-        # Check if dealing with simple reverse array, as sorting reverse array
-        # will be equivalent to half of length
-        if arr == sorted(arr, reverse=True):
-            return int(len(arr) / 2)
-        # Add zero to avoid the need of shifting the index so all the loops
-        # are working fine
-        arr.insert(0, 0)
-        num_sorts = 0
-        array_sorted = sorted(arr) # First optimisation
-        while arr != array_sorted:
-            for idx, val in enumerate(arr):
-                if idx != val:
-                    arr[idx], arr[val] = arr[val], arr[idx]
-                    num_sorts += 1
-                    break
-        return num_sorts
+``` python
+def minimumSwaps(arr):
+    # Check if dealing with simple reverse array, as sorting reverse array
+    # will be equivalent to half of length
+    if arr == sorted(arr, reverse=True):
+        return int(len(arr) / 2)
+    # Add zero to avoid the need of shifting the index so all the loops
+    # are working fine
+    arr.insert(0, 0)
+    num_sorts = 0
+    array_sorted = sorted(arr) # First optimisation
+    while arr != array_sorted:
+        for idx, val in enumerate(arr):
+            if idx != val:
+                arr[idx], arr[val] = arr[val], arr[idx]
+                num_sorts += 1
+                break
+    return num_sorts
+```
 
 **Passed tests: 14/14**
 

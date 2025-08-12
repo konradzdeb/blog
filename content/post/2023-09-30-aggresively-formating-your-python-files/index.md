@@ -1,3 +1,7 @@
+# Aggresively formating your Python files
+Konrad Zdeb
+2023-09-30
+
 Vim provides a wide range of functions for file formatting, starting
 with basic features such as `reindent`.
 
@@ -12,20 +16,24 @@ tapping into powerful, pre-existing solutions for code aesthetics and
 standardization. In effect, the role of the function is to pass the
 filename to the call below:
 
-    autopep8 --verbose --in-place --aggressive --aggressive   ${our_python_file}
+``` shell
+autopep8 --verbose --in-place --aggressive --aggressive   ${our_python_file}
+```
 
 This is the simplest implementation, where the file path is passed into
 the formatting function, and the formatted file is then read back into
 the buffer.
 
-    " Aggresively and quickly format Python file
-    function! FormatThisPythonFile()
-         let filename = expand("%")
-         let cmd = "autopep8 --verbose --in-place --aggressive --aggressive " . filename
-         let result = system(cmd)
-         execute(':edit! ' . filename)
-         echo result
-    endfunction
+``` vim
+" Aggresively and quickly format Python file
+function! FormatThisPythonFile()
+     let filename = expand("%")
+     let cmd = "autopep8 --verbose --in-place --aggressive --aggressive " . filename
+     let result = system(cmd)
+     execute(':edit! ' . filename)
+     echo result
+endfunction
+```
 
 1.  **Define Function:** The function `FormatThisPythonFile` is defined
     to format the current Python file.
@@ -53,15 +61,17 @@ An alternative implementation avoids these issues by not replacing the
 file content directly. Instead, it updates the buffer with the formatted
 content. This function could look as follows:
 
-    function! FormatThisPythonFile()
-        let filename = expand("%")
-        let cmd = "autopep8 --aggressive --aggressive " . filename
-        let result = system(cmd)
-        execute "%d"
-        put =result
-        exec "1,1d"
-    endfunction
-    command FormatThisPythonFile call FormatThisPythonFile()
+``` vim
+function! FormatThisPythonFile()
+    let filename = expand("%")
+    let cmd = "autopep8 --aggressive --aggressive " . filename
+    let result = system(cmd)
+    execute "%d"
+    put =result
+    exec "1,1d"
+endfunction
+command FormatThisPythonFile call FormatThisPythonFile()
+```
 
 In this implementation:
 
@@ -82,12 +92,7 @@ unformatted versions of the file after using the function, along with
 the ability to switch between the historical and formatted versions of
 the file.
 
-<figure>
-<img src="images/python_format.gif"
-alt="Example of formatting Python file." />
-<figcaption aria-hidden="true">Example of formatting Python
-file.</figcaption>
-</figure>
+![Example of formatting Python file.](images/python_format.gif)
 
 ## Conclusion
 

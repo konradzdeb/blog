@@ -1,3 +1,7 @@
+# On Structuring Python Projects
+Konrad Zdeb
+2022-03-16
+
 ## Types of Projects
 
 The term *Python project* can be somewhat misleading. While languages
@@ -25,14 +29,9 @@ it enables us to narrow down the gap between the complexity of the
 project scaffolding and the time horizon. If visualized, it might look
 something like this:
 
-![](/Users/konrad/Dev/RProjects/blog/content/post/2022-03-16-python-project-structre/index_files/figure-markdown_strict/line_plot_compl-1.png)
+![](index_files/figure-commonmark/line_plot_compl-1.png)
 
-<figure>
-<img src="images/complexity_line.png"
-alt="Complexity and scaffolding structure" />
-<figcaption aria-hidden="true">Complexity and scaffolding
-structure</figcaption>
-</figure>
+![Complexity and scaffolding structure](images/complexity_line.png)
 
 ## Set-up
 
@@ -72,17 +71,19 @@ module, which defines the metadata and dependencies of the project.
 
 ### Example of `setup.py`:
 
-    from setuptools import setup, find_packages
+``` python
+from setuptools import setup, find_packages
 
-    setup(
-        name='example_package',
-        version='0.1',
-        packages=find_packages(),
-        install_requires=[
-            'numpy',
-            'pandas'
-        ],
-    )
+setup(
+    name='example_package',
+    version='0.1',
+    packages=find_packages(),
+    install_requires=[
+        'numpy',
+        'pandas'
+    ],
+)
+```
 
 ### `setup.cfg`
 
@@ -111,15 +112,17 @@ static, easy-to-read format.
 
 ### Example of `setup.cfg`:
 
-    [metadata]
-    name = example_package
-    version = 0.1
+``` ini
+[metadata]
+name = example_package
+version = 0.1
 
-    [options]
-    packages = find:
-    install_requires =
-        numpy
-        pandas
+[options]
+packages = find:
+install_requires =
+    numpy
+    pandas
+```
 
 ## Summary
 

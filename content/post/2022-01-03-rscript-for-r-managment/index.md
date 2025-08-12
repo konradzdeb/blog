@@ -1,3 +1,7 @@
+# Using RScript for R Installation Managment
+Konrad Zdeb
+2022-01-03
+
 Most frequently, users tend to undertake common R installation and
 management tasks from within the R session. Frequently making use of
 commands, like `install.packages`, `update.packages` or `old.packages`
@@ -6,18 +10,20 @@ Those common tasks can also be accomplished via the GUI offered within
 RStudio, which provides an effortless mechanism for undertaking basic
 package management tasks. This is approach is usually sufficient for the
 vast majority of cases; however, there are some examples when working
-within REPL[1] to accomplish common installation tasks is not hugely
+within REPL[^1] to accomplish common installation tasks is not hugely
 convenient.
 
 For example, we may be utilising multiple library paths and our
 intention may be to update only one of the available libraries, which we
-use as a baseline for all new projects[2]. If our `.libPaths()` returns
+use as a baseline for all new projects[^2]. If our `.libPaths()` returns
 a content similar to the one below, we may be interested only in
 updating the first repository.
 
-    .libPaths()
-    # [1] "/Users/thisUserName/Library/R/4/library"
-    # [2] "/usr/local/Cellar/r/4.1.2/lib/R/library"
+``` r
+.libPaths()
+# [1] "/Users/thisUserName/Library/R/4/library"
+# [2] "/usr/local/Cellar/r/4.1.2/lib/R/library"
+```
 
 This outcome can be achieved using
 `update.packages(lib.loc =  .libPaths()[1])` but if our intention is to
@@ -42,8 +48,8 @@ mechanism that would be out of the box accessible via command line.
 # Solution
 
 R offers two interfaces for running scripts and commands without
-starting an interactive session: `R CMD` and `RScript`[3]. `R CMD` is an
-older interface facilitating command and script execution via command
+starting an interactive session: `R CMD` and `RScript`[^3]. `R CMD` is
+an older interface facilitating command and script execution via command
 line. `Rscript` came later and is, in general, more flexible. Readers
 interested in the subject should start research from [this
 StackOverflow](https://stackoverflow.com/q/21969145/1655567) discussion
@@ -66,18 +72,22 @@ For a start, let’s attempt to construct a data frame containing the
 outdated packages using `Rscript`. This is achieved in the following
 manner
 
-    Rscript --no-save --no-restore --no-init-file \
-            -e 'as.data.frame(old.packages(repos = "https://cran.rstudio.com"))[,-c(1,6)]'
+``` bash
+Rscript --no-save --no-restore --no-init-file \
+        -e 'as.data.frame(old.packages(repos = "https://cran.rstudio.com"))[,-c(1,6)]'
+```
 
 If we intend to execute this command frequently it may be useful to wrap
 in a function. As we are not intending to pass any arguments to the
 function this is trivial:
 
-    function routdated () {
-            Rscript --no-save --no-restore --no-init-file \
-            -e 'as.data.frame(old.packages(repos = "https://cran.rstudio.com"))[,-c(1,6)]'
-    }
-    routdated
+``` bash
+function routdated () {
+        Rscript --no-save --no-restore --no-init-file \
+        -e 'as.data.frame(old.packages(repos = "https://cran.rstudio.com"))[,-c(1,6)]'
+}
+routdated
+```
 
 #### Explanation
 
@@ -111,11 +121,13 @@ installation via `RScript` we could conveniently call it as a background
 process or just start in a new tab when working with any popular
 terminal client supporting this functionality.
 
-    # Function body
-    function rinst () {
-        declare pkgnme=$1
-        Rscript --vanilla -e "install.packages('$pkgnme', dependencies = TRUE, repos = 'https://cloud.r-project.org/', lib = '/Users/konrad/Library/R/4/library')"
-    }
+``` bash
+# Function body
+function rinst () {
+    declare pkgnme=$1
+    Rscript --vanilla -e "install.packages('$pkgnme', dependencies = TRUE, repos = 'https://cloud.r-project.org/', lib = '/Users/konrad/Library/R/4/library')"
+}
+```
 
 ### Explanation
 
@@ -133,17 +145,18 @@ In all likelihood, for more sophisticated projects solutions like
 combination of Rscript / bash can prove very efficient in quickly
 accomplishing routine maintenance tasks.
 
-[1] REPL stands for **R**ead **E**val **P**rint **L**oop and is usually
-delivered in a form of an interactive shell. While working in Python
-users would commonly access REPLY by running `python` or `ipython`,
-[more details](https://pythonprogramminglanguage.com/repl/).
+[^1]: REPL stands for **R**ead **E**val **P**rint **L**oop and is
+    usually delivered in a form of an interactive shell. While working
+    in Python users would commonly access REPLY by running `python` or
+    `ipython`, [more
+    details](https://pythonprogramminglanguage.com/repl/).
 
-[2] Projects like [`renv`](https://rstudio.github.io/renv/) and
-[Rocker](https://www.rocker-project.org) offer sophisticated ways of
-managing dependencies. Users intend to use R in production can
-definitely benefit from those developments.
+[^2]: Projects like [`renv`](https://rstudio.github.io/renv/) and
+    [Rocker](https://www.rocker-project.org) offer sophisticated ways of
+    managing dependencies. Users intend to use R in production can
+    definitely benefit from those developments.
 
-[3] Less known
-[`littler`](http://dirk.eddelbuettel.com/code/littler.html) projects
-offers some excellent functionalities that are worth exploring for users
-keen on exploiting R’s command line front end capabilities.
+[^3]: Less known
+    [`littler`](http://dirk.eddelbuettel.com/code/littler.html) projects
+    offers some excellent functionalities that are worth exploring for
+    users keen on exploiting R’s command line front end capabilities.

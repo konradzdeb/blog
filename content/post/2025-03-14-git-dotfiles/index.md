@@ -1,9 +1,8 @@
-<figure>
-<img src="images/imageGitStatus.png"
-alt="Using git to version control dotfiles" />
-<figcaption aria-hidden="true">Using git to version control
-dotfiles</figcaption>
-</figure>
+# Version Control your Dotfiles
+Konrad Zdeb
+2025-03-14
+
+![Using git to version control dotfiles](images/imageGitStatus.png)
 
 # What are .dotfiles?
 
@@ -29,9 +28,11 @@ to run regular Git operations on our configurations.
 For example, version controlling my Emacs configuration
 (`~/.emacs.d/init.el`) looks like this:
 
-    config switch -c configs/emacs_install
-    config add ~/.emacs.d/init.el
-    config commit -as -m "Initial Emacs config"
+``` bash
+config switch -c configs/emacs_install
+config add ~/.emacs.d/init.el
+config commit -as -m "Initial Emacs config"
+```
 
 ## The `config` command
 
@@ -43,13 +44,21 @@ will create a bare git repository. Bare repository does not contain
 working tree (only contains the version control data that is the `.git`
 folder)
 
-    git init --bare $HOME/.dotfiles/
+::: {.cell}
 
-1.  Finally we want to enable `config` command; the command is simply
+``` bash
+git init --bare $HOME/.dotfiles/
+```
+
+:::
+
+3.  Finally we want to enable `config` command; the command is simply
     aliased `git` command with `--work-tree` and `--git-dir` parameters
     and looks as follows:
 
-        alias config='/usr/bin/git --git-dir=$HOME/.doftfiles/ --work-tree=$HOME'
+    ``` bash
+    alias config='/usr/bin/git --git-dir=$HOME/.doftfiles/ --work-tree=$HOME'
+    ```
 
     What happens here:
 
@@ -57,11 +66,13 @@ folder)
     - The argument `--git-dir` specifies where we store the repository
       data
 
-2.  There is one more snag, in the present configuration calling the
+4.  There is one more snag, in the present configuration calling the
     `config` command would show a vast number of untracked files. We can
     solve that problem by using the following git configuration
 
-         config config --local status.showUntrackedFiles no
+    ``` bash
+     config config --local status.showUntrackedFiles no
+    ```
 
 If this solution is working for you, you can add the line with the
 `alias` command to your `~/.bashrc` (or other depending on the shell) to
@@ -77,49 +88,49 @@ Consider my Neovim (NVim) setup. It’s structured into multiple Lua
 configuration files managed by the Lazy plugin. The current structure
 looks like this:
 
-    tree ~/.config/nvim -P '*.lua' --prune
+``` bash
+/Users/konrad/.config/nvim
+├── init.lua
+└── lua
+    ├── config
+    │   ├── autocmds.lua
+    │   └── lazy.lua
+    └── plugins
+        ├── autolist.lua
+        ├── autopairs.lua
+        ├── autosession.lua
+        ├── code-runner.lua
+        ├── codecompletion.lua
+        ├── conform.lua
+        ├── dial.lua
+        ├── fzy.lua
+        ├── gruvbox.lua
+        ├── insertdatetime.lua
+        ├── kanagawa.lua
+        ├── lsp.lua
+        ├── lualine.lua
+        ├── markdown.lua
+        ├── mason-lspconfig.lua
+        ├── mason-tool-installer.lua
+        ├── neogen.lua
+        ├── neogit.lua
+        ├── neotree.lua
+        ├── nightfox.lua
+        ├── nvim-ts-autotag.lua
+        ├── nvimlint.lua
+        ├── orgmode.lua
+        ├── R.lua
+        ├── snippets.lua
+        ├── startup.lua
+        ├── telescope-undo.lua
+        ├── telescope.lua
+        ├── templates.lua
+        ├── treesitter.lua
+        ├── venv-selector.lua
+        └── wilder.lua
 
-    ## /Users/konrad/.config/nvim
-    ## ├── init.lua
-    ## └── lua
-    ##     ├── config
-    ##     │   ├── autocmds.lua
-    ##     │   └── lazy.lua
-    ##     └── plugins
-    ##         ├── autolist.lua
-    ##         ├── autopairs.lua
-    ##         ├── autosession.lua
-    ##         ├── code-runner.lua
-    ##         ├── codecompletion.lua
-    ##         ├── conform.lua
-    ##         ├── dial.lua
-    ##         ├── fzy.lua
-    ##         ├── gruvbox.lua
-    ##         ├── insertdatetime.lua
-    ##         ├── kanagawa.lua
-    ##         ├── lsp.lua
-    ##         ├── lualine.lua
-    ##         ├── markdown.lua
-    ##         ├── mason-lspconfig.lua
-    ##         ├── mason-tool-installer.lua
-    ##         ├── neogen.lua
-    ##         ├── neogit.lua
-    ##         ├── neotree.lua
-    ##         ├── nightfox.lua
-    ##         ├── nvim-ts-autotag.lua
-    ##         ├── nvimlint.lua
-    ##         ├── orgmode.lua
-    ##         ├── R.lua
-    ##         ├── snippets.lua
-    ##         ├── startup.lua
-    ##         ├── telescope-undo.lua
-    ##         ├── telescope.lua
-    ##         ├── templates.lua
-    ##         ├── treesitter.lua
-    ##         ├── venv-selector.lua
-    ##         └── wilder.lua
-    ## 
-    ## 4 directories, 35 files
+4 directories, 35 files
+```
 
 ## Practical Example: Adding R support
 
@@ -156,7 +167,9 @@ However, managing dotfiles with Git makes reverting simple.
 Before starting the new setup, I create a separate branch using my
 aliased Git command:
 
-    config switch -c configs/nvim-r-test
+``` bash
+config switch -c configs/nvim-r-test
+```
 
 I would then work through the configuration changes, test NVim and play
 with any settings desired. Depending on what I decide to do I would

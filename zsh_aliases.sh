@@ -12,6 +12,7 @@ alias blog_build_image='DOCKER_BUILDKIT=1 docker build \
 
 # Build the blog content
 alias blog_build='docker run --rm -it \
+    -v /var/run/docker.sock:/var/run/docker.sock
     --platform=$BLOG_PLATFORM \
     -v "$BLOG_DIR":/site \
     -w /site \

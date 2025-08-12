@@ -66,8 +66,48 @@ Consider my Neovim (NVim) setup.
 It’s structured into multiple Lua configuration files managed by the Lazy plugin.
 The current structure looks like this:
 
-```{bash show_nvim_config, echo=TRUE}
-tree ~/.config/nvim -P '*.lua' --prune
+```{bash show_nvim_config, echo=TRUE, eval=FALSE}
+/Users/konrad/.config/nvim
+├── init.lua
+└── lua
+    ├── config
+    │   ├── autocmds.lua
+    │   └── lazy.lua
+    └── plugins
+        ├── autolist.lua
+        ├── autopairs.lua
+        ├── autosession.lua
+        ├── code-runner.lua
+        ├── codecompletion.lua
+        ├── conform.lua
+        ├── dial.lua
+        ├── fzy.lua
+        ├── gruvbox.lua
+        ├── insertdatetime.lua
+        ├── kanagawa.lua
+        ├── lsp.lua
+        ├── lualine.lua
+        ├── markdown.lua
+        ├── mason-lspconfig.lua
+        ├── mason-tool-installer.lua
+        ├── neogen.lua
+        ├── neogit.lua
+        ├── neotree.lua
+        ├── nightfox.lua
+        ├── nvim-ts-autotag.lua
+        ├── nvimlint.lua
+        ├── orgmode.lua
+        ├── R.lua
+        ├── snippets.lua
+        ├── startup.lua
+        ├── telescope-undo.lua
+        ├── telescope.lua
+        ├── templates.lua
+        ├── treesitter.lua
+        ├── venv-selector.lua
+        └── wilder.lua
+
+4 directories, 35 files
 ```
 
 ## Practical Example: Adding R support

@@ -1,3 +1,7 @@
+# Using Swift for Data Science Workflows
+Konrad Zdeb
+2025-03-04
+
 # Why Swift?
 
 Data science is dominated by Python and R, with some usage of Julia,
@@ -68,35 +72,21 @@ several goals for this setup:
     Minimize repeated `print` statements, ideally preserving only the
     final output for clarity.
 
-This can be done using the below command [1].
+This can be done using the below command [^1].
 
-    # Wrap code chunks
-    knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 80), tidy = TRUE)
+``` r
+# Wrap code chunks
+knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 80), tidy = TRUE)
 
-    # Define Swift as engine
-    knitr::knit_engines$set(swift = function(options) {
-        # Get all Swift chunks
-        swift_chunk_names <- knitr::all_labels(engine == "swift")
-        # Preceding chunks
-        prior_chunk_names <- swift_chunk_names[seq_len(Position(\(x) x == knitr::opts_current$get("label"),
-            swift_chunk_names))]
-        # All Swift code
-        collected_swift_code <- Reduce(\(x, y) {
-            c(x, knitr::knit_code$get(y))
-        }, prior_chunk_names, init = "")
-        # Filter Swift code Identify print statement lines
-        print_lines <- grep("^print", collected_swift_code)
-        # Keep only the last print statement
-        if (length(print_lines) > 1) {
-            filtered_swift_code <- collected_swift_code[-print_lines[-length(print_lines)]]  # Remove all but the last print
-        } else {
-            filtered_swift_code <- collected_swift_code  # Keep everything as is
-        }
-        # Run the collected Swift code
-        out <- system2(command = "swift", args = "repl", input = filtered_swift_code,
-            stdout = TRUE, stderr = TRUE)
-        knitr::engine_output(options, options$code, out)
-    })
+knitr::knit_engines$set(swift = function(options) {
+    # Write code to a temporary file
+    tf <- tempfile(fileext = ".swift")
+    writeLines(options$code, tf)
+    # Run Swift as a script
+    out <- system2("swift", tf, stdout = TRUE, stderr = TRUE)
+    knitr::engine_output(options, options$code, out)
+})
+```
 
 What happens here: 1. Function `knitr::knit_engines$set` registers new
 engine. Engine is define as new function called `swift`. 2. The call
@@ -117,24 +107,26 @@ print statement.
 
 Let’s attempt to evaluate a trivial statement
 
-    import Foundation
-    let helloText: String = "Hello from Swift REPL"
-    print(helloText)
+``` swift
+import Foundation
+let helloText: String = "Hello from Swift REPL"
+print(helloText)
+```
 
-    ## helloText: String = "Hello from Swift REPL"
-    ## Hello from Swift REPL
+    Hello from Swift REPL
 
 Let’s see if we can continue using the variables created below and
 re-use variable from the previous statement
 
-    let punctuationMark: String = "!"
-    let helloTwo:String = helloText + punctuationMark
-    print(helloTwo)
+``` swift
+let punctuationMark: String = "!"
+let helloTwo:String = helloText + punctuationMark
+print(helloTwo)
+```
 
-    ## helloText: String = "Hello from Swift REPL"
-    ## punctuationMark: String = "!"
-    ## helloTwo: String = "Hello from Swift REPL!"
-    ## Hello from Swift REPL!
+    /tmp/Rtmph4Epqc/filee0f71b6f9a5.swift:2:23: error: cannot find 'helloText' in scope
+    let helloTwo:String = helloText + punctuationMark
+                          ^~~~~~~~~
 
 # Conclusion
 
@@ -148,8 +140,8 @@ accessible in an interactive environment, letting you prototype data
 manipulation, statistical analysis, or even machine learning models
 right in your R Markdown files.
 
-[1] The original code was contributed via [StackOverflow
-discussion](https://stackoverflow.com/a/79484446/1655567); I’ve re-wrote
-it using [R’s functional
-programming](http://adv-r.had.co.nz/Functionals.html#functionals-fp) and
-reduced the code to a few lines.
+[^1]: The original code was contributed via [StackOverflow
+    discussion](https://stackoverflow.com/a/79484446/1655567); I’ve
+    re-wrote it using [R’s functional
+    programming](http://adv-r.had.co.nz/Functionals.html#functionals-fp)
+    and reduced the code to a few lines.
