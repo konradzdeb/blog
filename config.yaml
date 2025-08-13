@@ -10,8 +10,8 @@ pagination:
   paginate: 5
 languageCode: en-gb
 title: The Final Artefact
-ignoreFiles:
-  ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\\.md$"]
+outputs:
+  home: ["HTML", "RSS", "JSON"]
 menu:
   main:
     - identifier: categories
@@ -44,9 +44,7 @@ markup:
 params:
   assets:
     disableHLJS: true
-  # defaultTheme: light
-  # defaultTheme: dark
-  defaultTheme: auto # to switch between dark or light according to browser
+  defaultTheme: auto
   ShowReadingTime: true
   ShowBreadCrumbs: true
   ShowShareButtons: true
@@ -54,8 +52,8 @@ params:
   ShowCodeCopyButtons: true
   editPost:
     URL: "https://github.com/konradzdeb/blog/tree/master/content"
-    Text: "Suggest Changes" # edit text
-    appendFilePath: true # to append file path to Edit link
+    Text: "Suggest Changes"
+    appendFilePath: true
   homeInfoParams:
     Title: "The Final Artefact"
     Content: "Yet another blog on coding and business"
