@@ -55,9 +55,14 @@ echo 'print(type(ast.parse("x = 42").body[0].value) is ast.Num)' >> /tmp/check_a
 I will store this script as `/tmp/check_ast.py`. Using the docker one liner, I will execute the script in multiple version of Python.
 
 ```{bash iterate_python, eval=TRUE, echo=TRUE}
-for version in 2.7 3.5 3.6 3.7 3.8 3.9 3.10 3.11 3.12 3.13; do
-    echo "Python ${version}:"
-    docker run --rm -v /tmp/check_ast.py:/check_ast.py python:$version python /check_ast.py
+VERSIONS="2.7 3.5 3.6 3.7 3.8 3.9 3.10 3.11 3.12 3.13"
+for version in $VERSIONS; do
+  echo "Python ${version}:"
+  # Mount the containing directory to /mnt and run the file from there
+  docker run --rm \
+    -v "${SCRIPT_DIR}:/mnt" \
+    "python:${version}" \
+    python "/mnt/${SCRIPT_NAME}" || echo "[EXPECTED FAILURE] python:${version} failed"
 done
 ```
 

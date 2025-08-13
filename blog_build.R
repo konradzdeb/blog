@@ -17,7 +17,7 @@ for (f in rmd_files) {
   md_file <- file.path(dirname(f), "index.md")
   if (is_full || !file.exists(md_file)) {
     message("▶ Rendering ", f)
-    quarto::quarto_render(f, output_format = "gfm", execute = TRUE)
+    quarto::quarto_render(f, execute = TRUE, output_format = "hugo-md")
   } else {
     message("▶ Skipping ", f, " (index.md exists)")
   }
@@ -27,7 +27,7 @@ for (f in rmd_files) {
 root_index <- "index.Rmd"
 if (file.exists(root_index)) {
   message("▶ Rendering root ", root_index)
-  quarto::quarto_render(root_index, output_format = "gfm", execute = TRUE)
+  quarto::quarto_render(root_index, output_format = "hugo-md", execute = TRUE)
 }
 
 message("▶ Building site with Hugo...")
