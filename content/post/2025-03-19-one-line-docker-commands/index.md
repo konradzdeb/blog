@@ -1,18 +1,16 @@
 ---
-title: One line docker commands
+title: One Line Docker Commands
 author: Konrad Zdeb
-date: '2025-03-19'
+date: "2025-03-19"
 slug: one-line-docker
-categories: 
-    - efficiency
-    - how-to
+categories:
+  - efficiency
+  - how-to
 tags:
-    - python
-    - docker
-    - shell
+  - python
+  - docker
+  - shell
 ---
-
-
 
 ![Executing Python command across multiple versions](images/ast_docker.png)
 
@@ -38,19 +36,14 @@ Intuitively, we might expect this to return `True`—after all, `42` is a number
 
 Now we run it across various Python versions using Docker.
 
-
-``` python
+```python
 import ast
 print(type(ast.parse("x = 42").body[0].value) is ast.Num)
 ```
 
-
-
-
 I will store this script as `/tmp/check_ast.py`. Using the docker one liner, I will execute the script in multiple version of Python.
 
-
-``` bash
+```bash
 for version in 2.7 3.5 3.6 3.7 3.8 3.9 3.10 3.11 3.12 3.13; do
     echo "Python ${version}:"
     docker run --rm -v /tmp/check_ast.py:/check_ast.py python:$version python /check_ast.py
@@ -88,20 +81,17 @@ You’ll notice the results vary. Some versions return `True`, others return `Fa
 
 As a result, `isinstance(..., ast.Num)` still returned `True` in those versions. The complete shift to `ast.Constant` occurred in Python 3.11, where `ast.parse()` finally stopped emitting the older nodes. This is a good example of how language-level changes may be rolled out gradually, and why it’s useful to test behaviour directly—rather than rely on changelog summaries alone.
 
-
 ## Other interesting uses
 
 For quick evaluation it is possible to direcltly jump into ipython console. I find this partilculary useful if I want to check running some code interactively in a specific version of Python.
 
-
-``` bash
+```bash
 docker run -it --rm python:3.8 bash -c "pip install ipython && ipython"
 ```
 
 The other trick that I find useful in those scenarios is to install packages while in Python interactive session by calling `subprocess`, this can be easily achieved via running `subprocess` command pointing to `pip` as shown below:
 
-
-``` python
+```python
 import subprocess
 import sys
 subprocess.run([sys.executable, "-m", "pip", "install", "pandas"], check=True)
