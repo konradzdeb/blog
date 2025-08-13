@@ -1,32 +1,33 @@
-# Showing ChatGPT How to Draw
-Konrad Zdeb
-2023-06-14
+---
+title: "Showing ChatGPT How to Draw"
+author: "Konrad Zdeb"
+date: "2023-06-14"
+slug: "drawing-chat-gpt"
+header-includes:
+- \usetikzlibrary{positioning}
+- \usetikzlibrary{shapes}
+categories: fun
+tags:
+- AI
+- LaTeX
+- TikZ
+---
 
-\usetikzlibrary{positioning}
 
-\usetikzlibrary{shapes}
+
 
 # Background
 
-For a computer, an image is collection of interpretable instructions
-that amount to a visual representation. Raster images are composed from
-using pixels, containing unique colours, whereas vector images keep
-track of points and equations that join them. In $\LaTeX$ PGF/TikZ is
-used to generate vector graphics from algebraic descriptions. TikZ is
-mostly used to conveniently draw various scientific figures. ChatGPT is
-capable of generating computer code in majority of popular languages. I
-wanted to test how far I can get with ChatGPT generating illustrations
-using TikZ.
+For a computer, an image is collection of interpretable instructions that amount to a visual representation. Raster images are composed from using pixels, containing unique colours, whereas vector images keep track of points and equations that join them.  In `\(\LaTeX\)` PGF/TikZ is used to generate vector graphics from algebraic descriptions. TikZ is mostly used to conveniently draw various scientific figures. ChatGPT is capable of generating computer code in majority of popular languages. I wanted to test how far I can get with ChatGPT generating illustrations using TikZ.
 
 # ChatGPT Conversation
 
-Let’s jump right in and see how ChatGPT deals with simple request to
-draw a class diagram? For the request:
+Let's jump right in and see how ChatGPT deals with simple request to draw a class diagram? For the request:
 
-> Can you draw an example of a class “Person” with the properties “name”
-> and “age” using TikZ?
+> Can you draw an example of a class "Person" with the properties "name" and "age" using TikZ?
 
-The ChatGPT will return the following code.
+The ChatGPT will return the following code. 
+
 
 ``` tex
 \begin{tikzpicture}
@@ -39,10 +40,8 @@ The ChatGPT will return the following code.
 \end{tikzpicture}
 ```
 
-There are certain mistakes in that code. The code refers to `attribute`
-and `class` styles that are not defined. We can amend that by giving
-ChatGPT are more specific set of instructions. The code compiles but
-looks horribly.
+There are certain mistakes in that code. The code refers to `attribute` and `class` styles that are not defined. We can amend that by giving ChatGPT are more specific set of instructions. The code compiles but looks horribly.
+
 
 ``` tex
 \begin{tikzpicture}[
@@ -58,15 +57,16 @@ looks horribly.
 \end{tikzpicture}
 ```
 
-![Sample Class](index_files/figure-commonmark/TrivialClassAmended-1.png)
 
-The graphs are horrible but by providing ChatGPT with additional
-instructions, likely we would be able to arrive at an acceptable
-solution. It would possibly make sense to test how the ChatGPT would
-handle a more complex request.
+<div class="figure">
+<img src="index_files/figure-html/TrivialClassAmended-1.png" alt="Sample Class" width="672" />
+<p class="caption"><span id="fig:TrivialClassAmended"></span>Figure 1: Sample Class</p>
+</div>
 
-> Could you create a flow chart illustrating a recursive implementation
-> for computing Fibonacci numbers?
+The graphs are horrible but by providing ChatGPT with additional instructions, likely we would be able to arrive at an acceptable solution. It would possibly make sense to test how the ChatGPT would handle a more complex request. 
+
+> Could you create a flow chart illustrating a recursive implementation for computing Fibonacci numbers?
+
 
 ``` tex
 \usetikzlibrary{shapes.geometric, arrows}
@@ -96,34 +96,27 @@ handle a more complex request.
 \end{tikzpicture}
 ```
 
-![Fibonacci Flow Chart](index_files/figure-commonmark/FlowChart-1.png)
 
-Clearly ChatGPT version struggles to attend to all small details of the
-proper flow chart representation as the produced visuals makes this
-nodes overlap and arrows are cutting across nodes which is also rather
-undesirable; nevertheless, in a broad sense the produced flow chart
-contains elements that we would be expecting to find in a professionally
-produced diagram.
+<div class="figure">
+<img src="index_files/figure-html/FlowChart-1.png" alt="Fibonacci Flow Chart" width="672" />
+<p class="caption"><span id="fig:FlowChart"></span>Figure 2: Fibonacci Flow Chart</p>
+</div>
+
+Clearly ChatGPT version struggles to attend to all small details of the proper flow chart representation as the produced visuals makes this nodes overlap and arrows are cutting across nodes which is also rather undesirable; nevertheless, in a broad sense the produced flow chart contains elements that we would be expecting to find in a professionally produced diagram.
 
 # Drawing Real Life Object
 
-As demonstrated, ChatGPT can handle fairly involve instructions and
-deliver usable results. The produced outputs require further tweaking,
-which we could achieve by issuing more detailed instructions to the
-ChatGPT or by manually adjusting placement of node elements and arrows.
-The goal was to check how the ChatGPT will handle generating real-life
-objects using TikZ. Finally, I’ve asked ChatGPT to do the following:
+As demonstrated, ChatGPT can handle fairly involve instructions and deliver usable results. The produced outputs require further tweaking, which we could achieve by issuing more detailed instructions to the ChatGPT or by manually adjusting placement of node elements and arrows. The goal was to check how the ChatGPT will handle generating real-life objects using TikZ. Finally, I've asked ChatGPT to do the following:
 
 > Can you draw a German Shepherd using TikZ?
 
 ChatGPT correctly recognised the impossibility of this task:
 
-> Creating a detailed drawing of a German Shepherd using TikZ would be a
-> complex and time-consuming task, as TikZ is primarily a vector
-> graphics tool for creating diagrams and shapes. It’s not ideal for
-> highly detailed illustrations like a realistic dog.
+> Creating a detailed drawing of a German Shepherd using TikZ would be a complex and time-consuming task, as TikZ is primarily a vector graphics tool for creating diagrams and shapes. It's not ideal for highly detailed illustrations like a realistic dog.
 
 Still was able to produce the following results:
+
+
 
 ``` tex
 \begin{tikzpicture}
@@ -151,4 +144,12 @@ Still was able to produce the following results:
 \end{tikzpicture}
 ```
 
-![German Shephard](index_files/figure-commonmark/GermanShephard-1.png)
+
+<div class="figure">
+<img src="index_files/figure-html/GermanShephard-1.png" alt="German Shephard" width="672" />
+<p class="caption"><span id="fig:GermanShephard"></span>Figure 3: German Shephard</p>
+</div>
+
+
+
+

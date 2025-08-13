@@ -1,4 +1,4 @@
-theme: "hugo-PaperMod"
+theme: "PaperMod"
 baseURL: https://thefinalartefact.blog/
 permalinks:
   post: "/post/:slug/"
@@ -6,8 +6,11 @@ pagination:
   paginate: 5
 languageCode: en-gb
 title: The Final Artefact
-ignoreFiles:
-  ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\\.md$"]
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
 menu:
   main:
     - identifier: categories
@@ -18,6 +21,10 @@ menu:
       name: tags
       url: /tags/
       weight: 20
+    - identifier: search
+      name: search
+      url: /search/
+      weight: 30
 
 # Use Hugo markup formatting
 markup:
@@ -33,16 +40,23 @@ markup:
     lineNoStart: 1
     lineNos: true
     lineNumbersInTable: true
-    noClasses: true
+    noClasses: false
     style: monokai
     tabWidth: 4
 
 params:
+  fuseOpts:
+    isCaseSensitive: false
+    shouldSort: true
+    location: 0
+    distance: 1000
+    threshold: 0.4
+    minMatchCharLength: 0
+    # limit: 10 # refer: https://www.fusejs.io/api/methods.html#search
+    keys: ["title", "permalink", "summary", "content"]
   assets:
     disableHLJS: true
-  # defaultTheme: light
-  # defaultTheme: dark
-  defaultTheme: auto # to switch between dark or light according to browser
+  defaultTheme: auto
   ShowReadingTime: true
   ShowBreadCrumbs: true
   ShowShareButtons: true
@@ -50,8 +64,8 @@ params:
   ShowCodeCopyButtons: true
   editPost:
     URL: "https://github.com/konradzdeb/blog/tree/master/content"
-    Text: "Suggest Changes" # edit text
-    appendFilePath: true # to append file path to Edit link
+    Text: "Suggest Changes"
+    appendFilePath: true
   homeInfoParams:
     Title: "The Final Artefact"
     Content: "Yet another blog on coding and business"
