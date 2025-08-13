@@ -1,8 +1,4 @@
----
-config.yaml
-Blog configuration
----
-theme: "hugo-PaperMod"
+theme: "PaperMod"
 baseURL: https://thefinalartefact.blog/
 permalinks:
   post: "/post/:slug/"
