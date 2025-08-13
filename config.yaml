@@ -40,7 +40,7 @@ markup:
     lineNoStart: 1
     lineNos: true
     lineNumbersInTable: true
-    noClasses: true
+    noClasses: false
     style: monokai
     tabWidth: 4
 
@@ -55,7 +55,7 @@ params:
     # limit: 10 # refer: https://www.fusejs.io/api/methods.html#search
     keys: ["title", "permalink", "summary", "content"]
   assets:
-    disableHLJS: false
+    disableHLJS: true
   defaultTheme: auto
   ShowReadingTime: true
   ShowBreadCrumbs: true
