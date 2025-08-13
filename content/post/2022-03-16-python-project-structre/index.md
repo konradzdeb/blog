@@ -23,7 +23,7 @@ In business practice, I have come across a few common types of projects. The dis
 
 The time horizon approach to project structure is hugely beneficial as it enables us to narrow down the gap between the complexity of the project scaffolding and the time horizon. If visualized, it might look something like this:
 
-<img src="{{< blogdown/postref >}}index_files/figure-html/line_plot_compl-1.png" width="672" />
+<img src="index_files/figure-html/line_plot_compl-1.png" width="672" />
 
 ![Complexity and scaffolding structure ](images/complexity_line.png)
 

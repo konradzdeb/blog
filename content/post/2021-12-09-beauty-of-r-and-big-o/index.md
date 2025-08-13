@@ -10,8 +10,8 @@ tags:
   - R
   - functional
 ---
-<script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
-<link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
+<script src="index_files/kePrint/kePrint.js"></script>
+<link href="index_files/lightable/lightable.css" rel="stylesheet" />
 
 
 
@@ -285,7 +285,7 @@ map_df(mget(Fun_names), ~ map_dbl(1:n, ~ .x(.x))) %>%
 	theme_minimal()
 ```
 
-<img src="{{< blogdown/postref >}}index_files/figure-html/create_plot-1.png" width="672" />
+<img src="index_files/figure-html/create_plot-1.png" width="672" />
 
 
 # Remarks

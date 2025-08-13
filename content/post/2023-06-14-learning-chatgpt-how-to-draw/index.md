@@ -59,7 +59,7 @@ There are certain mistakes in that code. The code refers to `attribute` and `cla
 
 
 <div class="figure">
-<img src="{{< blogdown/postref >}}index_files/figure-html/TrivialClassAmended-1.png" alt="Sample Class" width="672" />
+<img src="index_files/figure-html/TrivialClassAmended-1.png" alt="Sample Class" width="672" />
 <p class="caption"><span id="fig:TrivialClassAmended"></span>Figure 1: Sample Class</p>
 </div>
 
@@ -98,7 +98,7 @@ The graphs are horrible but by providing ChatGPT with additional instructions, l
 
 
 <div class="figure">
-<img src="{{< blogdown/postref >}}index_files/figure-html/FlowChart-1.png" alt="Fibonacci Flow Chart" width="672" />
+<img src="index_files/figure-html/FlowChart-1.png" alt="Fibonacci Flow Chart" width="672" />
 <p class="caption"><span id="fig:FlowChart"></span>Figure 2: Fibonacci Flow Chart</p>
 </div>
 
@@ -146,7 +146,7 @@ Still was able to produce the following results:
 
 
 <div class="figure">
-<img src="{{< blogdown/postref >}}index_files/figure-html/GermanShephard-1.png" alt="German Shephard" width="672" />
+<img src="index_files/figure-html/GermanShephard-1.png" alt="German Shephard" width="672" />
 <p class="caption"><span id="fig:GermanShephard"></span>Figure 3: German Shephard</p>
 </div>
 
