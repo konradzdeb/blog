@@ -27,3 +27,7 @@ The theoretical side is, in my view, its strongest asset. The track offers modul
 ## Mixed view
 
 I have mixed views on the practical components. Some modules—such as those on using MLflow for model deployment and DVC for data version control—are well placed and genuinely useful. Others are more debatable. For example, ETL/ELT is demonstrated using Pandas. While Pandas is widely used by analysts and helpful for many data engineering tasks, relying on it alone is often insufficient for production-grade pipelines.
+
+# Things I didn't Like
+
+Two modules could be improved. The "Introduction to Shell" module covers Bash by guiding learners from simple commands (e.g., cp, grep) to writing basic scripts. The concept is solid, but the delivery feels uneven: it emphasises memorising commands over practical workflows such as piping, redirection, error handling, and reproducible scripting. A stronger focus on real-world tasks—data inspection, batch processing, and automation—would make it more effective.
