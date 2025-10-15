@@ -12,6 +12,9 @@ tags:
   - PDP
 draft: true
 description: Review of MLEng course on Data Camp
+linkedin_note: |-
+  I’ve just completed DataCamp’s Machine Learning Engineering career track and wrote up a review. The track does a solid job explaining core ML/MLOps concepts and illustrates them with practical—if basic—examples, enough to follow the end-to-end flow from scikit-learn through deployment and monitoring. I especially liked the lifecycle framing and the focus on reproducibility with MLflow and DVC. A few modules are light for production use (the Shell intro is very basic; ETL centered on pandas isn’t representative of pipelines that span multiple systems and often use Spark), so plan to supplement those. If you’re looking for a structured introduction to ML engineering, this is a good starting point.
+  #MachineLearning #MLOps #DataCamp #MLflow #DVC #DataEngineering #Docker #CICD
 ---
 
 As a data science lead, I see it as my responsibility to guide junior data scientists on training and professional development. The field is broad, and I often see two common profiles: those with strong mathematical and statistical foundations but limited software engineering experience (e.g., object-oriented programming, unit testing, CI/CD), and those with solid computer science backgrounds but less exposure to the mathematical side. To make informed recommendations, I regularly complete courses and exercises myself and make a habit of daily practice. In this post, I review DataCamp’s Machine Learning Engineering course, which I recently completed.
