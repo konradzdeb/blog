@@ -10,7 +10,7 @@ tags:
   - MLEng
   - Learning
   - PDP
-draft: true
+draft: false
 description: Review of MLEng course on Data Camp
 linkedin_note: |-
   I’ve just completed DataCamp’s Machine Learning Engineering career track and wrote up a review. The track does a solid job explaining core ML/MLOps concepts and illustrates them with practical—if basic—examples, enough to follow the end-to-end flow from scikit-learn through deployment and monitoring. I especially liked the lifecycle framing and the focus on reproducibility with MLflow and DVC. A few modules are light for production use (the Shell intro is very basic; ETL centered on pandas isn’t representative of pipelines that span multiple systems and often use Spark), so plan to supplement those. If you’re looking for a structured introduction to ML engineering, this is a good starting point.
