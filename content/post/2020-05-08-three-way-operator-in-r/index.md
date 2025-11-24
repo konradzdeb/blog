@@ -11,7 +11,7 @@ tags:
 
 Is there a merit for a three-way operator in R?
 
-# Background
+## Background
 
 In C++20 revision added "spaceship operator", [which is defined as follows](https://en.cppreference.com/w/cpp/language/operator_comparison#Three-way_comparison):
 
@@ -22,7 +22,7 @@ In C++20 revision added "spaceship operator", [which is defined as follows](http
 (a <=> b) == 0 # if lhs and rhs are equal/equivalent.
 ```
 
-# R implementation
+## R implementation
 
 The behaviour can be achieved in R in multiple ways. A one straightforward approach would involve making use of the `ifelse` statement
 
@@ -37,7 +37,7 @@ b <- 2
 ifelse(a < b, -1, 1)
 ```
 
-```
+``` text
 ## [1] -1
 ```
 
@@ -50,7 +50,7 @@ b <- 1
 ifelse(a < b, -1, 1)
 ```
 
-```
+``` text
 ## [1] 1
 ```
 
@@ -63,7 +63,7 @@ b <- 1
 ifelse(a == b, 0, ifelse(a < b, -1, 1))
 ```
 
-```
+``` text
 ## [1] 0
 ```
 
@@ -73,7 +73,7 @@ b <- 2
 ifelse(a == b, 0, ifelse(a < b, -1, 1))
 ```
 
-```
+``` text
 ## [1] -1
 ```
 
@@ -83,7 +83,7 @@ b <- 1
 ifelse(a == b, 0, ifelse(a < b, -1, 1))
 ```
 
-```
+``` text
 ## [1] 1
 ```
 
@@ -98,7 +98,7 @@ b <- 1
 ifelse(a > b, TRUE, FALSE)
 ```
 
-```
+``` text
 ## [1] TRUE
 ```
 
@@ -117,17 +117,17 @@ b <- c(1,1)
 ifelse(a == b, 0, ifelse(a < b, -1, 1))
 ```
 
-```
+``` text
 ## Warning in a == b: longer object length is not a multiple of shorter object
 ## length
 ```
 
-```
+``` text
 ## Warning in a < b: longer object length is not a multiple of shorter object
 ## length
 ```
 
-```
+``` text
 ## [1] 1 1 1
 ```
 
@@ -151,7 +151,7 @@ Fairly neat solution can be obtained with use of infix operator. Infix operators
 5 + 2
 ```
 
-```
+``` text
 ## [1] 7
 ```
 
@@ -162,18 +162,18 @@ statement is equivalent to
 `+`(5,2)
 ```
 
-```
+``` text
 ## [1] 7
 ```
 
 User-defined infix functions can be created by creating functions that start and end with `%`. Let's assume that we want to achieve the following objectives:
 
- - Control for types of compared vectors
- - Control for size of compared vectors
- - Have control over the outcome:
-   - Staying strict with the provided C++ implementation
-   - Modifying this behaviour, by for instance, returning the bigger object
-   
+- Control for types of compared vectors
+- Control for size of compared vectors
+- Have control over the outcome:
+  - Staying strict with the provided C++ implementation
+  - Modifying this behaviour, by for instance, returning the bigger object
+
 This can be quickly achieved using the following implementation. 
 
 
@@ -258,14 +258,12 @@ b <- c(1,2)
 a %<=>% b
 ```
 
-```
+``` text
 ## Error in `map2()`:
 ## ! Can't recycle `.x` (size 3) to match `.y` (size 2).
 ```
 
 
-# Summary
+## Summary
 
 The need for the actual `%<=>%` is scant as `ifelse` and `max` efficiently fulfil that role. Nevertheless, creating spaceship operator in R is trivial and demonstrates flexibility of the language very well. I have a similar implementation in a package that I use to store [`KEmisc`](https://github.com/konradzdeb/KEmisc/blob/master/R/threeway.R) package that I use to store, trivial, handy functions. 
-
-

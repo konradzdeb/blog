@@ -1,0 +1,38 @@
+repos:
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.19.1
+    hooks:
+      - id: markdownlint-cli2
+        name: markdownlint
+        entry: markdownlint-cli2
+        language: node
+        pass_filenames: false
+        args:
+          - --config
+          - .markdownlint.jsonc
+          - "**/*.md"
+          - "#themes"
+          - "#AGENTS.md"
+          - "#node_modules"
+        verbose: true
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        name: codespell
+        types: [text]
+        args:
+          - --check-filenames
+          - --check-hidden
+          - --quiet-level=2
+          - --skip=AGENTS.md,public,resources,_site,node_modules,themes,.git,**/*.min.*,**/*.svg,**/*.png,**/*.jpg,**/*.pdf
+
+  - repo: local
+    hooks:
+      - id: hugo-build
+        name: hugo-build
+        entry: hugo
+        language: system
+        pass_filenames: false
+        args: [--minify]

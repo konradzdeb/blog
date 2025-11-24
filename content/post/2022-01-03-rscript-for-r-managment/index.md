@@ -1,8 +1,8 @@
 ---
-title: Using RScript for R Installation Managment
+title: Using RScript for R Installation Management
 author: Konrad Zdeb
 date: '2022-01-03'
-slug: rscript-for-r-managment
+slug: rscriptt-for-r-managment
 categories:
   - how-to
 tags:
@@ -17,8 +17,8 @@ For example, we may be utilising multiple library paths and our intention may be
 
 ``` r
 .libPaths()
-# [1] "/Users/thisUserName/Library/R/4/library"
-# [2] "/usr/local/Cellar/r/4.1.2/lib/R/library"
+## [1] "/Users/thisUserName/Library/R/4/library"
+## [2] "/usr/local/Cellar/r/4.1.2/lib/R/library"
 ```
 
 This outcome can be achieved using `update.packages(lib.loc =  .libPaths()[1])` but if our intention is to pass more arguments to the call, running this command frequently becomes more tedious and unnecessarily onerous. Python users will be familiar with Conda and pip and, while working in R, may be longing for a solution offering a similar, convenient command line mechanism facilitating execution of basic installation and package management tasks. For instance in Conda we would simply do `conda install package-name=2.3.4` to install a package of a specific version. Similarly we can simply run `conda update --all -y` to update all packages unprompted or pass further arguments to update packages within a specific environment and so forth. Pip offers a number of similar convenience features.
@@ -27,9 +27,9 @@ This outcome can be achieved using `update.packages(lib.loc =  .libPaths()[1])` 
 
 I was interested in at a R-based solution that would offer a comparable level of convenience. However, as R does not offer package management mechanism that would be out of the box accessible via command line. 
 
-# Solution
+## Solution
 
-R offers two interfaces for running scripts and commands without starting an interactive session: `R CMD` and `RScript`^[Less known [`littler`](http://dirk.eddelbuettel.com/code/littler.html) projects offers some excellent functionalities that are worth exploring for users keen on exploiting R's command line front end capabilities.]. `R CMD` is an older interface facilitating command and script execution via command line. `Rscript` came later and is, in general, more flexible. Readers interested in the subject should start research from [this StackOverflow](https://stackoverflow.com/q/21969145/1655567) discussion that provides a good primer on key differences.
+R offers two interfaces for running scriptts and commands without starting an interactive session: `R CMD` and `RScript`^[Less known [`littler`](http://dirk.eddelbuettel.com/code/littler.html) projects offers some excellent functionalities that are worth exploring for users keen on exploiting R's command line front end capabilities.]. `R CMD` is an older interface facilitating command and scriptt execution via command line. `Rscriptt` came later and is, in general, more flexible. Readers interested in the subject should start research from [this StackOverflow](https://stackoverflow.com/q/21969145/1655567) discussion that provides a good primer on key differences.
 
 ## Updating Packages
 
@@ -40,11 +40,11 @@ In the process of updating packages we will be usually interested in achieving t
 
 ### Outdated packages
 
-For a start, let's attempt to construct a data frame containing the outdated packages using `Rscript`. This is achieved in the following manner
+For a start, let's attempt to construct a data frame containing the outdated packages using `Rscriptt`. This is achieved in the following manner
 
 
 ``` bash
-Rscript --no-save --no-restore --no-init-file \
+Rscriptt --no-save --no-restore --no-init-file \
         -e 'as.data.frame(old.packages(repos = "https://cran.rstudio.com"))[,-c(1,6)]'
 ```
 
@@ -53,16 +53,16 @@ If we intend to execute this command frequently it may be useful to wrap in a fu
 
 ``` bash
 function routdated () {
-        Rscript --no-save --no-restore --no-init-file \
+        Rscriptt --no-save --no-restore --no-init-file \
         -e 'as.data.frame(old.packages(repos = "https://cran.rstudio.com"))[,-c(1,6)]'
 }
 routdated
 ```
 
 
-#### Explanation
+#### Outdated packages explanation
 
-Let's break this down. `Rscript` can be run with multiple switches:
+Let's break this down. `Rscriptt` can be run with multiple switches:
 
 * `--no-init-file` skips reading of the `.Rprofile` files. As I keep my library path stored within the `Renviron` file, I'm skipping processing of the `.RProfile` file. Traditionally, `.RProfile` is used to configure default repositories but I pref to specify the repository directly in the call as I want to update against RStudio's one
 * `--no-save` prevents `RScript` from saving data on exit
@@ -78,17 +78,17 @@ A sensible middle ground solution would be to run the package installation via `
 
 
 ``` bash
-# Function body
+## Function body
 function rinst () {
 	declare pkgnme=$1
-	Rscript --vanilla -e "install.packages('$pkgnme', dependencies = TRUE, repos = 'https://cloud.r-project.org/', lib = '/Users/konrad/Library/R/4/library')"
+	Rscriptt --vanilla -e "install.packages('$pkgnme', dependencies = TRUE, repos = 'https://cloud.r-project.org/', lib = '/Users/konrad/Library/R/4/library')"
 }
 ```
 
 ### Explanation
 
-As I want for this function to install only to a specific library and from a specific repository I'm using the `--vanilla` switch to let Rscript know that I don't need it to process `.RProfile` and other files in this particular call as I'm storing the relevant arguments within the function.
+As I want for this function to install only to a specific library and from a specific repository I'm using the `--vanilla` switch to let Rscriptt know that I don't need it to process `.RProfile` and other files in this particular call as I'm storing the relevant arguments within the function.
 
-# Summary
+## Summary
 
-In all likelihood, for more sophisticated projects solutions like [`renv`](https://rstudio.github.io/renv/) and [Rocker](https://www.rocker-project.org) are a way to go. Nevertheless combination of Rscript / bash can prove very efficient in quickly accomplishing routine maintenance tasks. 
+In all likelihood, for more sophisticated projects solutions like [`renv`](https://rstudio.github.io/renv/) and [Rocker](https://www.rocker-project.org) are a way to go. Nevertheless combination of Rscriptt / bash can prove very efficient in quickly accomplishing routine maintenance tasks. 

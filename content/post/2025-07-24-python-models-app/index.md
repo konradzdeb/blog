@@ -19,7 +19,7 @@ tags:
 
 Integrating Python-based machine learning models into iOS applications can be challenging, particularly when converting models into a Swift-compatible format. This example will demonstrate a simple image classification task using the Fashion-MNIST dataset and CoreML conversion tools. The goal is to illustrate the effort required to deploy small-to-medium complexity ML models within iOS applications. The demonstration is based on a Convolutional Neural Network (CNN) built with PyTorch, but the concepts apply broadly to other Python-based models as well.
 
-# Model Development
+## Model Development
 
 For demonstration purposes, we'll create a basic machine learning model in Python. To classify images, I'll build a simple Convolutional Neural Network (CNN) using PyTorch. The model will be trained on the Fashion-MNIST dataset, comprising 70,000 grayscale images of fashion items in 10 categories. We'll begin by sourcing a standard set of Python packages required for model development.
 
@@ -39,7 +39,7 @@ from torchvision import datasets, transforms
  
 ```
 
-The model represents a fairly unsophisticated approach to handle imaghe classification task. Naturally, in a producting setting you will want to utilise more sophisticated solution, handling complex data and scenarios where you could be dealing with distorted images data (low lighting, different angles, etc.). The provided CNN implementation is fairly basic but sufficient for the purpose of this demonstration. It consists of a few convolutional layers, followed by fully connected layers, and uses ReLU activation functions. The model is trained using the Adam optimizer and cross-entropy loss function.
+The model represents a fairly unsophisticated approach to handle image classification task. Naturally, in a production setting you will want to utilise more sophisticated solution, handling complex data and scenarios where you could be dealing with distorted images data (low lighting, different angles, etc.). The provided CNN implementation is fairly basic but sufficient for the purpose of this demonstration. It consists of a few convolutional layers, followed by fully connected layers, and uses ReLU activation functions. The model is trained using the Adam optimizer and cross-entropy loss function.
 
 ```python
      root="./data", train=True, download=True, transform=transform,
@@ -48,7 +48,7 @@ test_set = datasets.FashionMNIST(
     root="./data", train=False, download=True, transform=transform,
 )
 
-# Use the class labels from the dataset
+## Use the class labels from the dataset
 FASHION_LABELS = train_set.classes
 
 
@@ -108,6 +108,7 @@ print(classification_report(all_labels, all_preds,
 ```
 
 ## Additional Testing
+
 In addition to evaluating model performance, we'll also test its ability to handle images provided as flat files. The tests will run against several publicly available images.
 
 ```python
@@ -135,7 +136,7 @@ def preprocess_image(image_path):
 
 results = []
 
-# Create parametrized test for different image files
+## Create parametrized test for different image files
 @pytest.mark.parametrize("filename", ["t-shirt.jpeg", "pullover.jpg", "bag.jpeg"])
 def test_model_prediction(filename, model):
     fixtures_dir = os.path.join(os.path.dirname(__file__), "fixtures")
@@ -180,7 +181,7 @@ mlmodel.save("FashionMNISTClassifier.mlpackage")
 print("Exported CoreML model to FashionMNISTClassifier.mlpackage") 
 ```
 
-# Use in Swift
+## Use in Swift
 
 First, we need to import the model into our Xcode project by dragging and dropping the `.mlpackage` file into the Xcode project navigator. After importing, the model becomes available as a Swift class sharing its `.mlpackage` file name—`FashionMNISTClassifier` in this example. Inference is performed using the straightforward `predict` method, with most heavy lifting managed by the `FashionMNISTClassifierInput` class.
 
@@ -224,6 +225,7 @@ class ModelViewModel: ObservableObject {
 ```
 
 ## Image Pre-processing
+
 The Swift `ImagePreprocessor` struct provides a static method to convert a `UIImage` into a 28×28 grayscale-formatted `CVPixelBuffer`. The method resizes the image, converts it to grayscale, and produces a pixel buffer ready for inference with Core ML.
 
 ```swift
@@ -287,9 +289,10 @@ struct ImagePreprocessor {
 } 
 ```
 
-# Final Considerations
+## Final Considerations
+
 I've used a recent version of PyTorch to leverage Metal Performance Shaders (MPS)—Apple’s framework enabling GPU acceleration on Apple Silicon and Intel Macs. Although my chosen PyTorch version wasn't officially tested with Core ML Tools, it functioned without issue. However, for robustness, ensure compatibility between PyTorch and Core ML library versions.
 
 If your use case involves image classification, consider exploring Apple’s Vision Foundation Models. These models are optimized for on-device performance and simplify common image classification tasks significantly. Alternatively, if sticking with PyTorch is important, consider using **PyTorch Mobile**. PyTorch Mobile lets you run PyTorch models natively on-device, offering enhanced control with minimal translation between training and inference environments.
 
-The entire project, including training scripts, conversion logic, and Swift application code, is available through the GitHub repository: [https://github.com/konradzdeb/SwiftPythonML](https://github.com/konradzdeb/SwiftPythonML).
+The entire project, including training scriptts, conversion logic, and Swift application code, is available through the GitHub repository: [https://github.com/konradzdeb/SwiftPythonML](https://github.com/konradzdeb/SwiftPythonML).

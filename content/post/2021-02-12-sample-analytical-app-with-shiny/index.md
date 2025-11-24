@@ -12,30 +12,27 @@ tags:
   - R-package
 ---
 
-# Introduction
+## Introduction
 
 This article draws on the past post concerned with utilisation of [`golem`](https://github.com/ThinkR-open/golem) for robust deployment of analytical and reporting solutions. For this article, we will assume that we are working with defined working requirements that utilise some of the Labour Market Statistics disseminated through the [*nomis*](https://www.nomisweb.co.uk) portal.
 
 ## Change Plan
 
-**What we have**
+### What we have
 
- - Reporting requirements
- - Past scripts we used to create reports with accompanying instructions
- 
-**What we want**
+- Reporting requirements
+- Past scriptts we used to create reports with accompanying instructions
 
- - *Stronger business continuity* - we want to be able to give some access to this project and don't be concerned with missing files, outdated unavailable documentation and questions on how to produce updated reports. We want self-encompassing entity that takes of care of its technical requirements and user-interaction^[Good parallel can be drawn between this approach and manuals available with life-saving equipment. Equipment delivers technical capacity and manual ensures operational capacity. In case of an inexperienced user one is not useful without the other. We want to ensure that user with minimum required capacity can use the tools correctly.]
- 
- - *Better reproducibility* - Easier way to re-run reports on custom parameters
- 
- - *Improved efficiency* - We want to have a possibility of quickly creating updated and re-running past reports using the app.
- 
- - *Better development:*
-   - We want to ensure that any change requests to our reporting/analytical stack won't break crucial functionalities.
-   - We want to modularise development so new corporate branding or visualisation requirements can be applied with no (or minimal) integration in analytical function
-   
-# Framework
+### What we want
+
+- *Stronger business continuity* - we want to be able to give some access to this project and don't be concerned with missing files, outdated unavailable documentation and questions on how to produce updated reports. We want self-encompassing entity that takes of care of its technical requirements and user-interaction^[Good parallel can be drawn between this approach and manuals available with life-saving equipment. Equipment delivers technical capacity and manual ensures operational capacity. In case of an inexperienced user one is not useful without the other. We want to ensure that user with minimum required capacity can use the tools correctly.]
+- *Better reproducibility* - Easier way to re-run reports on custom parameters
+- *Improved efficiency* - We want to have a possibility of quickly creating updated and re-running past reports using the app.
+- *Better development:*
+  - We want to ensure that any change requests to our reporting/analytical stack won't break crucial functionalities.
+  - We want to modularise development so new corporate branding or visualisation requirements can be applied with no (or minimal) integration in analytical function
+
+## Framework
 
 ## Package
 
@@ -80,4 +77,4 @@ The structure corresponds to what we would expect to find in a traditional packa
 
 ## Using `usethis`
 
-Pacakge structure is a scaffolding that can be used to develop package functionalities and integrate remaining, subsequent articles focus on leveraging robust and tested methods for assembling our package development scaffolding, such as [`usethis`](https://usethis.r-lib.org) package that offers a variety of commands facilitating adding package elements.
+Package structure is a scaffolding that can be used to develop package functionalities and integrate remaining, subsequent articles focus on leveraging robust and tested methods for assembling our package development scaffolding, such as [`usethis`](https://usethis.r-lib.org) package that offers a variety of commands facilitating adding package elements.

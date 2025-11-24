@@ -14,7 +14,7 @@ tags:
 
 
 
-# Why Swift?
+## Why Swift?
 
 Data science is dominated by Python and R, with some usage of Julia, Scala, Java, and C++. While Swift may not be the most popular choice, it offers several notable benefits—especially for developers already invested in the Apple ecosystem.
 
@@ -36,7 +36,7 @@ Data science is dominated by Python and R, with some usage of Julia, Scala, Java
 
 For projects intended for the Apple ecosystem, Swift-based development can streamline the path from prototype to product. Reusing large parts of your data science pipeline directly within an iOS or macOS app reduces development overhead. This level of end-to-end integration is often more cumbersome when using non-Swift languages, making Swift an attractive option for commercial applications.
 
-# Initial Configuration
+## Initial Configuration
 
 In data science workflows, the Swift [REPL (Read-Eval-Print Loop)](https://swift.org/documentation/) provides an interactive environment that runs Swift code line by line, making it easy to test ideas and quickly prototype. In this blog post, I will use the Swift REPL within an R Markdown document by leveraging the [`knitr` package](https://cran.r-project.org/web/packages/knitr/index.html). This setup allows me to execute Swift code blocks directly while seamlessly incorporating the output into the rendered document, streamlining both experimentation and content creation.
 
@@ -57,10 +57,10 @@ This can be done using the below command [^1].
 
 
 ``` r
-# Wrap code chunks
+## Wrap code chunks
 knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 80), tidy = TRUE)
 
-# Define Swift as engine
+## Define Swift as engine
 knitr::knit_engines$set(swift = function(options) {
     # Get all Swift chunks
     swift_chunk_names <- knitr::all_labels(engine == "swift")
@@ -87,10 +87,11 @@ knitr::knit_engines$set(swift = function(options) {
 ```
 
 What happens here:
+
 1. Function `knitr::knit_engines$set` registers new engine. Engine is define as new function called `swift`.
 2. The call `swift_chunk_names[seq_len(Position( \(x) x == knitr::opts_current$get("label"), swift_chunk_names ))]` identifies current chunk and ensures that only the previous and the current chunk are passed into evaluation engine. Functional [`Position`](http://adv-r.had.co.nz/Functionals.html) will return a number of element meting criteria. Notation `\(x)` was introduced in R [4.1.0](https://cran.r-project.org/doc/manuals/r-release/NEWS.html) and is a shorthand for `function(x)`, e.g. `\(x) x + 1` is parsed as `function(x) x + 1`.
-4. Call `Reduce( \(x, y) { paste(x, knitr::knit_code$get(y), sep = "\n") }, prior_chunk_names, init = "")` combines the previous Swift code blocks in one text.
-5. Subsequent calls do a trivial vector substitution and remove all other than penultimate print statement.
+3. Call `Reduce( \(x, y) { paste(x, knitr::knit_code$get(y), sep = "\n") }, prior_chunk_names, init = "")` combines the previous Swift code blocks in one text.
+4. Subsequent calls do a trivial vector substitution and remove all other than penultimate print statement.
 
 
 ## Testing
@@ -104,12 +105,12 @@ let helloText: String = "Hello from Swift REPL"
 print(helloText)
 ```
 
-```
+``` text
 ## helloText: String = "Hello from Swift REPL"
 ## Hello from Swift REPL
 ```
 
-Let's see if we can continue using the variables created below and re-use variable from the previous statement
+Let's see if we can continue using the variables created below and reuse variable from the previous statement
 
 
 ``` swift
@@ -118,14 +119,14 @@ let helloTwo:String = helloText + punctuationMark
 print(helloTwo)
 ```
 
-```
+``` text
 ## helloText: String = "Hello from Swift REPL"
 ## punctuationMark: String = "!"
 ## helloTwo: String = "Hello from Swift REPL!"
 ## Hello from Swift REPL!
 ```
 
-# Conclusion
+## Conclusion
 
 By setting up a custom Swift engine in knitr, you can seamlessly execute Swift REPL commands within an R Markdown document and capture the output for immediate display. This allows for rapid experimentation, straightforward debugging, and convenient sharing of code alongside explanatory text—qualities essential for any data science workflow. With just a few lines of configuration, Swift’s performance and safety become accessible in an interactive environment, letting you prototype data manipulation, statistical analysis, or even machine learning models right in your R Markdown files.
 

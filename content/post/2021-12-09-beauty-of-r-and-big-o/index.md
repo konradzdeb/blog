@@ -15,11 +15,11 @@ tags:
 
 
 
-# Big-O
+## Big-O
 
 The purpose of this is not to provide yet another primer on the Big-O/$\Omega$/$\Theta$ notation but to share my enduring appreciation for working with R. I will introduce Big-O only briefly to provide context but I would refer all of those who are interested to the linked materials.
 
-## What is Big-sth notation...
+## What is Big-sth notation
 
 When analysing functions, we may be interested in knowing how fast a function grows. For instance, for function `\(T(n)=4n^2-2n+2\)`, after ignoring constants, we would say that `\(T(n)\)` grows at the order of `\(n^2\)`. With respect to the *Big-O* notation we would write `\(T(n)=O(n^2)\)`^[MIT. (2021, December 9). Big O notation. Introduction to Computers and Programming. Retrieved December 26, 2021, from [https://web.mit.edu/16.070/www/lecture/big_o.pdf](https://web.mit.edu/16.070/www/lecture/big_o.pdf)]. Most commonly, in computer science, we would differentiate between Big O, Big Theta `\((\Theta)\)` and Big Omega `\((\Omega)\)`. In a nutshell, the differences between those common notations can be summarised as follows:
 
@@ -30,7 +30,7 @@ When analysing functions, we may be interested in knowing how fast a function gr
 | Big-Theta `\((\Theta)\)` | Equivalent to `\(=\)`, growth equal specific value               | Average case | Reflects lower and upper bound of the running time            |
 
 
-# The task at hand ...
+## The task at hand
 
 So I wanted to compare a speed of some algorithms, say `\(n*\log(n)\)`, `\(\log(n)\)`, `\(n^2\)` and so forth. I need a quick visual aid where I could plot some most common running times and quickly add more to compare how the common implementations perform against the algorithm I was working on. 
 
@@ -62,7 +62,7 @@ tibble(.rows = n) %>%
            O_log_n = map_dbl(1:n, O_log_n))
 ```
 
-```
+``` text
 ## # A tibble: 10 × 2
 ##      O_n O_log_n
 ##    <dbl>   <dbl>
@@ -80,11 +80,11 @@ tibble(.rows = n) %>%
 
 The problems with this approach is apparent. I didn't want to type `O_this_and_that` x number of times to name columns, call functions and then be adding removing the functions I've already tested. I needed for R to:
 
--   Automatically identify all of the relevant function
--   Call each function on a sequence `1:n`
--   Pack everything in a neat table so I can play with it by plotting, etc..
+- Automatically identify all of the relevant function
+- Call each function on a sequence `1:n`
+- Pack everything in a neat table so I can play with it by plotting, etc..
 
-# Solution
+## Solution
 
 The actual solution can condensed further but I have broke it down for easier readability. First I've started with identifying the functions.
 
@@ -95,7 +95,7 @@ Funs_O <- mget(Fun_names) # Create a list of functions
 head(Funs_O, n = 2) # Preview
 ```
 
-```
+``` text
 ## $O_1
 ## function (n) 
 ## {
@@ -117,7 +117,7 @@ Now I needed to call each of those functions and pack the results into a tibble 
 map_df(Funs_O, ~ map_dbl(1:n, ~ .x(.x)))
 ```
 
-```
+``` text
 ## # A tibble: 10 × 7
 ##      O_1 O_2_to_n   O_fac O_log_n   O_n O_n_log_n O_n_n
 ##    <dbl>    <dbl>   <dbl>   <dbl> <dbl>     <dbl> <dbl>
@@ -141,7 +141,7 @@ n <- 1e3 # This is a bad habit of mine but while in R, I've a strong preference 
 dta_big_o <- map_df(mget(Fun_names), ~ map_dbl(1:n, ~ .x(.x)))
 ```
 
-#### Preview
+### Preview
 
 For `\(n = 1000\)` we obtain:
 
@@ -285,9 +285,9 @@ map_df(mget(Fun_names), ~ map_dbl(1:n, ~ .x(.x))) %>%
 	theme_minimal()
 ```
 
-<img src="index_files/figure-html/create_plot-1.png" width="672" />
+<img src="index_files/figure-html/create_plot-1.png" alt="Log-scale plot of Big-O functions" width="672" />
 
 
-# Remarks
+## Remarks
 
 In a production setting, we probably wouldn't rely on `ls(pattern = ...)` and `mget` sourcing objects by name. Even with providing the `mode` argument for `mget` and limiting results to function there is a risk that our code could capture an undesired call that from one or another reason could appear in the environment where `ls` would happen to be executing search. Finally for quickly plotting trivial functions, like `\(y=log(x)^2\)` can be easily achieved with use of dedicated software. Mac users will already have [Grapher](https://support.apple.com/en-gb/guide/grapher/gcalb3dec608/mac) installed that meets that requirement. Personally, I appreciate use cases demonstrating R's flexibility as [functionals](https://adv-r.hadley.nz/functionals.html) and meta-programming are actual efficiency powerhouses. 

@@ -1,5 +1,5 @@
 ---
-title: Aggresively formating your Python files
+title: Aggressively formatting your Python files
 author: Konrad Zdeb
 date: '2023-09-30'
 slug: []
@@ -19,7 +19,7 @@ tags:
 <p>Creating a function within Vim to process the file is likely the most straightforward approach. The primary purpose of this function is to pass the filename to an external command for formatting. Leveraging the rich ecosystem of Python formatting tools available from the command line allows the function to efficiently and consistently format files, tapping into powerful, pre-existing solutions for code aesthetics and standardization. In effect, the role of the function is to pass the filename to the call below:</p>
 <pre class="shell"><code>autopep8 --verbose --in-place --aggressive --aggressive   ${our_python_file}</code></pre>
 <p>This is the simplest implementation, where the file path is passed into the formatting function, and the formatted file is then read back into the buffer.</p>
-<pre class="vim"><code>&quot; Aggresively and quickly format Python file
+<pre class="vim"><code>&quot; Aggressively and quickly format Python file
 function! FormatThisPythonFile()
 	 let filename = expand(&quot;%&quot;)
 	 let cmd = &quot;autopep8 --verbose --in-place --aggressive --aggressive &quot; . filename
