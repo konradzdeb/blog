@@ -1,0 +1,8 @@
+{
+  "default": true,
+  "MD013": false,  // line length
+  "MD009": false,  // trailing spaces
+  "MD010": false,  // hard tabs
+  "MD012": false,  // multiple blank lines
+  "MD033": false   // inline HTML (optional)
+}
