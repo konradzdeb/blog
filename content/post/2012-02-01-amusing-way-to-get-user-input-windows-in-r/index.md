@@ -16,7 +16,7 @@ In an unlikely scenario that beautiful <a href="http://shiny.rstudio.com/" targe
 ``` r
 require(svDialogs)
 
-# Let's keep some data in one place
+## Let's keep some data in one place
 user_figure <- svDialogs::dlg_input()
 ```
 
@@ -29,15 +29,15 @@ In this case the code will return the following object:
 
 ``` r
 str(user_figure)
-# Classes 'nativeGUI', 'textCLI', 'gui', 'environment' <environment: 0x11872b648> 
+## Classes 'nativeGUI', 'textCLI', 'gui', 'environment' <environment: 0x11872b648> 
 user_figure
-# The default SciViews GUI (.GUI)
-# using widgets from: nativeGUI, textCLI
-# * Last call: dlg_input(gui = .GUI)
-# * Last widgets used: nativeGUI
-# * Last status: ok
-# * Last result:
-# [1] "100"
+## The default SciViews GUI (.GUI)
+## using widgets from: nativeGUI, textCLI
+## * Last call: dlg_input(gui = .GUI)
+## * Last widgets used: nativeGUI
+## * Last status: ok
+## * Last result:
+## [1] "100"
 ```
 
 <em>The post was inspired by <a href="http://stackoverflow.com/a/33934374/1655567" target="_blank" rel="noopener">an amusing discussion</a> on SO.</em>

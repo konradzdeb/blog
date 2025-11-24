@@ -11,14 +11,15 @@ tags:
 
 
 
-# Problem 
+## Problem 
 
 Solving challenges on [project Euler](https://projecteuler.net)  or [HackerRank](https://www.hackerrank.com/) is a good past time. For folks working in the wider analaytical / data science field, places like project Euler provide an excellent opportunity to work with academic programming concepts that do not frequently appear in real-life. I was looking at common problem:
 
 > You are given an unordered array consisting of consecutive integers  [1, 2, 3, ..., n] without any duplicates. You are allowed to swap any two elements. Find the minimum number of swaps required to sort the array in ascending order.  
 Example
 Perform the following steps:  
-```
+
+``` text
 i   arr                     swap (indices)
 0   [7, 1, 3, 2, 4, 5, 6]   swap (0,3)  
 1   [2, 1, 3, 7, 4, 5, 6]   swap (0,1)  
@@ -27,9 +28,10 @@ i   arr                     swap (indices)
 4   [1, 2, 3, 4, 5, 7, 6]   swap (5,6)  
 5   [1, 2, 3, 4, 5, 6, 7]  
 ```
+
 *It took  swaps to sort the array.*
 
-# Solution
+## Solution
 
 ## First attempt
 
@@ -53,7 +55,7 @@ def minimumSwaps(arr):
 
 The solution returns the correct results but times out for 6 cases that consists of bigger arrays.
 
-**Passed tests: 8 / 14**
+### Passed tests: 8 / 14
 
 ## Second attempt 
 
@@ -78,7 +80,7 @@ def minimumSwaps(arr):
 
 The line `array_sorted = sorted(arr)` makes the solution time out only once.
 
-**Passed tests: 13/14**
+### Passed tests: 13/14
 
 ## Third attempt
 
@@ -104,9 +106,11 @@ def minimumSwaps(arr):
                 break
     return num_sorts
 ```
-**Passed tests: 14/14**
 
-# Conclusions
+### Passed tests: 14/14
+
+## Conclusions
+
 I don't remember where I've seen this statement but someone once said:
 
 > RAM is cheap, thinking is expensive
@@ -114,7 +118,6 @@ I don't remember where I've seen this statement but someone once said:
 It's always easy and tempting to start working through concrete example instead of approaching the problem algebraically.
 
 * **First** a good program computes what is has to and only that. The task is to return *the numbers of steps* not to *sort.* Sorting implies actual movement of elements in array and potentially will have a different (likely worse) memory footprint to a purely algebraic solution. The proposed solution does not adhere to this principle fully as purely algebraic solution is applied only for reverse arrays.
-* **Second,** a premature optimisation is frequent source of bugs; also, alogirthm is often the source of poor performance. In the proposed solution, there is a little focus on the actual performance, and optimisation is achieved mostly in the course of cheap / common sense steps, like storing sorted object or skipping computation for specific cases.
+* **Second,** a premature optimisation is frequent source of bugs; also, algorithm is often the source of poor performance. In the proposed solution, there is a little focus on the actual performance, and optimisation is achieved mostly in the course of cheap / common sense steps, like storing sorted object or skipping computation for specific cases.
 
 Main learning points are that thinking how to achieve the outcome is frequently easier than building a detail mental image of the process that lends itself well to estimating the computational effort.
-

@@ -50,7 +50,7 @@ for version in 2.7 3.5 3.6 3.7 3.8 3.9 3.10 3.11 3.12 3.13; do
 done
 ```
 
-```
+``` text
 ## Python 2.7:
 ## True
 ## Python 3.5:
@@ -99,6 +99,6 @@ import pandas as pd
 print(pd.__version__)
 ```
 
-# Summary
+## Summary
 
 One-line Docker commands are a lightweight, repeatable, and isolated way to test and explore code across environments—without cluttering your system. They’re particularly useful when comparing behaviour across language versions or running quick experiments in tools you don’t use daily.

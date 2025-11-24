@@ -11,6 +11,8 @@ repos:
           - --config
           - .markdownlint.jsonc
           - "**/*.md"
+          - "#themes"
+          - "#AGENTS.md"
           - "#node_modules"
         verbose: true
 
@@ -24,7 +26,7 @@ repos:
           - --check-filenames
           - --check-hidden
           - --quiet-level=2
-          - --skip=public,resources,_site,node_modules,themes,.git,**/*.min.*,**/*.svg,**/*.png,**/*.jpg,**/*.pdf
+          - --skip=AGENTS.md,public,resources,_site,node_modules,themes,.git,**/*.min.*,**/*.svg,**/*.png,**/*.jpg,**/*.pdf
 
   - repo: local
     hooks:

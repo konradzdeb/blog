@@ -16,11 +16,11 @@ tags:
 
 
 
-# Background
+## Background
 
 For a computer, an image is collection of interpretable instructions that amount to a visual representation. Raster images are composed from using pixels, containing unique colours, whereas vector images keep track of points and equations that join them.  In `\(\LaTeX\)` PGF/TikZ is used to generate vector graphics from algebraic descriptions. TikZ is mostly used to conveniently draw various scientific figures. ChatGPT is capable of generating computer code in majority of popular languages. I wanted to test how far I can get with ChatGPT generating illustrations using TikZ.
 
-# ChatGPT Conversation
+## ChatGPT Conversation
 
 Let's jump right in and see how ChatGPT deals with simple request to draw a class diagram? For the request:
 
@@ -104,7 +104,7 @@ The graphs are horrible but by providing ChatGPT with additional instructions, l
 
 Clearly ChatGPT version struggles to attend to all small details of the proper flow chart representation as the produced visuals makes this nodes overlap and arrows are cutting across nodes which is also rather undesirable; nevertheless, in a broad sense the produced flow chart contains elements that we would be expecting to find in a professionally produced diagram.
 
-# Drawing Real Life Object
+## Drawing Real Life Object
 
 As demonstrated, ChatGPT can handle fairly involve instructions and deliver usable results. The produced outputs require further tweaking, which we could achieve by issuing more detailed instructions to the ChatGPT or by manually adjusting placement of node elements and arrows. The goal was to check how the ChatGPT will handle generating real-life objects using TikZ. Finally, I've asked ChatGPT to do the following:
 

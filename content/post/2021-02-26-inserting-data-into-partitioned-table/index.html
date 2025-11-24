@@ -101,7 +101,7 @@ sample_data &lt;- map_dfr(.x = dates, ~ tibble(val_a = runif(2),
 <p>Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the <a href="https://spark.rstudio.com"><code>sparklyr</code></a> package I’m creating a local connection.</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(sparklyr))
 sc &lt;- spark_connect(master = &quot;local&quot;)</code></pre>
-<p>For the purpose of the article I’ve also executed the provided-above HiveQL via Spark to ensure accessibility to data structures that would be structurally equivalent, ensuring smooth execution of the example code. Naturally, in a production setting, we would seldom look to create new Hive schema from an R script layer. Similarly, core tables storing results would be usually established outside regular production processes.</p>
+<p>For the purpose of the article I’ve also executed the provided-above HiveQL via Spark to ensure accessibility to data structures that would be structurally equivalent, ensuring smooth execution of the example code. Naturally, in a production setting, we would seldom look to create new Hive schema from an R scriptt layer. Similarly, core tables storing results would be usually established outside regular production processes.</p>
 <pre><code>## &lt;DBISparkResult&gt;
 ##   SQL  DROP TABLE IF EXISTS blog.sample_partitioned_table
 ##   ROWS Fetched: 0 [complete]
@@ -173,7 +173,7 @@ sdf_num_partitions(tbl_perm)</code></pre>
 </div>
 <div id="summary" class="section level1">
 <h1>Summary</h1>
-<p>Convenient and flexible functions facilitating string manipulations available in R make metaprogramming<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> in R easy. Generating and manipulating Hive statements as strings may not be the most efficient strategy in the light of the API’s offered via <code>sparklyr</code> or <code>dbplyr</code>. Neverthless is possible to spot instances where R code makes those coding challenges partiuclary easy to solution and also to maintain.</p>
+<p>Convenient and flexible functions facilitating string manipulations available in R make metaprogramming<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> in R easy. Generating and manipulating Hive statements as strings may not be the most efficient strategy in the light of the API’s offered via <code>sparklyr</code> or <code>dbplyr</code>. Nevertheless is possible to spot instances where R code makes those coding challenges particularly easy to solution and also to maintain.</p>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>

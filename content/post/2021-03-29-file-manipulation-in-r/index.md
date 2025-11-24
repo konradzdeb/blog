@@ -22,15 +22,15 @@ references:
       day: 23
 ---
 
-# Challenge
+## Challenge
 
-File manipulation is a frequent task unavoidable in almost every IT business process. Traditionally, file manipulation tasks are accomplished within the ramifications of specific tools native to a given system. As such, the one may consider writing and scheduling shell script to undertake frequent file operations or using more specific purpose-built tools like [`logrotate`](https://linux.die.net/man/8/logrotate) in order to archive logs or tools like [Kafka](https://kafka.apache.org/20/documentation.html) are used to build streaming-data pipelines. R is usually though of as a statistical programming language or as an environment for a statistical analysis. The fact that R is a mature programming language able to successfully accomplish a wide array of traditional tasks is frequently ignored. What constitutes a *programming language* is a valid question. Wikipedia offers somehow wide definition:
+File manipulation is a frequent task unavoidable in almost every IT business process. Traditionally, file manipulation tasks are accomplished within the ramifications of specific tools native to a given system. As such, the one may consider writing and scheduling shell scriptt to undertake frequent file operations or using more specific purpose-built tools like [`logrotate`](https://linux.die.net/man/8/logrotate) in order to archive logs or tools like [Kafka](https://kafka.apache.org/20/documentation.html) are used to build streaming-data pipelines. R is usually though of as a statistical programming language or as an environment for a statistical analysis. The fact that R is a mature programming language able to successfully accomplish a wide array of traditional tasks is frequently ignored. What constitutes a *programming language* is a valid question. Wikipedia offers somehow wide definition:
 
 > A programming language is a formal language comprising a set of instructions that produce various kinds of output. Programming languages are used in computer programming to implement algorithms.
 
 [*Wikipedia*](https://en.wikipedia.org/wiki/Programming_language)
 
-# Pros and Cons of Using R as an ETL solution
+## Pros and Cons of Using R as an ETL solution
 
 - The article assumes that consideration on whether to utilise R within a team for pure ETL tasks is usually given in the context of R language being utilised to greater or lesser degree to facilitate data modelling, analytical or statistical work. R wasn’t designed to replace ETL[^1] processes; nevertheless, as every other well-developed programming language R offers a set of robust tools for accomplishing file manipulation, analysis and creation. In particular, R package ecosystem offers a layer that provides a clean, **unified,** interface for accomplish a variety of tasks, which traditionally, would be solutioned using system tools or bespoke applications.
 
@@ -73,7 +73,7 @@ ls /srv/mail | xargs -n1 -P4 -I% rsync -Pa % myserver.com:/srv/mail/
 When discussing efficiencies derivable from R in the context of file manipulation it’s worth to mention a suitable packages as available
 
 | Package | Description |
-|:---|:---|
+| --- | --- |
 | [fs](https://github.com/r-lib/fs) | Cross-platform, uniform interface for file manipulation |
 | [processx](https://github.com/r-lib/processx) | Executing and controlling system processes |
 | [zip](https://github.com/r-lib/zip) | Cross-platform zip compression in R |
@@ -81,13 +81,13 @@ When discussing efficiencies derivable from R in the context of file manipulatio
 | [sftp](https://github.com/stenevang/sftp/) | SFTP for R |
 | [eurostat](https://ropengov.github.io/eurostat/), [wbstats](https://github.com/gshs-ornl/wbstats) | For accessing publicly available data |
 
-# Conclusion
+## Conclusion
 
-The R-based file manipulation process are only efficient, from a production perspective, when applied to processes containing a substantial analytical/statistical component. R also lends itself exceptionally to handling processes with heterogeneous inputs and outputs. By leveraging R we can bring order to processes that, before, had to utilise multiple tools to access disparate databases and ingest binary outputs. If our production process utilise common publicly available data repository, there is a strong chance that R package ecosystem can provide a convenient wrapper that makes regular querying and refreshing a breeze. R-based ETL exercises may prove unnecessary onerous if our intention is to develop multi-thread, asynchronous solutions. If our sole purpose is to run multi-thread rsync, using R packages to arrive at comparable end-results would introduce a lot of unnecessary complexity. In effect, whether to use R as an ETL backend depends on the nature of the project. In majority of the cases, building ETL pipelines using R will make sense if our project *already* uses R to undertake some analytical/statistical effort or there is a merit in brining R to do some statistical work. Likely, it is most efficient then to extend our R project by coding additional ETL using R than relaying on external tools to deliver data into R and outwith R.
+The R-based file manipulation process are only efficient, from a production perspective, when applied to processes containing a substantial analytical/statistical component. R also lends itself exceptionally to handling processes with heterogeneous inputs and outputs. By leveraging R we can bring order to processes that, before, had to utilise multiple tools to access disparate databases and ingest binary outputs. If our production process utilise common publicly available data repository, there is a strong chance that R package ecosystem can provide a convenient wrapper that makes regular querying and refreshing a breeze. R-based ETL exercises may prove unnecessary onerous if our intention is to develop multi-thread, asynchronous solutions. If our sole purpose is to run multi-thread rsync, using R packages to arrive at comparable end-results would introduce a lot of unnecessary complexity. In effect, whether to use R as an ETL backend depends on the nature of the project. In majority of the cases, building ETL pipelines using R will make sense if our project *already* uses R to undertake some analytical/statistical effort or there is a merit in bringing R to do some statistical work. Likely, it is most efficient then to extend our R project by coding additional ETL using R than relaying on external tools to deliver data into R and outwith R.
 
-# References
+## References
 
-https://techterms.com/definition/programming_language
+[TechTerms definition of programming language](https://techterms.com/definition/programming_language)
 
 [^1]: Export Transform Load
 
@@ -97,4 +97,4 @@ https://techterms.com/definition/programming_language
 
 [^4]: R package providing a convenient wrapper around `rsync` is available through the GitHub repo: [INWTlab/rsync](https://github.com/INWTlab/rsync).
 
-[^5]: The answer the question on *Speed up rsync with Simultaneous/Concurrent File Transfers?* available [here](https://stackoverflow.com/a/25532027/1655567).
+[^5]: The answer to the question on *Speed up rsync with Simultaneous/Concurrent File Transfers?* is available in this Stack Overflow post: <https://stackoverflow.com/a/25532027/1655567>.
