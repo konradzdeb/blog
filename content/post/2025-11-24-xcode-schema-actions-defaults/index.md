@@ -20,7 +20,7 @@ The following article provides guide on scheme build and run (pre-)post actions 
 
 In Swift and macOS development, defaults (via `UserDefaults` and the `defaults` CLI) are the lightweight persistence layer for user preferences, feature toggles, and other small pieces of state that need to survive app relaunches. They sit between in-memory settings and heavier storage options, letting you read and write simple values keyed by domain so the same code works in app code, Xcode schemes, and shell scripts. Because defaults are global to a domain, careful naming and cleanup are essential to avoid collisions and stale settings during development.
 
-For a deeper dive, Fatbobman’s [“UserDefaults and Observation in SwiftUI”](https://fatbobman.com/en/posts/userdefaults-and-observation/) is a solid blueprint: Xu Yang shows why Observation alone misses external changes, then patches the gap with an `@ObservableDefaults` macro that keeps SwiftUI views in sync with UserDefaults regardless of where writes originate. This is, excellent, disciplined approach which centralizes keys, respond to external mutations, and choses lightweight persistence over ad-hoc state—maps well. For the remaining part of this article I will be using this approach.
+For a deeper dive, Fatbobman’s [“UserDefaults and Observation in SwiftUI”](https://fatbobman.com/en/posts/userdefaults-and-observation/) is a solid blueprint: Xu Yang shows why Observation alone misses external changes, then patches the gap with an `@ObservableDefaults` macro that keeps SwiftUI views in sync with UserDefaults regardless of where writes originate. This is, excellent, disciplined approach which centralizes keys, respond to external mutations, and chooses lightweight persistence over ad-hoc state—maps well. For the remaining part of this article I will be using this approach.
 
 ## Challenge
 
@@ -50,7 +50,7 @@ import Foundation
 
 extension UserDefaults {
     static let group: UserDefaults = {
-        let staticString: String = "group.kz.public.swift.examples.DefaultsExperiment"
+        let staticString: String = "group.xz.public.swift.examples.DefaultsExperiment"
         if let teamIdentifierPrefix = Bundle.main.object(forInfoDictionaryKey: "Team Identifier Prefix") as? String {
             return UserDefaults(
                 suiteName: teamIdentifierPrefix + staticString
