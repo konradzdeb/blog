@@ -20,13 +20,21 @@ repos:
     rev: v2.4.1
     hooks:
       - id: codespell
-        name: codespell
-        types: [text]
         args:
           - --check-filenames
           - --check-hidden
           - --quiet-level=2
-          - --skip=AGENTS.md,public,resources,_site,node_modules,themes,.git,**/*.min.*,**/*.svg,**/*.png,**/*.jpg,**/*.pdf
+        exclude: |
+          (?x)^(
+            package-lock\.json|
+            node_modules/|
+            public/|
+            resources/|
+            themes/|
+            content/post/.*/index\.html$|
+            content/post/.*/index_files/|
+            frontmatter\.json
+          )
 
   - repo: local
     hooks:

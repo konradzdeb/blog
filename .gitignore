@@ -31,3 +31,4 @@ spark-warehouse/
 # Ignore metastore folder
 metastore_db/
 AGENTS.md
+node_modules/
