@@ -88,4 +88,4 @@ struct ContentView: View {
 
 ### Observing the Observable Defaults
 
-Now the key element - how to conveniently observe changes to the defaults?
+Now the key element - how to conveniently observe changes to the defaults? From within the Xcode we could use few of the standard methods such as calling logger via `OSlogger` or using breakpoints. However, Apple's implementation deliberately decouples _mutation_ from _persistence_. In practice, all I/O operations go through memory cache and persistence to disk is deferred and opportunistic. Write-trigger usually occurs during one of the following events:
