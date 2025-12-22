@@ -32,3 +32,6 @@ spark-warehouse/
 metastore_db/
 AGENTS.md
 node_modules/
+
+# Local Netlify folder
+.netlify
