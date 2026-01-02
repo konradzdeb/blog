@@ -12,15 +12,15 @@ tags:
 
 
 
-<p>Recently, I cam across an interesting discussion on StackOverflow<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> pertaining to approach to fuzzy matching tables in R. Good answer contributed by one of the most resilient and excellent contributors to whom I owe a lot of thanks for help suggested relying on regular expression, combining this with basic sting removal and transformations like <code>toupper</code> to deterministically match the tables. The solution solved the problem and was accepted.</p>
+<p>Recently, I cam across an interesting discussion on StackOverflow<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> pertaining to approach to fuzzy matching tables in R. Good answer contributed by one of the most resilient and excellent contributors to whom I owe a lot of thanks for help suggested relying on regular expression, combining this with basic string removal and transformations like <code>toupper</code> to deterministically match the tables. The solution solved the problem and was accepted.</p>
 <div id="so-whats-wrong" class="section level1">
 <h1>So what’s wrong…</h1>
 <p>With this particular problem/solution pair, there is absolutely nothing wrong. On numerous occasions I have seen people running <code>UPPER(REGEXP_REPLACE( my_value, '[[:space:]]', '' ))</code> only so later someone can realise, that actually now they need <code>REGEXP_REPLACE(COLUMN,'[^[:ascii:]],'')</code> only for someone else to offer <code>SELECT REGEXP_REPLACE(COLUMN,'[^' || CHR(1) || '-' || CHR(127) || '],'')</code><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. Those are all good solutions that solve the particular challenge but they (very) seldom stand the test of time.</p>
 <p>The <em>real</em> problem is in not finding the most robust approach but deciding how the challenge is being approached from a priority perspective. Those of us who endlessly twist the regex so they arrive at something resembling the regex below, which was actually created to match email addresses<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>, aspire to match <em>deterministically</em> at any price and frequently are destined to fail, especially when working with data reflecting human-input.</p>
 <pre class="r"><code>^(?:(?!.*?[.]{2})[a-zA-Z0-9](?:[a-zA-Z0-9.+!%-]{1,64}|)|\&quot;[a-zA-Z0-9.+!% -]{1,64}\&quot;)@[a-zA-Z0-9][a-zA-Z0-9.-]+(.[a-z]{2,}|.[0-9]{1,})$</code></pre>
 <p>The nature of the regex matching is source of the problem. Regex-based matching will always result a binary outcome, strings will match or not. By the very definition <strong>regex-based matching is not fuzzy matching.</strong></p>
-<div id="pardigm-shift-just-becasuse-wee-dont-menion-this-phrase-often-enough" class="section level2">
-<h2>Pardigm shift … (just becasuse wee don’t menion this phrase often enough)</h2>
+<div id="pardigm-shift-just-because-we-dont-mention-this-phrase-often-enough" class="section level2">
+<h2>Pardigm shift … (just because we don’t mention this phrase often enough)</h2>
 <p>When you attempt to match things fuzzily you are signing up to a few assumptions:</p>
 <ol style="list-style-type: decimal">
 <li>Your matching reflects certain probabilistic assumptions or in other words, <em>your match is not expected to be 100% accurate.</em></li>
@@ -46,7 +46,7 @@ data_B &lt;- tibble::tribble(
     &quot;Frod&quot;, &quot;B&quot;,
     &quot;mercedes&quot; , &quot;A&quot;
 )</code></pre>
-<p>Let’s say that we want to bring the <code>subjective_rating</code> column to the <code>data_A</code>. The first, common sense would to match on the actual <code>manufacturer</code>. The one could be tempted to get the first word from the manufacturer column and use it for matching. We could attempt to match using only brand name. For that purpose the most straightforward implementation would be to delete everything after space. As shown bellow, the first problem we are seeing that <code>" Ford Corsa"</code> was deleted as it starts with space.</p>
+<p>Let’s say that we want to bring the <code>subjective_rating</code> column to the <code>data_A</code>. The first, common sense would to match on the actual <code>manufacturer</code>. The one could be tempted to get the first word from the manufacturer column and use it for matching. We could attempt to match using only brand name. For that purpose the most straightforward implementation would be to delete everything after space. As shown below, the first problem we are seeing that <code>" Ford Corsa"</code> was deleted as it starts with space.</p>
 <pre class="r"><code>suppressPackageStartupMessages(library(&quot;tidyverse&quot;))
 data_A |&gt; 
     mutate(manufacturer = str_remove(manufacturer, &quot;\\s.*&quot;)) |&gt; 

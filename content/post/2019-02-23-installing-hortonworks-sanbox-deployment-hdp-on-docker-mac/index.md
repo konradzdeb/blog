@@ -11,7 +11,7 @@ tags:
   - bash
 ---
 
-# Background
+## Background
 
 The post covers installation of Hortonworks Sandbox (HD) on Mac using Docker. In software development, *sandbox* describes a testing environment that can be used to isolate untested code changes from a production code. Hortonworks Sandbox provides such an environment with the Hortonworks Data Platform installed. Hortonworks Data Platform is an open source framework facilitating distributed storage and processing large volumes of data.
 
@@ -26,9 +26,9 @@ Docker, which is now used by millions of developers, is and open platform for de
 
 ``` r
 which -a docker
-# /usr/local/bin/docker
+## /usr/local/bin/docker
 docker -v
-# Docker version 20.10.2, build 2291f61
+## Docker version 20.10.2, build 2291f61
 ```
 
 Assuming that the line above did not produce results we can install docker with use of Homebrew. To install Homebrew:
@@ -47,5 +47,4 @@ brew install --cask docker
 
 ### HDP
 
-The HDP can be installed with the provided scrip. The script can be downloaded from 
-
+The HDP can be installed with the provided script. The scriptt can be downloaded from 

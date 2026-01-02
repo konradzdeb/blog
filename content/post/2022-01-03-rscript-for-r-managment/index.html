@@ -1,8 +1,8 @@
 ---
-title: Using RScript for R Installation Managment
+title: Using RScript for R Installation Management
 author: Konrad Zdeb
 date: '2022-01-03'
-slug: rscript-for-r-managment
+slug: rscriptt-for-r-managment
 categories:
   - how-to
 tags:
@@ -24,7 +24,7 @@ tags:
 </div>
 <div id="solution" class="section level1">
 <h1>Solution</h1>
-<p>R offers two interfaces for running scripts and commands without starting an interactive session: <code>R CMD</code> and <code>RScript</code><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. <code>R CMD</code> is an older interface facilitating command and script execution via command line. <code>Rscript</code> came later and is, in general, more flexible. Readers interested in the subject should start research from <a href="https://stackoverflow.com/q/21969145/1655567">this StackOverflow</a> discussion that provides a good primer on key differences.</p>
+<p>R offers two interfaces for running scriptts and commands without starting an interactive session: <code>R CMD</code> and <code>RScript</code><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. <code>R CMD</code> is an older interface facilitating command and scriptt execution via command line. <code>Rscriptt</code> came later and is, in general, more flexible. Readers interested in the subject should start research from <a href="https://stackoverflow.com/q/21969145/1655567">this StackOverflow</a> discussion that provides a good primer on key differences.</p>
 <div id="updating-packages" class="section level2">
 <h2>Updating Packages</h2>
 <p>In the process of updating packages we will be usually interested in achieving two goals:</p>
@@ -34,18 +34,18 @@ tags:
 </ul>
 <div id="outdated-packages" class="section level3">
 <h3>Outdated packages</h3>
-<p>For a start, let’s attempt to construct a data frame containing the outdated packages using <code>Rscript</code>. This is achieved in the following manner</p>
-<pre class="bash"><code>Rscript --no-save --no-restore --no-init-file \
+<p>For a start, let’s attempt to construct a data frame containing the outdated packages using <code>Rscriptt</code>. This is achieved in the following manner</p>
+<pre class="bash"><code>Rscriptt --no-save --no-restore --no-init-file \
         -e &#39;as.data.frame(old.packages(repos = &quot;https://cran.rstudio.com&quot;))[,-c(1,6)]&#39;</code></pre>
 <p>If we intend to execute this command frequently it may be useful to wrap in a function. As we are not intending to pass any arguments to the function this is trivial:</p>
 <pre class="bash"><code>function routdated () {
-        Rscript --no-save --no-restore --no-init-file \
+        Rscriptt --no-save --no-restore --no-init-file \
         -e &#39;as.data.frame(old.packages(repos = &quot;https://cran.rstudio.com&quot;))[,-c(1,6)]&#39;
 }
 routdated</code></pre>
 <div id="explanation" class="section level4">
 <h4>Explanation</h4>
-<p>Let’s break this down. <code>Rscript</code> can be run with multiple switches:</p>
+<p>Let’s break this down. <code>Rscriptt</code> can be run with multiple switches:</p>
 <ul>
 <li><code>--no-init-file</code> skips reading of the <code>.Rprofile</code> files. As I keep my library path stored within the <code>Renviron</code> file, I’m skipping processing of the <code>.RProfile</code> file. Traditionally, <code>.RProfile</code> is used to configure default repositories but I pref to specify the repository directly in the call as I want to update against RStudio’s one</li>
 <li><code>--no-save</code> prevents <code>RScript</code> from saving data on exit</li>
@@ -62,17 +62,17 @@ routdated</code></pre>
 <pre class="bash"><code># Function body
 function rinst () {
 	declare pkgnme=$1
-	Rscript --vanilla -e &quot;install.packages(&#39;$pkgnme&#39;, dependencies = TRUE, repos = &#39;https://cloud.r-project.org/&#39;, lib = &#39;/Users/konrad/Library/R/4/library&#39;)&quot;
+	Rscriptt --vanilla -e &quot;install.packages(&#39;$pkgnme&#39;, dependencies = TRUE, repos = &#39;https://cloud.r-project.org/&#39;, lib = &#39;/Users/konrad/Library/R/4/library&#39;)&quot;
 }</code></pre>
 <div id="explanation-1" class="section level3">
 <h3>Explanation</h3>
-<p>As I want for this function to install only to a specific library and from a specific repository I’m using the <code>--vanilla</code> switch to let Rscript know that I don’t need it to process <code>.RProfile</code> and other files in this particular call as I’m storing the relevant arguments within the function.</p>
+<p>As I want for this function to install only to a specific library and from a specific repository I’m using the <code>--vanilla</code> switch to let Rscriptt know that I don’t need it to process <code>.RProfile</code> and other files in this particular call as I’m storing the relevant arguments within the function.</p>
 </div>
 </div>
 </div>
 <div id="summary" class="section level1">
 <h1>Summary</h1>
-<p>In all likelihood, for more sophisticated projects solutions like <a href="https://rstudio.github.io/renv/"><code>renv</code></a> and <a href="https://www.rocker-project.org">Rocker</a> are a way to go. Nevertheless combination of Rscript / bash can prove very efficient in quickly accomplishing routine maintenance tasks.</p>
+<p>In all likelihood, for more sophisticated projects solutions like <a href="https://rstudio.github.io/renv/"><code>renv</code></a> and <a href="https://www.rocker-project.org">Rocker</a> are a way to go. Nevertheless combination of Rscriptt / bash can prove very efficient in quickly accomplishing routine maintenance tasks.</p>
 </div>
 <div class="footnotes footnotes-end-of-document">
 <hr />

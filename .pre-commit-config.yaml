@@ -1,0 +1,54 @@
+repos:
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.19.1
+    hooks:
+      - id: markdownlint-cli2
+        name: markdownlint
+        entry: markdownlint-cli2
+        language: node
+        pass_filenames: false
+        args:
+          - --config
+          - .markdownlint.jsonc
+          - "**/*.md"
+          - "#themes"
+          - "#AGENTS.md"
+          - "#node_modules"
+        verbose: true
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        args:
+          - --check-filenames
+          - --check-hidden
+          - --quiet-level=2
+        exclude: |
+          (?x)^(
+            package-lock\.json|
+            node_modules/|
+            public/|
+            resources/|
+            themes/|
+            content/post/.*/index\.html$|
+            content/post/.*/index_files/|
+            frontmatter\.json
+          )
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+    -   id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package.lock.json
+
+
+  - repo: local
+    hooks:
+      - id: hugo-build
+        name: hugo-build
+        entry: hugo
+        language: system
+        pass_filenames: false
+        args: [--minify]

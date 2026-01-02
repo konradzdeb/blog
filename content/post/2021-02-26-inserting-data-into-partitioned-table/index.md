@@ -32,7 +32,7 @@ references:
     month: 4
 ---
 
-# Rationale
+## Rationale
 
 Maintaining partitioned Hive tables is a frequent practice in a business. Properly structured tables are conducive to achieving robust performance through speeding up query execution (see Costa, Costa, and Santos 2019). Frequent use cases pertain to creating tables with hierarchical partition structure. In context of a data that is refreshed daily, the frequently utilised partition structure reflects years, months and dates.
 
@@ -79,14 +79,14 @@ In an actual production setting, we would expect that our run will generate a da
 ``` r
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(lubridate))
-# Generating two months of data
+## Generating two months of data
 dates <- seq.Date(
     from = as.Date("01-01-2010", format = "%d-%m-%Y"),
     to = as.Date("28-02-2010", format = "%d-%m-%Y"),
     by = "day"
 )
-# Each data will contain two rows of values corresponding to the column types
-# that were previously defined in Hive
+## Each data will contain two rows of values corresponding to the column types
+## that were previously defined in Hive
 sample_data <- map_dfr(.x = dates, ~ tibble(val_a = runif(2),
                                             val_b = runif(2),
                                             val_c = sample(letters, 2),
@@ -101,15 +101,17 @@ The created data looks as follows:
 head(sample_data)
 ```
 
-    ## # A tibble: 6 × 6
-    ##    val_a val_b val_c update_year update_month update_day
-    ##    <dbl> <dbl> <chr>       <dbl>        <dbl>      <int>
-    ## 1 0.674  0.247 e            2010            1          1
-    ## 2 0.295  0.942 h            2010            1          1
-    ## 3 0.0147 0.289 m            2010            1          2
-    ## 4 0.610  0.190 i            2010            1          2
-    ## 5 0.155  0.146 g            2010            1          3
-    ## 6 0.565  0.259 u            2010            1          3
+``` text
+## # A tibble: 6 × 6
+##    val_a  val_b val_c update_year update_month update_day
+##    <dbl>  <dbl> <chr>       <dbl>        <dbl>      <int>
+## 1 0.566  0.0228 c            2010            1          1
+## 2 0.0319 0.0220 k            2010            1          1
+## 3 0.338  0.993  a            2010            1          2
+## 4 0.794  0.517  o            2010            1          2
+## 5 0.934  0.727  y            2010            1          3
+## 6 0.0883 0.385  j            2010            1          3
+```
 
 Following the successful creation of the dummy data we are in position to easily leverage the desired data structure. Using the [`sparklyr`](https://spark.rstudio.com) package I’m creating a local connection.
 
@@ -118,17 +120,21 @@ suppressPackageStartupMessages(library(sparklyr))
 sc <- spark_connect(master = "local")
 ```
 
-For the purpose of the article I’ve also executed the provided-above HiveQL via Spark to ensure accessibility to data structures that would be structurally equivalent, ensuring smooth execution of the example code. Naturally, in a production setting, we would seldom look to create new Hive schema from an R script layer. Similarly, core tables storing results would be usually established outside regular production processes.
+For the purpose of the article I’ve also executed the provided-above HiveQL via Spark to ensure accessibility to data structures that would be structurally equivalent, ensuring smooth execution of the example code. Naturally, in a production setting, we would seldom look to create new Hive schema from an R scriptt layer. Similarly, core tables storing results would be usually established outside regular production processes.
 
-    ## <DBISparkResult>
-    ##   SQL  DROP TABLE IF EXISTS blog.sample_partitioned_table
-    ##   ROWS Fetched: 0 [complete]
-    ##        Changed: 0
+``` text
+## <DBISparkResult>
+##   SQL  DROP TABLE IF EXISTS blog.sample_partitioned_table
+##   ROWS Fetched: 0 [complete]
+##        Changed: 0
+```
 
-    ## <DBISparkResult>
-    ##   SQL  DROP DATABASE IF EXISTS blog
-    ##   ROWS Fetched: 0 [complete]
-    ##        Changed: 0
+``` text
+## <DBISparkResult>
+##   SQL  DROP DATABASE IF EXISTS blog
+##   ROWS Fetched: 0 [complete]
+##        Changed: 0
+```
 
 ``` r
 res_DBI_data <- DBI::dbSendQuery(sc, "CREATE DATABASE blog COMMENT 'Blog article samples,                                           can be deleted.'")
@@ -174,10 +180,12 @@ res_pmap <- pmap(
 ```
 
 Let’s unpack the code below. Our key goals are:
-\* Our aim is to populate *partitions* in our permanent Hive table `blog.sample_partitioned_table`, hence the statement `INSERT INTO TABLE blog.sample_partitioned_table`
-\* We are working with some modelling/analytical data that currently sits in our Spark session as `spark_sample_data` and we want for the relevant results in the data to land in the prescribed partitions on Spark
+
+- Our aim is to populate *partitions* in our permanent Hive table `blog.sample_partitioned_table`, hence the statement `INSERT INTO TABLE blog.sample_partitioned_table`
+- We are working with some modelling/analytical data that currently sits in our Spark session as `spark_sample_data` and we want for the relevant results in the data to land in the prescribed partitions on Spark
 
 What happens in the process is as follows:
+
 1. We are generating a list of vectors with partitions identifiers to iterate over. As I’ve created this sample data in the current session in memory I can just refer to those items using `select` I would do that in the following manner `select(sample_data, update_year, update_month, update_day)`
 2. I’m interested in iterating over each column simultaneously and `pmap` function is excellent for that. Using `~` notation offered in `pmap` I will be looking to refer to first object as `..1` to the second as `..2` and so on.
 3. Glue package is used to insert strings with partitions identifier into the respective partition names.
@@ -192,27 +200,31 @@ tbl_perm <- tbl(sc, "blog.sample_partitioned_table")
 sdf_num_partitions(tbl_perm)
 ```
 
-    ## [1] 118
+``` text
+## [1] 118
+```
 
 ``` r
 glimpse(tbl_perm)
 ```
 
-    ## Rows: ??
-    ## Columns: 6
-    ## Database: spark_connection
-    ## $ value_column_a <dbl> 0.9968951, 0.6619936, 0.9968951, 0.6619936, 0.7150829, …
-    ## $ value_column_b <dbl> 0.544749459, 0.084884726, 0.544749459, 0.084884726, 0.3…
-    ## $ value_column_c <chr> "i", "b", "i", "b", "f", "o", "f", "o", "k", "v", "k", …
-    ## $ part_year      <int> 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
-    ## $ part_month     <int> 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1…
-    ## $ part_day       <int> 10, 10, 10, 10, 12, 12, 12, 12, 5, 5, 5, 5, 9, 9, 9, 9,…
+``` text
+## Rows: ??
+## Columns: 6
+## Database: spark_connection
+## $ value_column_a <dbl> 0.93434298, 0.08828931, 0.93434298, 0.08828931, 0.78982…
+## $ value_column_b <dbl> 0.72664445, 0.38482719, 0.72664445, 0.38482719, 0.56651…
+## $ value_column_c <chr> "y", "j", "y", "j", "f", "e", "f", "e", "y", "j", "y", …
+## $ part_year      <int> 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2010, 2…
+## $ part_month     <int> 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1…
+## $ part_day       <int> 3, 3, 3, 3, 27, 27, 27, 27, 14, 14, 14, 14, 24, 24, 24,…
+```
 
-# Summary
+## Summary
 
-Convenient and flexible functions facilitating string manipulations available in R make metaprogramming[^1] in R easy. Generating and manipulating Hive statements as strings may not be the most efficient strategy in the light of the API’s offered via `sparklyr` or `dbplyr`. Neverthless is possible to spot instances where R code makes those coding challenges partiuclary easy to solution and also to maintain.
+Convenient and flexible functions facilitating string manipulations available in R make metaprogramming[^1] in R easy. Generating and manipulating Hive statements as strings may not be the most efficient strategy in the light of the API’s offered via `sparklyr` or `dbplyr`. Nevertheless is possible to spot instances where R code makes those coding challenges particularly easy to solution and also to maintain.
 
-# References
+## References
 
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 

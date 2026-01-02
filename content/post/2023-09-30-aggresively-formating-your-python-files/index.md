@@ -1,5 +1,5 @@
 ---
-title: Aggresively formating your Python files
+title: Aggressively formatting your Python files
 author: Konrad Zdeb
 date: '2023-09-30'
 slug: []
@@ -24,7 +24,7 @@ autopep8 --verbose --in-place --aggressive --aggressive   ${our_python_file}
 This is the simplest implementation, where the file path is passed into the formatting function, and the formatted file is then read back into the buffer.
 
 ```vim
-" Aggresively and quickly format Python file
+" Aggressively and quickly format Python file
 function! FormatThisPythonFile()
 	 let filename = expand("%")
 	 let cmd = "autopep8 --verbose --in-place --aggressive --aggressive " . filename

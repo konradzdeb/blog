@@ -1,0 +1,155 @@
+{
+  "$schema": "https://frontmatter.codes/frontmatter.schema.json",
+  "frontMatter.taxonomy.contentTypes": [
+    {
+      "name": "default",
+      "pageBundle": false,
+      "previewPath": null,
+      "fields": [
+        {
+          "title": "title",
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "title": "author",
+          "name": "author",
+          "type": "string"
+        },
+        {
+          "title": "date",
+          "name": "date",
+          "type": "datetime"
+        },
+        {
+          "title": "categories",
+          "name": "categories",
+          "type": "categories"
+        },
+        {
+          "title": "tags",
+          "name": "tags",
+          "type": "tags"
+        },
+        {
+          "title": "draft",
+          "name": "draft",
+          "type": "draft"
+        },
+        {
+          "title": "description",
+          "name": "description",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "frontMatter.framework.id": "hugo",
+  "frontMatter.content.publicFolder": "static",
+  "frontMatter.preview.host": "http://localhost:1313",
+  "frontMatter.git.enabled": true,
+  "frontMatter.content.pageFolders": [
+    {
+      "title": "content",
+      "path": "[[workspace]]/content"
+    },
+    {
+      "title": "PaperMod",
+      "path": "[[workspace]]/themes/PaperMod"
+    },
+    {
+      "title": "2015-06-05-ascii-charts-in-r",
+      "path": "[[workspace]]/content/post/2015-06-05-ascii-charts-in-r"
+    },
+    {
+      "title": "2015-03-28-managing-rows-in-the-ggplot-legend",
+      "path": "[[workspace]]/content/post/2015-03-28-managing-rows-in-the-ggplot-legend"
+    },
+    {
+      "title": "2018-11-24-interactive-module",
+      "path": "[[workspace]]/content/post/2018-11-24-interactive-module"
+    },
+    {
+      "title": "2019-02-23-installing-hortonworks-sanbox-deployment-hdp-on-docker-mac",
+      "path": "[[workspace]]/content/post/2019-02-23-installing-hortonworks-sanbox-deployment-hdp-on-docker-mac"
+    },
+    {
+      "title": "2020-05-08-three-way-operator-in-r",
+      "path": "[[workspace]]/content/post/2020-05-08-three-way-operator-in-r"
+    },
+    {
+      "title": "2021-05-23-fun-with-sortting-arrays",
+      "path": "[[workspace]]/content/post/2021-05-23-fun-with-sortting-arrays"
+    },
+    {
+      "title": "2021-02-12-sample-analytical-app-with-shiny",
+      "path": "[[workspace]]/content/post/2021-02-12-sample-analytical-app-with-shiny"
+    },
+    {
+      "title": "2020-07-23-poor-man-s-robust-shiny-app-deployment",
+      "path": "[[workspace]]/content/post/2020-07-23-poor-man-s-robust-shiny-app-deployment"
+    },
+    {
+      "title": "2021-02-26-inserting-data-into-partitioned-table",
+      "path": "[[workspace]]/content/post/2021-02-26-inserting-data-into-partitioned-table"
+    },
+    {
+      "title": "2021-12-09-beauty-of-r-and-big-o",
+      "path": "[[workspace]]/content/post/2021-12-09-beauty-of-r-and-big-o"
+    },
+    {
+      "title": "2021-08-13-importing-hive-to-csv",
+      "path": "[[workspace]]/content/post/2021-08-13-importing-hive-to-csv"
+    },
+    {
+      "title": "2021-06-29-why-regex-is-not-fuzzy-matching",
+      "path": "[[workspace]]/content/post/2021-06-29-why-regex-is-not-fuzzy-matching"
+    },
+    {
+      "path": "[[workspace]]/content/post/2023-09-30-aggresively-formating-your-python-files"
+    },
+    {
+      "title": "2022-03-16-python-project-structre",
+      "path": "[[workspace]]/content/post/2022-03-16-python-project-structre"
+    },
+    {
+      "path": "[[workspace]]/content/post/2023-06-14-learning-chatgpt-how-to-draw"
+    },
+    {
+      "title": "2022-01-03-rscript-for-r-managment",
+      "path": "[[workspace]]/content/post/2022-01-03-rscript-for-r-managment"
+    },
+    {
+      "title": "2025-03-04-swift-data-science",
+      "path": "[[workspace]]/content/post/2025-03-04-swift-data-science"
+    },
+    {
+      "title": "2025-03-14-git-dotfiles",
+      "path": "[[workspace]]/content/post/2025-03-14-git-dotfiles"
+    },
+    {
+      "title": "2025-03-19-one-line-docker-commands",
+      "path": "[[workspace]]/content/post/2025-03-19-one-line-docker-commands"
+    },
+    {
+      "title": "2025-03-28-nvim-autoupdate",
+      "path": "[[workspace]]/content/post/2025-03-28-nvim-autoupdate"
+    },
+    {
+      "title": "2025-08-31-review-mleng-datacamp",
+      "path": "[[workspace]]/content/post/2025-08-31-review-mleng-datacamp"
+    },
+    {
+      "title": "2025-07-24-python-models-app",
+      "path": "[[workspace]]/content/post/2025-07-24-python-models-app"
+    },
+    {
+      "title": ".github",
+      "path": "[[workspace]]/themes/PaperMod/.github"
+    },
+    {
+      "title": "2012-02-01-amusing-way-to-get-user-input-windows-in-r",
+      "path": "[[workspace]]/content/post/2012-02-01-amusing-way-to-get-user-input-windows-in-r"
+    }
+  ]
+}

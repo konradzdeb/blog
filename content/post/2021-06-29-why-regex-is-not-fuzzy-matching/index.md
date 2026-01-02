@@ -10,9 +10,9 @@ tags:
   - StackOverflow
 ---
 
-Recently, I cam across an interesting discussion on StackOverflow^[SO discussion on: [*Fuzzy Join with Partial String Match in R*](https://stackoverflow.com/a/68182330/1655567)] pertaining to approach to fuzzy matching tables in R. Good answer contributed by one of the most resilient and excellent contributors to whom I owe a lot of thanks for help suggested relying on regular expression, combining this with basic sting removal and transformations like `toupper` to deterministically match the tables. The solution solved the problem and was accepted.
+Recently, I cam across an interesting discussion on StackOverflow^[SO discussion on: [*Fuzzy Join with Partial String Match in R*](https://stackoverflow.com/a/68182330/1655567)] pertaining to approach to fuzzy matching tables in R. Good answer contributed by one of the most resilient and excellent contributors to whom I owe a lot of thanks for help suggested relying on regular expression, combining this with basic string removal and transformations like `toupper` to deterministically match the tables. The solution solved the problem and was accepted.
 
-# So what's wrong...
+## So what's wrong
 
 With this particular problem/solution pair, there is absolutely nothing wrong. On numerous occasions I have seen people running `UPPER(REGEXP_REPLACE( my_value, '[[:space:]]', '' ))` only so later someone can realise, that actually now they need `REGEXP_REPLACE(COLUMN,'[^[:ascii:]],'')` only for someone else to offer `SELECT REGEXP_REPLACE(COLUMN,'[^' || CHR(1) || '-' || CHR(127) || '],'')`^[The example originations from SO discussion on removing non-ASCII characters; this is actually [one of the better answerers](https://Stack Overflow.com/a/18234629/1655567) offered.]. Those are all good solutions that solve the particular challenge but they (very) seldom stand the test of time.
 
@@ -25,7 +25,7 @@ The *real* problem is in not finding the most robust approach but deciding how t
 
 The nature of the regex matching is source of the problem. Regex-based matching will always result a binary outcome, strings will match or not. By the very definition **regex-based matching is not fuzzy matching.** 
 
-## Pardigm shift ... (just becasuse wee don't menion this phrase often enough)
+## Paradigm shift (just because we don't mention this phrase often enough)
 
 When you attempt to match things fuzzily you are signing up to a few assumptions:
 
@@ -33,7 +33,7 @@ When you attempt to match things fuzzily you are signing up to a few assumptions
 2) There is no "one right" method to do the matching, ways of calculating string distances may be less or more suitable for a given problem. Computationally expensive procedures may yield excellent result but prove impractical from the implementation perspective, and so on
 3) Whereas for regex there is clear direction of improvement: it can be (almost) always tweaked more to account for one more 'edge case' the improvement direction 
 
-# Example
+## Example
 
 Generating example that show inefficiency of regex when contrasted with string matching approach. The most obvious example is the one that will show mismatches on misspelled words. Let's consider the following example. Two data sets contain a set of strings reflecting car manufactures, as shown below.
 
@@ -55,7 +55,7 @@ data_B <- tibble::tribble(
 )
 ```
 
-Let's say that we want to bring the `subjective_rating` column to the `data_A`. The first, common sense would to match on the actual `manufacturer`. The one could be tempted to get the first word from the manufacturer column and use it for matching. We could attempt to match using only brand name. For that purpose the most straightforward implementation would be to delete everything after space. As shown bellow, the first problem we are seeing that `" Ford Corsa"` was deleted as it starts with space.
+Let's say that we want to bring the `subjective_rating` column to the `data_A`. The first, common sense would to match on the actual `manufacturer`. The one could be tempted to get the first word from the manufacturer column and use it for matching. We could attempt to match using only brand name. For that purpose the most straightforward implementation would be to delete everything after space. As shown below, the first problem we are seeing that `" Ford Corsa"` was deleted as it starts with space.
 
 
 ``` r
@@ -65,11 +65,11 @@ data_A |>
     left_join(data_B)
 ```
 
-```
+``` text
 ## Joining with `by = join_by(manufacturer)`
 ```
 
-```
+``` text
 ## # A tibble: 5 × 3
 ##   manufacturer price subjective_rating
 ##   <chr>        <dbl> <chr>            
@@ -91,11 +91,11 @@ data_A |>
     left_join(data_B)
 ```
 
-```
+``` text
 ## Joining with `by = join_by(manufacturer)`
 ```
 
-```
+``` text
 ## # A tibble: 5 × 3
 ##   manufacturer price subjective_rating
 ##   <chr>        <dbl> <chr>            
@@ -118,7 +118,7 @@ data_A |>
     fuzzyjoin::regex_left_join(data_B, by = "manufacturer")
 ```
 
-```
+``` text
 ## # A tibble: 5 × 4
 ##   manufacturer.x price manufacturer.y subjective_rating
 ##   <chr>          <dbl> <chr>          <chr>            
@@ -129,7 +129,7 @@ data_A |>
 ## 5 mecedes           10 <NA>           <NA>
 ```
 
-## A "pragmatic programmer" approach ...
+## A "pragmatic programmer" approach
 
 At this junction it's beneficial revise our initial assumptions. After working with this trivial sample data we can conclude that:
 
@@ -147,9 +147,10 @@ jw <- JaroWinkler(ignore_case = TRUE)
 jw("Mercedes", "mecedes")
 ```
 
-```
+``` text
 ## [1] 0.9666667
 ```
+
 The function returns distance between two strings and, expectedly, `jw` will return quite a high score for for common spelling mistakes. The score for dissimilar words will be much lower.
 
 
@@ -157,7 +158,7 @@ The function returns distance between two strings and, expectedly, `jw` will ret
 jw("Mercedes", "opel corsa zxc")
 ```
 
-```
+``` text
 ## [1] 0.5119048
 ```
 
@@ -171,7 +172,7 @@ fuzzyjoin::fuzzy_left_join(x = data_A, y = data_B, by = "manufacturer",
                            )
 ```
 
-```
+``` text
 ## # A tibble: 5 × 4
 ##   manufacturer.x           price manufacturer.y subjective_rating
 ##   <chr>                    <dbl> <chr>          <chr>            
@@ -181,8 +182,9 @@ fuzzyjoin::fuzzy_left_join(x = data_A, y = data_B, by = "manufacturer",
 ## 4 "Mercedes W205 C-Class"     90 mercedes       A                
 ## 5 "Mecedes X156 GLA-Class"    10 mercedes       A
 ```
+
 Without any string transformations we are achieving *reasonable* match. The key word is here is *reasonable.* The proposed approach only makes sense if we agree that we are not looking for a perfect match but we are willing to accept reasonably good output.
 
-# So what
+## So what
 
 First be honest with what do you need, can you live with a few mismatched records? If you are building data to predict trends reflecting substantial populations the likely answer is *yes,* if you are building data set to email personalised marketing communication to existing customers the likely answer is *no.* 

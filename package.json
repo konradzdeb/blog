@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "devDependencies": {
+    "stylelint": "^16.26.1",
+    "stylelint-config-standard": "^36.0.1"
+  }
+}

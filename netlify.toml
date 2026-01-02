@@ -1,14 +1,18 @@
 [build]
-command = "hugo"
+command = "hugo --gc --minify --baseURL=https://thefinalartefact.blog/"
 publish = "public"
-[build.environment]
-HUGO_VERSION = "0.128.2"
 
-[context]
-[context.branch-deploy]
-command = "hugo -F -b $DEPLOY_PRIME_URL"
-[context.deploy-preview]
-command = "hugo -F -b $DEPLOY_PRIME_URL"
+[build.environment]
+HUGO_VERSION = "0.148.1"
+
 [context.production]
+command = "hugo --gc --minify --baseURL=https://thefinalartefact.blog/"
 [context.production.environment]
 HUGO_ENV = "production"
+
+# Make branch and preview builds use their own URL
+[context.branch-deploy]
+command = "hugo --gc --minify --baseURL=$DEPLOY_URL/"
+
+[context.deploy-preview]
+command = "hugo --gc --minify --baseURL=$DEPLOY_PRIME_URL/"
