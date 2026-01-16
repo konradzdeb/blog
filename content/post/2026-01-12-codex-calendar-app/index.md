@@ -11,10 +11,10 @@ tags:
   - Calendar
   - Planning
 draft: true
-description: Draft stub for the Codex-based calendar planning tool article.
+description: "I vibe-coded a small CLI with Codex that turns a JSON schedule into a clean, printable calendar PDF and an optional ICS feed. It supports recurring events, alternating week blocks with color legends, multi-month ranges in a single PDF, and custom header/footer text and fonts. Repo: https://github.com/konradzdeb/codex-calendar-planning"
 ---
 
-When my ex wife asked to spend more time with our son, I agreed but needed the schedule to stay consistent. That kicked off a small calendar-planning tool with a few requirements: a clean, printable calendar view, no paid app or subscription for a one-off need, and a way to subscribe or export the calendar so it stays visible across all of my devices.
+After a small change in my son's schedule, I wanted to keep everything consistent while making it easy to share. That kicked off a small calendar-planning tool with a few requirements: a clean, printable calendar view, no paid app or subscription for a one-off need, and a way to subscribe or export the calendar so it stays visible across all of my devices.
 
 ## Background
 
@@ -62,7 +62,7 @@ I built a tiny Python CLI called `calendar-planning` that takes a JSON file as t
 - `events`: timed or all-day items, optionally recurring weekly with exceptions.
 - `blocks`: colored date ranges that define the week patterns (e.g., Schedule A vs Schedule B).
 
-From that single file, the tool generates a PDF calendar (single month or a multi-month PDF) and an optional `.ics` file for calendar subscriptions. Updating the schedule is just editing JSON and re-running the command.
+From that single file, the tool generates a PDF calendar (single month or a multi-month PDF) and an optional `.ics` file for calendar subscriptions. Updating the schedule is just editing JSON and re-running the command. The code is published at [github.com/konradzdeb/codex-calendar-planning](https://github.com/konradzdeb/codex-calendar-planning).
 
 I ran it via `uv run calendar-planning ...` while the project was uv-managed. The default output is `out/calendar-YYYY-MM.pdf`, and the `.ics` file is written next to the PDF unless you pass `--no-ics` or override with `--out-ics`.
 
