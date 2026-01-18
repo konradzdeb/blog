@@ -172,3 +172,5 @@ Here is a sample output generated from the `sample_events.json` fixture:
 ![Sample calendar output](sample-calendar.png)
 
 The main lesson was that for one-off planning tasks, a small CLI and a good data model are better than wrestling a heavyweight calendar app. I did not need perfect recurrence support or time zone handling; I needed a printable artifact and a repeatable process, and this delivered both with minimal overhead.
+
+Repository with the code: [github.com/konradzdeb/codex-calendar-planning](https://github.com/konradzdeb/codex-calendar-planning).
