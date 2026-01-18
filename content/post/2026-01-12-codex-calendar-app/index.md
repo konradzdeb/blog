@@ -11,7 +11,6 @@ tags:
   - Calendar
   - Planning
 draft: false
-description: "I vibe-coded a small CLI with Codex that turns a JSON schedule into a clean, printable calendar PDF and an optional ICS feed. It supports recurring events, alternating week blocks with color legends, multi-month ranges in a single PDF, and custom header/footer text and fonts. Repo: https://github.com/konradzdeb/codex-calendar-planning"
 ---
 
 After a small change in my son's schedule, I wanted to keep everything consistent while making it easy to share. That kicked off a small calendar-planning tool with a few requirements: a clean, printable calendar view, no paid app or subscription for a one-off need, and a way to subscribe or export the calendar so it stays visible across all of my devices.
@@ -35,8 +34,11 @@ For testing and experimentation, I decided to make the development fully vibe-co
 I started with a small set of prompts to define the foundations and basic principles for the tool. A few of the early prompts (cleaned up for readability) were:
 
 > "Create a ReportLab-based script to print a calendar to PDF."
+>
 > "This project is uv-managed, so add dependencies with uv add. Split calendar rendering into its own module and use Click for the CLI."
+>
 > "Default the output path to ./out/<calendar-YYYY-MM.pdf> and create out/ if it is missing."
+>
 > "Parse JSON events with weekly recurrence and exceptions, and render them clearly in the PDF."
 
 ## Prompt-led refinements
@@ -44,9 +46,13 @@ I started with a small set of prompts to define the foundations and basic princi
 Once the basics worked, I used follow-on prompts to push the tool toward the real-world workflow I needed:
 
 > "Add blocks that shade calendar cells with colors and a legend defined in JSON."
+>
 > "Fix the missing Sunday in alternating weekend blocks by anchoring recurrence to the configured week start, and make Monday the default."
+>
 > "Support month ranges like 1-3 and render a single multi-page PDF, with page numbers for multi-month output."
+>
 > "Add header and footer strings, bold event labels, and allow custom fonts for readability on screens."
+>
 > "Export a consolidated ICS file alongside the PDF, with --out-ics and --no-ics switches."
 
 ## Problem
@@ -165,3 +171,5 @@ Here is a sample output generated from the `sample_events.json` fixture:
 ![Sample calendar output](sample-calendar.png)
 
 The main lesson was that for one-off planning tasks, a small CLI and a good data model are better than wrestling a heavyweight calendar app. I did not need perfect recurrence support or time zone handling; I needed a printable artifact and a repeatable process, and this delivered both with minimal overhead.
+
+Repository with the code: [github.com/konradzdeb/codex-calendar-planning](https://github.com/konradzdeb/codex-calendar-planning).
