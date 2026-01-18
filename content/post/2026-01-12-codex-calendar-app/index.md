@@ -10,7 +10,7 @@ tags:
   - Codex
   - Calendar
   - Planning
-draft: true
+draft: false
 description: "I vibe-coded a small CLI with Codex that turns a JSON schedule into a clean, printable calendar PDF and an optional ICS feed. It supports recurring events, alternating week blocks with color legends, multi-month ranges in a single PDF, and custom header/footer text and fonts. Repo: https://github.com/konradzdeb/codex-calendar-planning"
 ---
 
