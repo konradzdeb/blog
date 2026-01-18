@@ -11,7 +11,6 @@ tags:
   - Calendar
   - Planning
 draft: false
-description: "I vibe-coded a small CLI with Codex that turns a JSON schedule into a clean, printable calendar PDF and an optional ICS feed. It supports recurring events, alternating week blocks with color legends, multi-month ranges in a single PDF, and custom header/footer text and fonts. Repo: [github.com/konradzdeb/codex-calendar-planning](https://github.com/konradzdeb/codex-calendar-planning)"
 ---
 
 After a small change in my son's schedule, I wanted to keep everything consistent while making it easy to share. That kicked off a small calendar-planning tool with a few requirements: a clean, printable calendar view, no paid app or subscription for a one-off need, and a way to subscribe or export the calendar so it stays visible across all of my devices.
