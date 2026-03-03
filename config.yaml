@@ -45,6 +45,8 @@ markup:
     tabWidth: 4
 
 params:
+  author:
+    name: Konrad
   fuseOpts:
     isCaseSensitive: false
     shouldSort: true
