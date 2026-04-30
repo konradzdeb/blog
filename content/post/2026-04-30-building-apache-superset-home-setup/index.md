@@ -19,7 +19,7 @@ I was recently task with pro-bono helping on analysing some life science data. A
 
 This is not a production setup. It is a pragmatic, LAN-only system that gives you most of the value with minimal overhead.
 
-The approach mirrors how I tend to structure quick technical experiments: keep dependencies simple, validate each step incrementally, and only harden where necessary. fileciteturn0file3
+The approach mirrors how I tend to structure quick technical experiments: keep dependencies simple, validate each step incrementally, and only harden where necessary.
 
 ---
 
