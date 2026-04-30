@@ -4,7 +4,7 @@ permalinks:
   post: "/post/:slug/"
 pagination:
   paginate: 5
-languageCode: en-gb
+locale: en-gb
 title: The Final Artefact
 outputs:
   home:
