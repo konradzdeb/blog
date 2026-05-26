@@ -15,7 +15,7 @@ draft: true
 
 ## Background
 
-I was recently task with pro-bono helping on analysing some life science data. As I was expecting a lot of feedback on the lines of *can you show this like that* I wanted to Setting up a small analytics environment at home is surprisingly straightforward. The goal here is simple: run a lightweight instance of Apache Superset on a Debian laptop, allow multiple users on the local network to upload CSV files, and build basic dashboards.
+I was recently task with pro-bono helping on analysing some life science data. As I was expecting a lot of feedback on the lines of _can you show this like that._ This nice experience brought me close to my initial career days working as a researcher and analysts for various outfits. I wanted to Setting up a small analytics environment at home is surprisingly straightforward. The goal here is simple: run a lightweight instance of Apache Superset on a Debian laptop, allow multiple users on the local network to upload CSV files, and build basic dashboards.
 
 This is not a production setup. It is a pragmatic, LAN-only system that gives you most of the value with minimal overhead.
 
@@ -27,13 +27,13 @@ The approach mirrors how I tend to structure quick technical experiments: keep d
 
 The setup is intentionally minimal:
 
-| Component | Choice |
-| :---------------- | :------ |
-| BI tool | Apache Superset |
-| Metadata DB | PostgreSQL |
+| Component    | Choice                     |
+| :----------- | :------------------------- |
+| BI tool      | Apache Superset            |
+| Metadata DB  | PostgreSQL                 |
 | Data storage | PostgreSQL (same instance) |
-| Runtime | Python virtual environment |
-| Access | Local network only |
+| Runtime      | Python virtual environment |
+| Access       | Local network only         |
 
 No Docker, no orchestration, no reverse proxy. Just enough to get a working system.
 
