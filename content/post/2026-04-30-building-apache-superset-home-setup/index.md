@@ -13,6 +13,8 @@ tags:
 draft: false
 ---
 
+![Apache Superset chart editor showing a stacked area chart for synthetic transaction data](images/apache-superset-chart-editor.png)
+
 ## Background
 
 I was recently asked to help, pro bono, with analysing some life science data. From the outset I expected a steady stream of feedback along the lines of _can you show this like that_, and that prospect pulled me back to my early career days working as a researcher and analyst for various outfits. What those years taught me is that the bottleneck is rarely the analysis itself; it is the loop of sharing a result, hearing how someone would prefer to see it, and turning that around quickly. A small, self-service tool that lets people poke at the data themselves removes most of that friction.
