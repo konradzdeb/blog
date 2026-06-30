@@ -1,6 +1,6 @@
 ---
 theme: "PaperMod"
-baseURL: https://thefinalartefact.blog/
+baseURL: https://www.thefinalartefact.xyz/
 permalinks:
   post: "/post/:slug/"
 pagination:
