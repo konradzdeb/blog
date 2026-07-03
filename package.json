@@ -1,6 +1,13 @@
 {
   "private": true,
+  "scripts": {
+    "hugo": "hugo",
+    "server": "hugo server -D",
+    "build": "hugo --gc --minify",
+    "build:production": "hugo --gc --minify --baseURL=https://www.thefinalartefact.xyz/"
+  },
   "devDependencies": {
+    "hugo-extended": "0.161.1",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^36.0.1"
   }
