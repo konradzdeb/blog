@@ -11,35 +11,23 @@ tags:
   - LLM
   - context
   - CLI
-draft: true
+draft: false
 description: A practical look at using ctx as a local context layer for LLM work, from searching agent history to inspecting SQLite data and sharing focused evidence across tools.
 ---
 
 When working with LLMs, the prompt is only part of the problem. The harder part is deciding which context should travel with the request: source files, command output, constraints, previous decisions, and the exact shape of the failure.
 
-LLMs are usually discussed as tools for making business tasks more efficient. The more interesting question here is narrower: how do we work more efficiently with LLMs themselves?
+Most writing about LLMs asks how they make our work more efficient. The more interesting question here is narrower: how do we work more efficiently with the models themselves?
 
 In my work, that often means leveraging multiple tools, each with a focused role, rather than treating the LLM as a single chat window that has to hold everything at once.
 
-`ctx` fits into that gap. I want it to act as a small context layer between a project and an LLM, so I can stop rebuilding the same explanation by hand and send focused, repeatable bundles instead.
+`ctx` fits into that gap. I want it to act as a small context layer between a project and an LLM, so I can stop rebuilding the same explanation by hand and send targeted, repeatable bundles instead.
 
 ## What is ctx?
 
 Here, `ctx` is a local CLI for working with agent history. It can discover and index previous sessions, list sources, search indexed history, show transcripts or individual events, locate metadata, expose read-only tools over MCP, and run read-only SQL against its local index.
 
 That makes it useful as a memory and inspection layer for LLM work. Instead of relying on whatever a given chat client remembers, I can query what actually happened: which sessions ran, what context was captured, where it came from, and which pieces are worth reusing.
-
-## Working thesis
-
-LLMs do better when context is:
-
-- explicit rather than implied
-- small enough to inspect
-- repeatable across runs
-- grounded in current files and command output
-- stripped of unrelated project noise
-
-The goal is not to send more context. The goal is to send the right context in a form that is easy to review before it reaches the model.
 
 ## Why this matters
 
@@ -51,7 +39,9 @@ In day-to-day development, most LLM mistakes I see come from missing or stale co
 - logs copied without the command that produced them
 - a request that describes intent but omits the current state of the repo
 
-This is especially visible in larger repositories, where "look at the code" is too broad and "here is one file" is too narrow.
+This is especially visible in larger repositories, where "look at the code" is too broad and "here is one file" is too narrow. The fix is not more context but the right context: explicit rather than implied, small enough to inspect, grounded in current files and command output, and stripped of unrelated project noise, in a form that is easy to review before it reaches the model.
+
+Interfaces such as [Magentic-UI](https://arxiv.org/abs/2507.22358) show how multi-agent tools can make human-agent collaboration easier to manage, but even the best interface does not remove the need for context you can inspect. What I want is the ability to query my own history of prompts, sessions, sources, and captured context, and to assemble it deliberately.
 
 ## What I want from ctx
 
@@ -66,13 +56,11 @@ For LLM work, a useful `ctx` workflow should make it easy to collect:
 
 It should also make omissions obvious. If I am asking why a payment webhook retries forever, I want the bundle to include the handler, queue configuration, idempotency checks, recent logs, and the failing test or trace. If I am asking for a Swift refactor, I want the relevant views, models, tests, and build output.
 
-Interfaces such as [Magentic-UI](https://arxiv.org/abs/2507.22358) show how multi-agent tools can make human-agent collaboration easier to manage. That helps, but it does not remove the need for inspectable context. For my purposes, the important feature is being able to query my own history of prompts, sessions, sources, and captured context.
-
 The search mechanisms exposed by most CLI or chat clients are useful for lookup, but they are not ideal for more demanding questions. Complex expressions, date ranges, source types, status flags, and combined filters are usually better handled by querying the underlying data directly.
 
 ## Complex CLI searches
 
-The `ctx search` command supports text queries, repeated terms, provider filters, workspace filters, time windows, event types, touched-file metadata, subagent inclusion, session drill-down, and JSON output. For example, while working on a hobby app, I wanted to find sessions that touched `Defaults.swift` and mentioned SwiftUI's `@AppStorage` property wrapper:
+The `ctx search` command supports text queries, repeated terms, provider filters, workspace filters, time windows, event types, touched-file metadata, subagent inclusion, session drill-down, and JSON output. For example, while working on a hobby app, I wanted to find sessions that touched `Defaults.swift` and mentioned SwiftUI's `@AppStorage` property wrapper. Full-text search tokenises the `@` away, so the search term is just the bare word:
 
 ```bash
 ctx search "AppStorage" --file "Defaults.swift"
@@ -107,15 +95,41 @@ Because the store is ordinary SQLite, it also lends itself to careful inspection
 
 ![Browsing the ctx SQLite database structure in DB Browser for SQLite](ctx-sqlite-db-browser.png)
 
-The same structure is available from the terminal:
+The simplest way in is to get your bearings. A plain `ctx sql` query lists the tables and views, so I can see the shape of the store before writing anything more involved:
+
+```bash
+ctx sql "
+SELECT name, type
+FROM sqlite_master
+WHERE type IN ('table', 'view')
+ORDER BY type, name;
+"
+```
+
+```text
+name                       | type
+-------------------------- | -----
+artifact_search            | table
+artifact_search_config     | table
+artifact_search_content    | table
+artifact_search_data       | table
+artifact_search_docsize    | table
+artifact_search_idx        | table
+artifacts                  | table
+audit_log                  | table
+capture_sources            | table
+catalog_sessions           | table
+ctx_history_search         | table
+...
+```
+
+For one-off read-only commands like that, `ctx sql` is the safe default. Once I want to explore — join tables, tune a query, and reshape the result — `litecli` is more comfortable, and it opens the same file directly:
 
 ```bash
 litecli "$HOME/.ctx/work.sqlite"
 ```
 
-This is not limited to schema browsing. Once inside `litecli`, the search tables are available too, so I can run full-text queries and join them back to event metadata.
-
-For example, rank matching events for a phrase:
+This is not limited to schema browsing. Once inside `litecli`, the search tables are available too, so I can run full-text queries and join them back to event metadata. For example, to rank matching events for a phrase:
 
 ```sql
 SELECT
@@ -155,39 +169,11 @@ GROUP BY tool
 ORDER BY query_count DESC, tool;
 ```
 
-That is where `litecli` becomes more than a database browser. It gives me an interactive scratchpad for the same search index: autocomplete tables, tune the `MATCH` expression, add joins, add date filters, and reshape the result until it is the right evidence for the next prompt. For one-off read-only commands, `ctx sql` is safer; for exploratory search work, `litecli` is more comfortable.
-
-From there, exploration is simple. I can inspect the catalog with a plain SQL query instead of relying only on higher-level commands.
-
-```bash
-ctx sql "
-SELECT name, type
-FROM sqlite_master
-WHERE type IN ('table', 'view')
-ORDER BY type, name;
-"
-```
-
-```text
-name                       | type
--------------------------- | -----
-artifact_search            | table
-artifact_search_config     | table
-artifact_search_content    | table
-artifact_search_data       | table
-artifact_search_docsize    | table
-artifact_search_idx        | table
-artifacts                  | table
-audit_log                  | table
-capture_sources            | table
-catalog_sessions           | table
-ctx_history_search         | table
-...
-```
+That is where `litecli` becomes more than a database browser. It gives me an interactive scratchpad for the same search index: autocomplete tables, tune the `MATCH` expression, add joins, add date filters, and reshape the result until it is the right evidence for the next prompt.
 
 ## Sharing context
 
-`ctx` also helps when I move work between LLMs. Because the index records sessions, touched files, and event previews, I can ask another client to retrieve the narrow slice I need instead of pasting a long transcript. Staying with the same example, I could ask Claude:
+`ctx` also helps when I move work between LLMs. Because the index records sessions, touched files, and event previews, I can ask another client to retrieve the narrow slice I need instead of pasting a long transcript. Staying with the same example, I could ask Claude to search the history — even though those sessions were originally run under a different tool:
 
 > Use `ctx` to find sessions that discussed application defaults, especially sessions that touched `Defaults.swift` or mentioned SwiftUI's `@AppStorage` property wrapper.
 
@@ -195,7 +181,7 @@ The model can then use `ctx` to run targeted searches and return a compact summa
 
 > **Sessions that focused on application defaults**
 >
-> 1. `<session-id>` (`codex`) -- strongest match
+> 1. `<session-id>` (`codex`) — strongest match
 >
 >    This session discussed the defaults layer, the reset path, and changes related to `@AppStorage`.
 >
