@@ -21,11 +21,11 @@ Most writing about LLMs asks how they make our work more efficient. The more int
 
 In my work, that often means leveraging multiple tools, each with a focused role, rather than treating the LLM as a single chat window that has to hold everything at once.
 
-`ctx` fits into that gap. I want it to act as a small context layer between a project and an LLM, so I can stop rebuilding the same explanation by hand and send targeted, repeatable bundles instead.
+[`ctx`](https://github.com/context-hub/generator) fits into that gap. I want it to act as a small context layer between a project and an LLM, so I can stop rebuilding the same explanation by hand and send targeted, repeatable bundles instead.
 
 ## What is ctx?
 
-Here, `ctx` is a local CLI for working with agent history. It can discover and index previous sessions, list sources, search indexed history, show transcripts or individual events, locate metadata, expose read-only tools over MCP, and run read-only SQL against its local index.
+Here, [`ctx`](https://github.com/context-hub/generator) is a local CLI for working with agent history. It can discover and index previous sessions, list sources, search indexed history, show transcripts or individual events, locate metadata, expose read-only tools over MCP, and run read-only SQL against its local index.
 
 That makes it useful as a memory and inspection layer for LLM work. Instead of relying on whatever a given chat client remembers, I can query what actually happened: which sessions ran, what context was captured, where it came from, and which pieces are worth reusing.
 
@@ -70,7 +70,7 @@ This is useful, but it is still a search interface with flags. SQL is the better
 
 ## Direct SQL access
 
-One practical advantage of `ctx` is that it exposes the underlying SQLite database directly. The location is visible from `ctx status`, so there is no hidden store to hunt for. I abbreviate my home directory to `~` below; the command itself prints absolute paths.
+One practical advantage of [`ctx`](https://github.com/context-hub/generator) is that it exposes the underlying SQLite database directly. The location is visible from `ctx status`, so there is no hidden store to hunt for. I abbreviate my home directory to `~` below; the command itself prints absolute paths.
 
 ```bash
 ctx status
@@ -91,7 +91,7 @@ stale_catalog_sessions: 1
 local_only: true
 ```
 
-Because the store is ordinary SQLite, it also lends itself to careful inspection with common SQLite tools. I do not have to treat the `ctx` CLI as the only view into the data: DB Browser for SQLite can open the same `work.sqlite` file and show tables, indexes, FTS virtual tables, and raw rows directly.
+Because the store is ordinary SQLite, it also lends itself to careful inspection with common SQLite tools. I do not have to treat the [`ctx`](https://github.com/context-hub/generator) CLI as the only view into the data: DB Browser for SQLite can open the same `work.sqlite` file and show tables, indexes, FTS virtual tables, and raw rows directly.
 
 ![Browsing the ctx SQLite database structure in DB Browser for SQLite](ctx-sqlite-db-browser.png)
 
@@ -123,13 +123,13 @@ ctx_history_search         | table
 ...
 ```
 
-For one-off read-only commands like that, `ctx sql` is the safe default. Once I want to explore — join tables, tune a query, and reshape the result — `litecli` is more comfortable, and it opens the same file directly:
+For one-off read-only commands like that, `ctx sql` is the safe default. Once I want to explore — join tables, tune a query, and reshape the result — [`litecli`](https://github.com/dbcli/litecli) is more comfortable, and it opens the same file directly:
 
 ```bash
 litecli "$HOME/.ctx/work.sqlite"
 ```
 
-This is not limited to schema browsing. Once inside `litecli`, the search tables are available too, so I can run full-text queries and join them back to event metadata. For example, to rank matching events for a phrase:
+This is not limited to schema browsing. Once inside [`litecli`](https://github.com/dbcli/litecli), the search tables are available too, so I can run full-text queries and join them back to event metadata. For example, to rank matching events for a phrase:
 
 ```sql
 SELECT
@@ -169,15 +169,15 @@ GROUP BY tool
 ORDER BY query_count DESC, tool;
 ```
 
-That is where `litecli` becomes more than a database browser. It gives me an interactive scratchpad for the same search index: autocomplete tables, tune the `MATCH` expression, add joins, add date filters, and reshape the result until it is the right evidence for the next prompt.
+That is where [`litecli`](https://github.com/dbcli/litecli) becomes more than a database browser. It gives me an interactive scratchpad for the same search index: autocomplete tables, tune the `MATCH` expression, add joins, add date filters, and reshape the result until it is the right evidence for the next prompt.
 
 ## Sharing context
 
-`ctx` also helps when I move work between LLMs. Because the index records sessions, touched files, and event previews, I can ask another client to retrieve the narrow slice I need instead of pasting a long transcript. Staying with the same example, I could ask Claude to search the history — even though those sessions were originally run under a different tool:
+[`ctx`](https://github.com/context-hub/generator) also helps when I move work between LLMs. Because the index records sessions, touched files, and event previews, I can ask another client to retrieve the narrow slice I need instead of pasting a long transcript. Staying with the same example, I could ask Claude to search the history — even though those sessions were originally run under a different tool:
 
 > Use `ctx` to find sessions that discussed application defaults, especially sessions that touched `Defaults.swift` or mentioned SwiftUI's `@AppStorage` property wrapper.
 
-The model can then use `ctx` to run targeted searches and return a compact summary:
+The model can then use [`ctx`](https://github.com/context-hub/generator) to run targeted searches and return a compact summary:
 
 > **Sessions that focused on application defaults**
 >
@@ -191,4 +191,4 @@ The local CLI also exposes read-only tools over MCP through `ctx mcp serve`. Tha
 
 ## Conclusion
 
-The value of `ctx` is not that it replaces judgment about what context belongs in a prompt. Its value is that it makes that judgment easier to apply: search first, inspect the underlying SQLite data when the flags are not enough, and pass the next model a small, grounded set of evidence instead of a vague summary or a pasted transcript.
+The value of [`ctx`](https://github.com/context-hub/generator) is not that it replaces judgment about what context belongs in a prompt. Its value is that it makes that judgment easier to apply: search first, inspect the underlying SQLite data when the flags are not enough, and pass the next model a small, grounded set of evidence instead of a vague summary or a pasted transcript.
