@@ -4,7 +4,7 @@ author: Konrad Zdeb
 date: 2025-11-24T16:01:56.305Z
 bodyClass: "widecode"
 categories:
-  - dev
+  - Swift and Apple Development
 tags:
   - Swift
   - Xcode

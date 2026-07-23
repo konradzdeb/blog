@@ -4,7 +4,7 @@ author: Konrad Zdeb
 date: '2021-06-29'
 slug: []
 categories:
-  - example
+  - Software Development
 tags:
   - R
   - StackOverflow

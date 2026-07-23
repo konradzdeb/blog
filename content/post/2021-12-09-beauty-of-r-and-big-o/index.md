@@ -5,7 +5,7 @@ date: '2021-12-09'
 slug: []
 math: true
 categories:
-  - fun
+  - Software Development
 tags:
   - R
   - functional

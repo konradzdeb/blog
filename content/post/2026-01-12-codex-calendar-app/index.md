@@ -4,8 +4,7 @@ author: Konrad Zdeb
 date: 2026-01-12
 slug: codex-calendar-app
 categories:
-  - productivity
-  - tools
+  - AI and LLMs
 tags:
   - Codex
   - Calendar

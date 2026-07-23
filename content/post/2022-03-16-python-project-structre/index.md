@@ -5,8 +5,7 @@ date: '2022-03-16'
 slug: python-project-structure
 draft: false
 categories:
-  - dev
-  - example
+  - Software Development
 tags:
   - Python
 ---

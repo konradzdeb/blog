@@ -5,7 +5,7 @@ date: '2021-08-13'
 slug: importing-csv-to-hive
 draft: false
 categories:
-  - how-to
+  - Data Engineering and BI
 tags:
   - Hive
   - bash

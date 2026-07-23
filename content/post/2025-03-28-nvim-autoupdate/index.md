@@ -4,8 +4,7 @@ author: Konrad Zdeb
 date: '2025-03-28'
 slug: nvim-autoupdate
 categories:
-  - how-to
-  - dev
+  - Developer Tooling
 tags:
   - lua
   - vim

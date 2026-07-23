@@ -5,7 +5,7 @@ date: '2019-02-23'
 slug: installing-hortonworks-sanbox-deployment-hdp-on-docker-mac
 draft: false
 categories:
-  - how-to
+  - Data Engineering and BI
 tags:
   - docker
   - bash

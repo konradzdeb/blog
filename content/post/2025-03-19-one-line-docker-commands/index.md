@@ -4,8 +4,7 @@ author: Konrad Zdeb
 date: "2025-03-19"
 slug: one-line-docker
 categories:
-  - efficiency
-  - how-to
+  - Developer Tooling
 tags:
   - python
   - docker

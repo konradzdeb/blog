@@ -4,7 +4,7 @@ author: Konrad
 date: '2015-03-28'
 slug: managing-rows-in-the-ggplot-legend
 categories:
-  - how-to
+  - Data Science and Analytics
 tags:
   - R
   - ggplot2

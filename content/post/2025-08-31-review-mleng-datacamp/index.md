@@ -4,7 +4,7 @@ author: Konrad Zdeb
 date: 2025-08-31
 slug: review-mlend
 categories:
-  - review
+  - Data Science and Analytics
 tags:
   - DataCamp
   - MLEng

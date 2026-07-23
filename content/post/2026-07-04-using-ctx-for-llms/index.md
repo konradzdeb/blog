@@ -4,8 +4,7 @@ author: Konrad Zdeb
 date: 2026-07-04
 slug: using-ctx-for-llms
 categories:
-  - tools
-  - llms
+  - AI and LLMs
 tags:
   - ctx
   - LLM

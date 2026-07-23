@@ -4,8 +4,7 @@ author: Konrad Zdeb
 date: '2021-02-26'
 slug: inserting-data-into-partitioned-table
 categories:
-  - how-to
-  - example
+  - Data Engineering and BI
 tags:
   - R
   - Spark

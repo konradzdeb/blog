@@ -4,8 +4,7 @@ author: Konrad
 date: '2020-07-23'
 slug: poor-man-s-robust-shiny-app-deployment
 categories:
-  - how-to
-  - BI
+  - Data Science and Analytics
 tags:
   - R
   - Shiny
