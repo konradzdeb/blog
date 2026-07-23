@@ -4,7 +4,7 @@ author: Konrad
 date: '2012-02-01'
 slug: amusing-way-to-get-user-input-windows-in-r
 categories:
-  - how-to
+  - Software Development
 tags:
   - R
   - gui

@@ -4,8 +4,7 @@ author: Konrad Zdeb
 date: 2026-04-30
 slug: building-apache-superset-home-setup
 categories:
-  - how-to
-  - data
+  - Data Engineering and BI
 tags:
   - Apache Superset
   - Docker

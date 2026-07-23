@@ -6,7 +6,8 @@ slug: "drawing-chat-gpt"
 header-includes:
 - \usetikzlibrary{positioning}
 - \usetikzlibrary{shapes}
-categories: fun
+categories:
+  - AI and LLMs
 tags:
 - AI
 - LaTeX

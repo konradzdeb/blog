@@ -4,7 +4,7 @@ author: Konrad
 date: '2015-06-05'
 slug: ascii-charts-in-r
 categories:
-  - how-to
+  - Data Science and Analytics
 tags:
   - R
   - Stata

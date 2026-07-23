@@ -4,8 +4,7 @@ author: Konrad
 date: '2021-02-12'
 slug: sample-analytical-app-with-shiny
 categories:
-  - dev
-  - how-to
+  - Data Science and Analytics
 tags:
   - R
   - Shiny

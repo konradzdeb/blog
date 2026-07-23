@@ -4,7 +4,7 @@ author: Konrad Zdeb
 date: '2021-03-29'
 slug: file-manipulation-in-r
 categories:
-  - how-to
+  - Data Engineering and BI
 tags:
   - R
 references:

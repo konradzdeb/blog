@@ -4,7 +4,7 @@ author: Konrad Zdeb
 date: '2025-07-24'
 slug: python-models-app
 categories:
-  - how-to
+  - Swift and Apple Development
 tags:
   - Swift
   - ML

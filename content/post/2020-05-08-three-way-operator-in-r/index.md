@@ -4,7 +4,7 @@ author: Konrad
 date: '2020-05-08'
 slug: three-way-operator-in-r
 categories:
-  - dev
+  - Software Development
 tags:
   - R
 ---

@@ -4,8 +4,7 @@ author: Konrad Zdeb
 date: '2025-03-04'
 slug: swift-data-science
 categories:
-  - example
-  - Data Science
+  - Swift and Apple Development
 tags:
   - Swift
   - knitr

@@ -4,8 +4,7 @@ author: Konrad Zdeb
 date: '2025-03-14'
 slug: git-dotfiles
 categories:
-  - fun
-  - how-to
+  - Developer Tooling
 tags:
   - git
   - dotfiles

@@ -4,8 +4,7 @@ author: Konrad
 date: '2018-11-24'
 slug: interactive-module
 categories:
-  - how-to
-  - BI
+  - Data Science and Analytics
 tags:
   - R
   - Shiny

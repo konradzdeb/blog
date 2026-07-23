@@ -4,7 +4,7 @@ author: Konrad Zdeb
 date: '2023-09-30'
 slug: []
 categories:
-  - how-to
+  - Developer Tooling
 tags:
   - Python
   - vim

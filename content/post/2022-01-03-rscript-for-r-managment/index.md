@@ -4,7 +4,7 @@ author: Konrad Zdeb
 date: '2022-01-03'
 slug: rscriptt-for-r-managment
 categories:
-  - how-to
+  - Developer Tooling
 tags:
   - bash
   - R

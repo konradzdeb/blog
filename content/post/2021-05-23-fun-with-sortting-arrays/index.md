@@ -4,7 +4,7 @@ author: Konrad Zdeb
 date: '2021-05-23'
 slug: fun-with-sortting-arrays
 categories:
-  - fun
+  - Software Development
 tags:
   - python
 ---

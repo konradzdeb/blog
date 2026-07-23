@@ -4,8 +4,7 @@ author: Konrad Zdeb
 date: 2026-07-23
 slug: human-made
 categories:
-  - discussion
-  - dev
+  - AI and LLMs
 tags:
   - GenAI
   - LLMs
