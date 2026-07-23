@@ -10,7 +10,7 @@ tags:
   - LLMs
   - Discussion
 draft: false
-description: Mitchell Hashimoto begins his excellent SIMD post by noting that it was written entirely without AI assistance. It made me wonder whether “handwritten” is becoming a quality label. Imagine an author writes a technical post, then asks a generative model to produce the Zig examples. The model produces exactly the same code the author would have written. Would you pay more for entirely human-written software than AI-assisted software if the differences in reliability, maintainability, performance and security were unobservable? Are we paying for quality—or for evidence of human effort?
+description: A reflection on human effort, generative AI and the signals we use to judge software quality.
 ---
 
 
